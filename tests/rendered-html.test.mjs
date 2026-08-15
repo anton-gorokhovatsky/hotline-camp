@@ -29,7 +29,7 @@ test("renders the Hotline camp landing page", async () => {
   assert.match(html, /<title>[^<]*Hotline[^<]*триатлонный кэмп/i);
   assert.match(readableHtml, /27 сентября/);
   assert.match(readableHtml, /4 октября/);
-  assert.match(readableHtml, /Кэмп Hotline/);
+  assert.match(readableHtml, /Соберём гонку/);
   assert.match(readableHtml, /Форма уже с тобой/);
   assert.match(readableHtml, /Дальше — вместе/);
   assert.match(readableHtml, /исторический ориентир/i);
@@ -50,11 +50,16 @@ test("keeps theme, motion and focus affordances in the production source", async
   assert.match(layout, /prefers-color-scheme/);
   assert.match(layout, /localStorage\.getItem\('camp-theme'\)/);
   assert.match(page, /className="energy-ribbon"/);
-  assert.match(page, /Hotline \/ триатлонный кэмп/);
+  assert.match(page, /hotline-ride\.jpg/);
+  assert.match(page, /hotline-team-ride\.jpg/);
+  assert.match(page, /hotline-finish-sochi\.jpg/);
+  assert.doesNotMatch(page, /(?:evgeny|maksim)\.jpg/);
   assert.match(page, /className="footer-wordmark"/);
   assert.match(css, /:focus-visible/);
   assert.match(css, /prefers-reduced-motion:\s*reduce/);
   assert.match(css, /forced-colors:\s*active/);
-  assert.match(css, /min-height:\s*(?:44px|2\.75rem)/);
+  assert.match(css, /min-height:\s*(?:44px|2\.75rem|2\.8rem)/);
+  assert.doesNotMatch(page, /className="route-map"/);
+  assert.doesNotMatch(css, /\.program-card:hover/);
   assert.doesNotMatch(page, /H×D|SkeletonPreview/);
 });
