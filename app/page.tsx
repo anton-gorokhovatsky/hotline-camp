@@ -7,7 +7,7 @@ import { ThemeToggle } from "./theme-toggle";
 const telegramUrl = "https://t.me/DDopenChat";
 
 export const metadata: Metadata = {
-  title: "Hotline: триатлонный кэмп в\u00a0Сочи — 27\u00a0сентября–4\u00a0октября\u00a02026",
+  title: "Hotline: триатлонный кэмп в\u00a0Сочи\u00a0— 27\u00a0сентября–4\u00a0октября\u00a02026",
   description:
     "Триатлонный кэмп Hotline в\u00a0Сириусе с\u00a0Евгением\u00a0Тихониным и\u00a0Максимом\u00a0Кубышко: трасса, море, транзитные зоны и\u00a0план на\u00a0гонку.",
 };
@@ -91,7 +91,7 @@ const program = [
 
 const phases = [
   ["Приезд", "Собираем исходные данные: дистанция, самочувствие, экипировка и\u00a0логистика."],
-  ["Знакомство с\u00a0гонкой", "Проходим ключевые участки, воду и\u00a0транзит — отдельно и\u00a0в\u00a0связках."],
+  ["Знакомство с\u00a0гонкой", "Проходим ключевые участки, воду и\u00a0транзит\u00a0— отдельно и\u00a0в\u00a0связках."],
   ["Предстартовая настройка", "Снижаем неопределённость и\u00a0нагрузку, фиксируем личный план."],
   ["Стартовый уикенд", "IRONSTAR\u00a0113 — 3\u00a0октября, OLYMPIC — 4\u00a0октября."],
 ];
@@ -99,25 +99,25 @@ const phases = [
 const checklist = [
   {
     title: "Выбрать дистанцию",
-    text: "Первым сообщением напишите, едете ли\u00a0вы 113 или OLYMPIC: расписание и\u00a0требования к\u00a0велосипеду отличаются.",
+    text: "Первым сообщением напиши, едешь ли\u00a0ты на\u00a0113 или OLYMPIC: расписание и\u00a0требования к\u00a0велосипеду отличаются.",
     link: "https://iron-star.com/event/ironstar-113-sirius-2026/program/",
     label: "Программа\u00a0113",
   },
   {
     title: "Проверить документы",
-    text: "Для допуска к\u00a0старту нужны медицинская справка и\u00a0страховка. Не\u00a0откладывайте их на\u00a0неделю кэмпа.",
+    text: "Для\u00a0допуска к\u00a0старту нужны медицинская справка и\u00a0страховка. Не\u00a0откладывай их на\u00a0неделю кэмпа.",
     link: "https://iron-star.com/faq/",
     label: "FAQ организатора",
   },
   {
     title: "Продумать велосипед",
-    text: "Заранее выберите перевозчика, проверьте его правила и\u00a0заложите время на\u00a0сборку и\u00a0технический осмотр.",
+    text: "Заранее выбери перевозчика, проверь его правила и\u00a0заложи время на\u00a0сборку и\u00a0технический осмотр.",
     link: "https://iron-star.com/faq/",
     label: "Правила перевозки",
   },
   {
     title: "Жить ближе к\u00a0Сириусу",
-    text: "Прибрежный кластер сокращает ежедневные переезды. Точные ориентиры по\u00a0размещению команда пришлёт участникам.",
+    text: "Прибрежный кластер сокращает ежедневные переезды. Точные ориентиры по\u00a0размещению команда пришлёт тебе после подтверждения участия.",
     link: "https://sirius.gov.ru/transport/",
     label: "Транспорт Сириуса",
   },
@@ -131,7 +131,7 @@ export default function Home() {
       </a>
 
       <header className="site-header">
-        <a className="wordmark" href="#top" aria-label="К началу страницы">
+        <a className="wordmark" href="#top" aria-label="К началу страницы">
           <span className="wordmark-mark" aria-hidden="true">Hotline</span>
           <span>Кэмп / Сочи</span>
         </a>
@@ -155,12 +155,13 @@ export default function Home() {
           <div className="hero-copy">
             <p className="eyebrow"><span>Кэмп Hotline</span> Сириус, Сочи</p>
             <h1 id="hero-title">
-              Собрать форму
-              <span>в&nbsp;готовность к&nbsp;гонке.</span>
+              Форма уже с&nbsp;тобой.
+              <span>Соберём гонку.</span>
             </h1>
             <p className="hero-lead">
-              Неделя с&nbsp;Евгением&nbsp;Тихониным и&nbsp;Максимом&nbsp;Кубышко: трасса, море,
-              транзитные зоны и&nbsp;личный сценарий старта.
+              Неделя в&nbsp;Сириусе с&nbsp;Евгением&nbsp;Тихониным и&nbsp;Максимом&nbsp;Кубышко.
+              Ты изучишь трассу, проверишь себя в&nbsp;море и&nbsp;выйдешь на&nbsp;старт
+              со&nbsp;своим понятным планом.
             </p>
             <div className="hero-actions">
               <a className="button button-primary" href={telegramUrl} target="_blank" rel="noreferrer">
@@ -169,10 +170,10 @@ export default function Home() {
               </a>
               <a className="text-link" href="#program">Посмотреть программу <span aria-hidden="true">↓</span></a>
             </div>
-            <p className="microcopy">Сначала уточним дистанцию и&nbsp;уровень подготовки. Место подтверждает тренер.</p>
+            <p className="microcopy">Напиши, какую дистанцию выбираешь и&nbsp;как сейчас тренируешься. Тренер ответит лично и&nbsp;честно скажет, подходит ли&nbsp;тебе кэмп.</p>
           </div>
 
-          <aside className="race-board" aria-label="Ключевые сведения о кэмпе">
+          <aside className="race-board" aria-label="Ключевые сведения о кэмпе">
             <div className="race-board-top">
               <span>27&nbsp;сентября</span>
               <span aria-hidden="true">→</span>
@@ -186,7 +187,7 @@ export default function Home() {
             </svg>
             <div className="race-board-title">
               <strong>Сочи</strong>
-              <span>Черное море / стартовый уикенд</span>
+              <span>Чёрное море / стартовый уикенд</span>
             </div>
             <dl className="hero-facts">
               <div><dt>Группа</dt><dd>15&nbsp;человек</dd></div>
@@ -209,7 +210,7 @@ export default function Home() {
           <div className="section-heading">
             <p className="kicker">Что будем делать</p>
             <h2 id="program-title">Четыре части одной гонки</h2>
-            <p>Не&nbsp;добавляем объём ради объёма. Настраиваем то, что должно сработать в&nbsp;конкретном месте и&nbsp;в&nbsp;конкретный день.</p>
+            <p>Здесь не&nbsp;будет объёма ради объёма. Вместе настроим то, что должно сработать у&nbsp;тебя&nbsp;— на&nbsp;конкретной трассе и&nbsp;в&nbsp;конкретный день.</p>
           </div>
           <div className="program-grid">
             {program.map((item) => (
@@ -231,14 +232,14 @@ export default function Home() {
             <h2 id="place-title">Сириус: море и&nbsp;старт в&nbsp;одной логистике</h2>
             <p>
               Кэмп проходит рядом с&nbsp;трассами осеннего фестиваля IRONSTAR. Здесь можно
-              тренировать не&nbsp;абстрактные километры, а&nbsp;ориентиры, покрытие, ветер и&nbsp;
-              последовательность действий, которые встретятся на&nbsp;старте.
+              работать не&nbsp;с&nbsp;абстрактными километрами, а&nbsp;с&nbsp;ориентирами, покрытием,
+              ветром и&nbsp;последовательностью действий, которые встретятся тебе на&nbsp;старте.
             </p>
             <a className="text-link external-link" href="https://sirius.gov.ru/transport/" target="_blank" rel="noreferrer">
               Как добраться до&nbsp;Сириуса <ArrowUpRight />
             </a>
           </div>
-          <div className="place-map" aria-label="Схематический ориентир: аэропорт, Сириус и Чёрное море">
+          <div className="place-map" aria-label="Схематический ориентир: аэропорт, Сириус и Чёрное море">
             <div className="map-label map-airport"><span>Аэропорт Сочи</span><small>около 10&nbsp;минут на&nbsp;машине</small></div>
             <div className="map-route" aria-hidden="true"><span></span><span></span><span></span></div>
             <div className="map-label map-sirius"><span>Сириус</span><small>тренировки и&nbsp;старт</small></div>
@@ -260,8 +261,8 @@ export default function Home() {
           </div>
           <div className="sea-notes">
             <p>
-              Это исторический ориентир, а&nbsp;не&nbsp;прогноз. Решение по&nbsp;гидрокостюму и&nbsp;
-              открытой воде принимается по&nbsp;фактической температуре и&nbsp;условиям в&nbsp;день тренировки.
+              Это исторический ориентир, а&nbsp;не&nbsp;прогноз. Решение по&nbsp;гидрокостюму
+              и&nbsp;открытой воде принимается по&nbsp;фактической температуре и&nbsp;условиям в&nbsp;день тренировки.
             </p>
             <a href="https://seatemperature.net/monthly/sochi-krasnodarskiy-russia-sea-temperature-in-october-1790" target="_blank" rel="noreferrer">
               Источник наблюдений <ArrowUpRight />
@@ -272,8 +273,8 @@ export default function Home() {
         <section className="section rhythm-section" aria-labelledby="rhythm-title">
           <div className="section-heading compact-heading">
             <p className="kicker">Ритм недели</p>
-            <h2 id="rhythm-title">От приезда — к&nbsp;личному плану старта</h2>
-            <p>Точное расписание зависит от&nbsp;погоды и&nbsp;официальной программы. Каркас недели остаётся понятным.</p>
+            <h2 id="rhythm-title">От&nbsp;приезда&nbsp;— к&nbsp;личному плану старта</h2>
+            <p>Каркас недели остаётся понятным, а&nbsp;детали мы подстроим под&nbsp;погоду, официальную программу и&nbsp;твоё состояние.</p>
           </div>
           <ol className="phase-list">
             {phases.map(([title, text], index) => (
@@ -289,11 +290,11 @@ export default function Home() {
           <div className="section-heading">
             <p className="kicker">Тренеры</p>
             <h2 id="coaches-title">Два взгляда на&nbsp;одну готовность</h2>
-            <p>Опыт элитного велоспорта, современного пятиборья и&nbsp;международного триатлона — в&nbsp;прикладной работе с&nbsp;вашей гонкой.</p>
+            <p>Опыт элитного велоспорта, современного пятиборья и&nbsp;международного триатлона&nbsp;— в&nbsp;прикладной работе с&nbsp;твоей гонкой.</p>
           </div>
           <div className="coaches-grid">
             <article className="coach-card coach-evgeny">
-              <div className="coach-photo"><img src="./media/evgeny.jpg" alt="Евгений Тихонин в велоформе" width="1800" height="1349" loading="lazy" decoding="async" /></div>
+              <div className="coach-photo"><img src="./media/evgeny.jpg" alt="Евгений Тихонин в велоформе" width="1440" height="1800" loading="lazy" decoding="async" /></div>
               <div className="coach-copy">
                 <p className="coach-team">Hotline</p>
                 <h3>Евгений&nbsp;Тихонин</h3>
@@ -302,7 +303,7 @@ export default function Home() {
               </div>
             </article>
             <article className="coach-card coach-maksim">
-              <div className="coach-photo"><img src="./media/maksim.jpg" alt="Максим Кубышко в беговой экипировке" width="950" height="1200" loading="lazy" decoding="async" /></div>
+              <div className="coach-photo"><img src="./media/maksim.jpg" alt="Максим Кубышко в беговой экипировке" width="933" height="1400" loading="lazy" decoding="async" /></div>
               <div className="coach-copy">
                 <p className="coach-team">Dusty Dumbbells</p>
                 <h3>Максим&nbsp;Кубышко</h3>
@@ -316,8 +317,8 @@ export default function Home() {
         <section className="section checklist-section" aria-labelledby="checklist-title">
           <div className="section-heading compact-heading">
             <p className="kicker">До&nbsp;поездки</p>
-            <h2 id="checklist-title">Что уже можно сделать самому</h2>
-            <p>Четыре шага, которые уберут бытовую суету из&nbsp;предстартовой недели.</p>
+            <h2 id="checklist-title">Начни с&nbsp;четырёх вещей</h2>
+            <p>Они уберут бытовую суету из&nbsp;предстартовой недели.</p>
           </div>
           <div className="checklist-grid">
             {checklist.map((item, index) => (
@@ -335,7 +336,7 @@ export default function Home() {
           <div className="details-copy">
             <p className="kicker">Участие</p>
             <h2 id="details-title">15&nbsp;мест. Работа в&nbsp;подгруппах.</h2>
-            <p>Кэмп предназначен для спортсменов с&nbsp;уже набранной базой, которым нужно перевести её в&nbsp;готовность к&nbsp;конкретной дистанции.</p>
+            <p>Кэмп для&nbsp;тебя, если база уже набрана и&nbsp;её нужно перевести в&nbsp;готовность к&nbsp;конкретной дистанции.</p>
           </div>
           <dl className="details-list">
             <div><dt>Даты</dt><dd>27&nbsp;сентября–4&nbsp;октября&nbsp;2026</dd></div>
@@ -344,7 +345,7 @@ export default function Home() {
             <div><dt>Уточняется</dt><dd>Проживание, трансфер и&nbsp;точное расписание</dd></div>
           </dl>
           <div className="details-action">
-            <p>В&nbsp;первом сообщении напишите дистанцию, город вылета, примерный уровень и&nbsp;какой велосипед берёте.</p>
+            <p>В&nbsp;первом сообщении напиши дистанцию, город вылета, примерный уровень и&nbsp;какой велосипед берёшь.</p>
             <a className="button button-primary button-wide" href={telegramUrl} target="_blank" rel="noreferrer">
               <TelegramMark />
               Написать в&nbsp;Telegram
@@ -364,35 +365,52 @@ export default function Home() {
             </details>
             <details>
               <summary>Нужен ли&nbsp;гидрокостюм?</summary>
-              <p>Возьмите его, если он у&nbsp;вас есть. Разрешение или обязательность определяются фактической температурой воды и&nbsp;правилами организатора в&nbsp;день старта.</p>
+              <p>Возьми его, если он у&nbsp;тебя есть. Разрешение или обязательность определяются фактической температурой воды и&nbsp;правилами организатора в&nbsp;день старта.</p>
             </details>
             <details>
               <summary>Где лучше жить?</summary>
-              <p>Практичный ориентир — прибрежная часть Сириуса, чтобы сократить ежедневные переезды. Конкретные варианты команда даст после подтверждения участия.</p>
+              <p>Практичный ориентир&nbsp;— прибрежная часть Сириуса, чтобы сократить ежедневные переезды. Конкретные варианты команда даст тебе после подтверждения участия.</p>
             </details>
             <details>
               <summary>Что не&nbsp;входит в&nbsp;30&#8239;000&nbsp;₽?</summary>
-              <p>В&nbsp;презентации отдельно обозначена аренда дорожки в&nbsp;бассейне. Условия по&nbsp;проживанию, дороге, питанию и&nbsp;трансферам стоит уточнить до&nbsp;оплаты.</p>
+              <p>В&nbsp;презентации отдельно обозначена аренда дорожки в&nbsp;бассейне. Условия по&nbsp;проживанию, дороге, питанию и&nbsp;трансферам уточни до&nbsp;оплаты.</p>
             </details>
           </div>
         </section>
-
-        <section className="final-cta" aria-labelledby="final-title">
-          <p className="kicker kicker-light">27.09–04.10 / Сочи</p>
-          <h2 id="final-title">Приехать не&nbsp;просто тренироваться.<br />Приехать готовым стартовать.</h2>
-          <a className="button button-light" href={telegramUrl} target="_blank" rel="noreferrer">
-            Обсудить участие в&nbsp;Telegram
-            <ArrowUpRight />
-          </a>
-        </section>
       </main>
 
-      <footer className="site-footer">
-        <div><span>Hotline / триатлонный кэмп</span><span>в&nbsp;партнёрстве с&nbsp;Dusty Dumbbells</span></div>
-        <p>Информация о&nbsp;погоде и&nbsp;море — исторический ориентир, не&nbsp;прогноз. Расписание и&nbsp;условия старта сверяйте с&nbsp;организатором.</p>
-        <div className="footer-links">
-          <a href="https://iron-star.com/event/ironstar-113-sirius-2026/program/" target="_blank" rel="noreferrer">IRONSTAR&nbsp;113 <ArrowUpRight /></a>
-          <a href="https://iron-star.com/event/ironstar-olympic-sirius-2026/program/" target="_blank" rel="noreferrer">OLYMPIC <ArrowUpRight /></a>
+      <footer className="site-footer" aria-labelledby="footer-title">
+        <div className="footer-poster">
+          <img
+            className="footer-athlete"
+            src="./media/evgeny.jpg"
+            alt=""
+            width="1440"
+            height="1800"
+            loading="lazy"
+            decoding="async"
+            aria-hidden="true"
+          />
+          <div className="footer-cta">
+            <p className="kicker">27.09–04.10 / Сочи</p>
+            <h2 id="footer-title">Ты уже в&nbsp;пути.<span>Дальше&nbsp;— вместе.</span></h2>
+            <a className="button button-footer" href={telegramUrl} target="_blank" rel="noreferrer">
+              Обсудить участие
+              <ArrowUpRight />
+            </a>
+          </div>
+          <p className="footer-wordmark" aria-hidden="true">Hotline</p>
+          <div className="footer-meta">
+            <div className="footer-brand">
+              <span>Hotline / триатлонный кэмп</span>
+              <span>в&nbsp;партнёрстве с&nbsp;Dusty Dumbbells</span>
+            </div>
+            <p>Информация о&nbsp;погоде и&nbsp;море&nbsp;— исторический ориентир, не&nbsp;прогноз. Расписание и&nbsp;условия старта сверяй с&nbsp;организатором.</p>
+            <nav className="footer-links" aria-label="Ссылки на программы стартов">
+              <a href="https://iron-star.com/event/ironstar-113-sirius-2026/program/" target="_blank" rel="noreferrer">IRONSTAR&nbsp;113 <ArrowUpRight /></a>
+              <a href="https://iron-star.com/event/ironstar-olympic-sirius-2026/program/" target="_blank" rel="noreferrer">OLYMPIC <ArrowUpRight /></a>
+            </nav>
+          </div>
         </div>
       </footer>
     </>

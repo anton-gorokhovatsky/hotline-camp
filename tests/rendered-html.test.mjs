@@ -30,7 +30,8 @@ test("renders the Hotline camp landing page", async () => {
   assert.match(readableHtml, /27 сентября/);
   assert.match(readableHtml, /4 октября/);
   assert.match(readableHtml, /Кэмп Hotline/);
-  assert.match(readableHtml, /Собрать форму/);
+  assert.match(readableHtml, /Форма уже с тобой/);
+  assert.match(readableHtml, /Дальше — вместе/);
   assert.match(readableHtml, /исторический ориентир/i);
   assert.match(html, /https:\/\/t\.me\/DDopenChat/);
   assert.match(readableHtml, /Перейти к содержанию/);
@@ -50,6 +51,7 @@ test("keeps theme, motion and focus affordances in the production source", async
   assert.match(layout, /localStorage\.getItem\('camp-theme'\)/);
   assert.match(page, /className="energy-ribbon"/);
   assert.match(page, /Hotline \/ триатлонный кэмп/);
+  assert.match(page, /className="footer-wordmark"/);
   assert.match(css, /:focus-visible/);
   assert.match(css, /prefers-reduced-motion:\s*reduce/);
   assert.match(css, /forced-colors:\s*active/);
