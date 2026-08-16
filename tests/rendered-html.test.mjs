@@ -57,12 +57,31 @@ test("renders the complete Hotline camp landing page", async () => {
     ) ?? [];
   assert.equal(ctaAnchors.length, 4);
 
-  assert.match(html, /hotline-team-ride\.jpg/);
-  assert.match(html, /hotline-finish-sochi\.jpg/);
-  assert.match(html, /evgeny\.jpg/);
-  assert.match(html, /maksim\.jpg/);
-  assert.match(html, /Евгений Тихонин в велосипедной форме/);
-  assert.match(html, /Максим Кубышко в беговой форме/);
+  const narrativeImages = [
+    "hero-time-trial.jpg",
+    "program-cyclist.jpg",
+    "week-swimmer.jpg",
+    "coach-evgeny-finish.jpg",
+    "coach-maksim-finish.jpg",
+    "final-finish.jpg",
+  ];
+
+  for (const image of narrativeImages) {
+    const escapedImage = image.replace(".", "\\.");
+    const renderedImages = html.match(
+      new RegExp(`<img\\b[^>]*\\bsrc="[^"]*${escapedImage}"[^>]*>`, "g"),
+    );
+    assert.equal(renderedImages?.length ?? 0, 1);
+  }
+
+  assert.match(html, /Триатлет проходит велосипедный этап в аэропозиции/);
+  assert.match(html, /Велосипедист Hotline проходит трассу на скорости/);
+  assert.match(html, /Триатлет выходит из воды после плавательного этапа/);
+  assert.match(html, /Евгений Тихонин держит финишную ленту после триатлона/);
+  assert.match(html, /Максим Кубышко бежит по финишному коридору/);
+  assert.match(html, /Триатлет пересекает финишную ленту/);
+  assert.match(readableHtml, /4-кратный чемпион России/);
+  assert.match(readableHtml, /Мастер спорта по современному пятиборью/);
 
   assert.match(html, /ironstar-113-sirius-2026\/program/);
   assert.match(html, /ironstar-olympic-sirius-2026\/program/);

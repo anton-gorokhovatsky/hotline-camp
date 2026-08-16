@@ -69,10 +69,12 @@ const coaches = [
     name: "Евгений Тихонин",
     role: "велосипед и\u00a0триатлон",
     text: "Поможет связать технику, темп и\u00a0решения на\u00a0трассе в\u00a0один рабочий сценарий.",
-    image: "./media/evgeny.jpg",
-    alt: "Евгений Тихонин в велосипедной форме",
-    width: 1440,
-    height: 1800,
+    credentials:
+      "4-кратный чемпион России. Победитель IRONMAN\u00a070.3 в\u00a0Омане и\u00a0Дурбане, бронзовый призёр чемпионата мира IRONMAN\u00a070.3.",
+    image: "./media/coach-evgeny-finish.jpg",
+    alt: "Евгений Тихонин держит финишную ленту после триатлона",
+    width: 1800,
+    height: 1202,
     className: "coach-card coach-card-evgeny",
   },
   {
@@ -80,10 +82,12 @@ const coaches = [
     name: "Максим Кубышко",
     role: "бег и\u00a0триатлон",
     text: "Поможет выбрать усилие, сохранить форму к\u00a0старту и\u00a0не\u00a0потерять гонку на\u00a0лишней спешке.",
-    image: "./media/maksim.jpg",
-    alt: "Максим Кубышко в беговой форме",
-    width: 933,
-    height: 1400,
+    credentials:
+      "Мастер спорта по\u00a0современному пятиборью. Чемпион Москвы и\u00a0призёр чемпионата России.",
+    image: "./media/coach-maksim-finish.jpg",
+    alt: "Максим Кубышко бежит по финишному коридору",
+    width: 1800,
+    height: 1199,
     className: "coach-card coach-card-maksim",
   },
 ];
@@ -202,65 +206,89 @@ export default function HomePage() {
 
           <figure className="hero-media">
             <img
-              src="./media/hotline-team-ride.jpg"
-              alt="Команда Hotline едет группой на шоссейных велосипедах"
-              width="1680"
-              height="1117"
+              src="./media/hero-time-trial.jpg"
+              alt="Триатлет проходит велосипедный этап в аэропозиции"
+              width="2400"
+              height="1599"
               fetchPriority="high"
             />
-            <figcaption>
-              <span>Hotline Cycling Club</span>
-              <span>Командная работа · личный темп</span>
-            </figcaption>
           </figure>
         </section>
 
         <section className="promise page-shell" aria-labelledby="promise-title">
           <p className="section-label">Задача кэмпа</p>
-          <h2 id="promise-title">
-            Не{"\u00a0"}добавить форму.
-            <span>Убрать случайность.</span>
-          </h2>
-          <p>
-            Месяцы тренировок уже сделали основную работу. Эта неделя нужна, чтобы
-            спокойно познакомиться с{"\u00a0"}местом, проверить решения и{"\u00a0"}не
-            собирать гонку утром перед стартом.
-          </p>
+          <div className="promise-body">
+            <h2 id="promise-title">
+              Не{"\u00a0"}добавить форму.
+              <span>Убрать случайность.</span>
+            </h2>
+            <p>
+              Месяцы тренировок уже сделали основную работу. Эта неделя нужна, чтобы
+              спокойно познакомиться с{"\u00a0"}местом, проверить решения и{"\u00a0"}не
+              собирать гонку утром перед стартом.
+            </p>
+          </div>
         </section>
 
         <section className="program page-shell section" id="program" aria-labelledby="program-title">
           <div className="section-heading">
             <p className="section-label">Что станет понятным</p>
-            <h2 id="program-title">Четыре части одной гонки</h2>
-            <p>
-              Отдельные тренировки важны. На{"\u00a0"}старте решает то, как они
-              складываются в{"\u00a0"}один проверенный сценарий.
-            </p>
+            <div className="section-heading-copy">
+              <h2 id="program-title">Четыре части одной гонки</h2>
+              <p>
+                Отдельные тренировки важны. На{"\u00a0"}старте решает то, как они
+                складываются в{"\u00a0"}один проверенный сценарий.
+              </p>
+            </div>
           </div>
 
-          <ol className="outcome-grid">
-            {outcomes.map((item) => (
-              <li key={item.number}>
-                <div className="outcome-meta">
-                  <span>{item.number}</span>
-                  <span>{item.label}</span>
-                </div>
-                <h3>{item.title}</h3>
-                <p>{item.text}</p>
-              </li>
-            ))}
-          </ol>
+          <div className="program-body">
+            <figure className="program-photo">
+              <img
+                src="./media/program-cyclist.jpg"
+                alt="Велосипедист Hotline проходит трассу на скорости"
+                width="1200"
+                height="1800"
+                loading="lazy"
+              />
+            </figure>
+
+            <ol className="outcome-grid">
+              {outcomes.map((item) => (
+                <li key={item.number}>
+                  <div className="outcome-meta">
+                    <span>{item.number}</span>
+                    <span>{item.label}</span>
+                  </div>
+                  <h3>{item.title}</h3>
+                  <p>{item.text}</p>
+                </li>
+              ))}
+            </ol>
+          </div>
         </section>
 
         <section className="week section" id="week" aria-labelledby="week-title">
           <div className="week-inner page-shell">
-            <div className="week-intro">
-              <p className="section-label section-label-light">Ритм недели</p>
-              <h2 id="week-title">От приезда — к{"\u00a0"}ясному плану старта</h2>
-              <p>
-                Каркас недели известен заранее. Конкретное расписание меняется
-                только ради погоды, состояния группы и{"\u00a0"}официальной программы.
-              </p>
+            <div className="week-lead">
+              <div className="week-intro">
+                <p className="section-label section-label-light">Ритм недели</p>
+                <h2 id="week-title">От приезда — к{"\u00a0"}ясному плану старта</h2>
+                <p>
+                  Каркас недели известен заранее. Конкретное расписание меняется
+                  только ради погоды, состояния группы и{"\u00a0"}официальной программы.
+                </p>
+              </div>
+
+              <figure className="week-photo">
+                <img
+                  src="./media/week-swimmer.jpg"
+                  alt="Триатлет выходит из воды после плавательного этапа"
+                  width="1600"
+                  height="2400"
+                  loading="lazy"
+                />
+              </figure>
             </div>
 
             <ol className="phase-list">
@@ -299,12 +327,14 @@ export default function HomePage() {
         <section className="place page-shell section" id="place" aria-labelledby="place-title">
           <div className="section-heading place-heading">
             <p className="section-label">Место и{"\u00a0"}быт</p>
-            <h2 id="place-title">Сириус — часть подготовки</h2>
-            <p>
-              Стартовый городок, море и{"\u00a0"}ключевые участки трассы находятся
-              в{"\u00a0"}одной территории. Точное размещение сообщим после подтверждения,
-              не{"\u00a0"}обещая выдуманную «пешую доступность».
-            </p>
+            <div className="section-heading-copy">
+              <h2 id="place-title">Сириус — часть подготовки</h2>
+              <p>
+                Стартовый городок, море и{"\u00a0"}ключевые участки трассы находятся
+                в{"\u00a0"}одной территории. Точное размещение сообщим после выбора базы,
+                чтобы дорогу до{"\u00a0"}тренировок можно было спланировать заранее.
+              </p>
+            </div>
           </div>
 
           <div className="place-grid">
@@ -363,12 +393,14 @@ export default function HomePage() {
         <section className="coaches page-shell section" id="coaches" aria-labelledby="coaches-title">
           <div className="section-heading coaches-heading">
             <p className="section-label">Тренеры</p>
-            <h2 id="coaches-title">Два взгляда. Один план.</h2>
-            <p>
-              Не{"\u00a0"}передаём участника между дисциплинами. Смотрим на
-              подготовку как на{"\u00a0"}одну гонку — от{"\u00a0"}первого гребка до
-              финишной прямой.
-            </p>
+            <div className="section-heading-copy">
+              <h2 id="coaches-title">Два взгляда. Один план.</h2>
+              <p>
+                Не{"\u00a0"}передаём участника между дисциплинами. Смотрим на
+                подготовку как на{"\u00a0"}одну гонку — от{"\u00a0"}первого гребка до
+                финишной прямой.
+              </p>
+            </div>
           </div>
 
           <div className="coach-grid">
@@ -388,7 +420,10 @@ export default function HomePage() {
                     {coach.number} / {coach.role}
                   </p>
                   <h3>{coach.name}</h3>
-                  <p>{coach.text}</p>
+                  <div className="coach-details">
+                    <p>{coach.text}</p>
+                    <p className="coach-credentials">{coach.credentials}</p>
+                  </div>
                 </div>
               </article>
             ))}
@@ -482,10 +517,10 @@ export default function HomePage() {
           </div>
           <figure className="finish-photo">
             <img
-              src="./media/hotline-finish-sochi.jpg"
-              alt="Участник Hotline финиширует на соревновании в Сочи"
-              width="1680"
-              height="1116"
+              src="./media/final-finish.jpg"
+              alt="Триатлет пересекает финишную ленту"
+              width="2400"
+              height="1599"
               loading="lazy"
             />
           </figure>
