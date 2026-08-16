@@ -14,33 +14,64 @@ async function render() {
   );
 }
 
-test("renders the Hotline camp landing page", async () => {
+function makeReadable(html) {
+  return html
+    .replaceAll("\u00a0", " ")
+    .replaceAll("\u202f", " ")
+    .replace(/&(?:nbsp|#160|#xa0);/gi, " ")
+    .replace(/&#8239;|&#x202f;/gi, " ")
+    .replace(/<!--\s*-->/g, "")
+    .replace(/\s+/g, " ");
+}
+
+test("renders the complete Hotline camp landing page", async () => {
   const response = await render();
   assert.equal(response.status, 200);
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
 
   const html = await response.text();
-  const readableHtml = html
-    .replaceAll("\u00a0", " ")
-    .replaceAll("\u202f", " ")
-    .replace(/&(?:nbsp|#160|#xa0);/gi, " ")
-    .replace(/&#8239;|&#x202f;/gi, " ");
+  const readableHtml = makeReadable(html);
+
   assert.match(html, /<html[^>]*lang="ru"/i);
   assert.match(html, /<title>[^<]*Hotline[^<]*триатлонный кэмп/i);
   assert.match(readableHtml, /27 сентября/);
   assert.match(readableHtml, /4 октября/);
-  assert.match(readableHtml, /Соберём гонку/);
-  assert.match(readableHtml, /Форма уже с тобой/);
+  assert.match(readableHtml, /Форма уже набрана/);
+  assert.match(readableHtml, /Собираем старт/);
   assert.match(readableHtml, /Дальше — вместе/);
   assert.match(readableHtml, /исторический ориентир/i);
-  assert.match(html, /https:\/\/t\.me\/DDopenChat/);
+  assert.match(readableHtml, /до 15 человек/i);
+  assert.match(readableHtml, /30 000 ₽/i);
   assert.match(readableHtml, /Перейти к содержанию/);
-  assert.match(html, /в(?:\u00a0|&nbsp;|&#x?0*a0;)Сочи/i);
-  assert.match(html, /30(?:\u202f|&#8239;|&#x202f;)000(?:\u00a0|&nbsp;|&#x?0*a0;)₽/i);
+
+  assert.match(html, /<header\b/i);
+  assert.match(html, /<nav\b/i);
+  assert.match(html, /<main\b/i);
+  assert.match(html, /<section\b/i);
+  assert.match(html, /<footer\b/i);
+  assert.match(html, /<details\b/i);
+
+  const ctaAnchors =
+    html.match(
+      /<a\b[^>]*href="https:\/\/t\.me\/DDopenChat"[^>]*>[\s\S]*?Обсудить участие[\s\S]*?<\/a>/g,
+    ) ?? [];
+  assert.equal(ctaAnchors.length, 4);
+
+  assert.match(html, /hotline-team-ride\.jpg/);
+  assert.match(html, /hotline-finish-sochi\.jpg/);
+  assert.match(html, /evgeny\.jpg/);
+  assert.match(html, /maksim\.jpg/);
+  assert.match(html, /Евгений Тихонин в велосипедной форме/);
+  assert.match(html, /Максим Кубышко в беговой форме/);
+
+  assert.match(html, /ironstar-113-sirius-2026\/program/);
+  assert.match(html, /ironstar-olympic-sirius-2026\/program/);
+  assert.match(html, /sirius\.gov\.ru\/transport/);
+  assert.match(html, /temperaturavody\.com/);
   assert.doesNotMatch(html, /codex-preview|react-loading-skeleton|Building your site/i);
 });
 
-test("keeps theme, motion and focus affordances in the production source", async () => {
+test("keeps one CTA component and the project interface contract", async () => {
   const [layout, page, css] = await Promise.all([
     readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
@@ -49,17 +80,32 @@ test("keeps theme, motion and focus affordances in the production source", async
 
   assert.match(layout, /prefers-color-scheme/);
   assert.match(layout, /localStorage\.getItem\('camp-theme'\)/);
-  assert.match(page, /className="energy-ribbon"/);
-  assert.match(page, /hotline-ride\.jpg/);
-  assert.match(page, /hotline-team-ride\.jpg/);
-  assert.match(page, /hotline-finish-sochi\.jpg/);
-  assert.doesNotMatch(page, /(?:evgeny|maksim)\.jpg/);
-  assert.match(page, /className="footer-wordmark"/);
+  assert.match(page, /function CampCta\(\)/);
+  assert.equal((page.match(/Обсудить участие/g) ?? []).length, 1);
+  assert.equal((page.match(/https:\/\/t\.me\/DDopenChat/g) ?? []).length, 1);
+  assert.equal((page.match(/<CampCta \/>/g) ?? []).length, 4);
+
+  assert.doesNotMatch(page, /energy-ribbon|SportMark|route-map|footer-wordmark/);
+  assert.doesNotMatch(css, /linear-gradient|radial-gradient|conic-gradient/);
+  assert.doesNotMatch(page, /hotline-ride\.jpg/);
+
+  assert.match(css, /--gutter:\s*clamp\(/);
+  assert.match(css, /--space-section:\s*clamp\(/);
+  assert.match(css, /--radius-control:/);
+  assert.match(css, /--radius-card:/);
+  assert.match(css, /--radius-panel:/);
+
+  const radiusValues = [...css.matchAll(/border-radius:\s*([^;]+);/g)].map((match) =>
+    match[1].trim(),
+  );
+  assert.ok(radiusValues.length > 0);
+  assert.ok(radiusValues.every((value) => /^var\(--radius-(?:control|card|panel)\)$/.test(value)));
+
   assert.match(css, /:focus-visible/);
   assert.match(css, /prefers-reduced-motion:\s*reduce/);
   assert.match(css, /forced-colors:\s*active/);
-  assert.match(css, /min-height:\s*(?:44px|2\.75rem|2\.8rem)/);
-  assert.doesNotMatch(page, /className="route-map"/);
-  assert.doesNotMatch(css, /\.program-card:hover/);
-  assert.doesNotMatch(page, /H×D|SkeletonPreview/);
+  assert.match(css, /min-height:\s*3rem/);
+  assert.match(css, /\[data-theme="dark"\]/);
+  assert.match(css, /text-wrap:\s*balance/);
+  assert.match(css, /text-wrap:\s*pretty/);
 });
