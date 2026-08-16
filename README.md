@@ -25,8 +25,11 @@ pnpm test
 ## GitHub Pages
 
 Workflow `.github/workflows/pages.yml` собирает проект с базовым путём
-`/hotline-camp/`, экспортирует статические файлы в `out/` и публикует их через
-GitHub Pages Actions.
+`/hotline-camp/`. Стандартный статический export Next.js сразу создаёт папку
+`out/`, которую workflow публикует через GitHub Pages Actions.
+
+Локальная разработка идёт через pnpm, а единственный настроенный канал
+публикации — GitHub Pages workflow выше.
 
 ## Контент, который ещё нужно заменить
 

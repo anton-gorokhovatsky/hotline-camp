@@ -2,129 +2,90 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 
-async function render() {
-  const workerUrl = new URL("../dist/server/index.js", import.meta.url);
-  workerUrl.searchParams.set("test", `${process.pid}-${Date.now()}`);
-  const { default: worker } = await import(workerUrl.href);
+const projectFile = (path) => new URL(`../${path}`, import.meta.url);
 
-  return worker.fetch(
-    new Request("http://localhost/", { headers: { accept: "text/html" } }),
-    { ASSETS: { fetch: async () => new Response("Not found", { status: 404 }) } },
-    { waitUntil() {}, passThroughOnException() {} },
-  );
+async function readProjectFile(path) {
+  return readFile(projectFile(path), "utf8");
 }
 
-function makeReadable(html) {
-  return html
-    .replaceAll("\u00a0", " ")
-    .replaceAll("\u202f", " ")
-    .replace(/&(?:nbsp|#160|#xa0);/gi, " ")
-    .replace(/&#8239;|&#x202f;/gi, " ")
-    .replace(/<!--\s*-->/g, "")
-    .replace(/\s+/g, " ");
-}
+test("exports a complete static document", async () => {
+  const html = await readProjectFile("out/index.html");
 
-test("renders the complete Hotline camp landing page", async () => {
-  const response = await render();
-  assert.equal(response.status, 200);
-  assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
-
-  const html = await response.text();
-  const readableHtml = makeReadable(html);
-
-  assert.match(html, /<html[^>]*lang="ru"/i);
-  assert.match(html, /<title>[^<]*Hotline[^<]*триатлонный кэмп/i);
-  assert.match(readableHtml, /27 сентября/);
-  assert.match(readableHtml, /4 октября/);
-  assert.match(readableHtml, /Форма уже набрана/);
-  assert.match(readableHtml, /Собираем старт/);
-  assert.match(readableHtml, /Дальше — вместе/);
-  assert.match(readableHtml, /исторический ориентир/i);
-  assert.match(readableHtml, /до 15 человек/i);
-  assert.match(readableHtml, /30 000 ₽/i);
-  assert.match(readableHtml, /Перейти к содержанию/);
-
-  assert.match(html, /<header\b/i);
-  assert.match(html, /<nav\b/i);
-  assert.match(html, /<main\b/i);
-  assert.match(html, /<section\b/i);
-  assert.match(html, /<footer\b/i);
-  assert.match(html, /<details\b/i);
-
-  const ctaAnchors =
-    html.match(
-      /<a\b[^>]*href="https:\/\/t\.me\/DDopenChat"[^>]*>[\s\S]*?Обсудить участие[\s\S]*?<\/a>/g,
-    ) ?? [];
-  assert.equal(ctaAnchors.length, 4);
-
-  const narrativeImages = [
-    "hero-time-trial.jpg",
-    "program-cyclist.jpg",
-    "week-swimmer.jpg",
-    "coach-evgeny-finish.jpg",
-    "coach-maksim-finish.jpg",
-    "final-finish.jpg",
-  ];
-
-  for (const image of narrativeImages) {
-    const escapedImage = image.replace(".", "\\.");
-    const renderedImages = html.match(
-      new RegExp(`<img\\b[^>]*\\bsrc="[^"]*${escapedImage}"[^>]*>`, "g"),
-    );
-    assert.equal(renderedImages?.length ?? 0, 1);
-  }
-
-  assert.match(html, /Триатлет проходит велосипедный этап в аэропозиции/);
-  assert.match(html, /Велосипедист Hotline проходит трассу на скорости/);
-  assert.match(html, /Триатлет выходит из воды после плавательного этапа/);
-  assert.match(html, /Евгений Тихонин держит финишную ленту после триатлона/);
-  assert.match(html, /Максим Кубышко бежит по финишному коридору/);
-  assert.match(html, /Триатлет пересекает финишную ленту/);
-  assert.match(readableHtml, /4-кратный чемпион России/);
-  assert.match(readableHtml, /Мастер спорта по современному пятиборью/);
-
-  assert.match(html, /ironstar-113-sirius-2026\/program/);
-  assert.match(html, /ironstar-olympic-sirius-2026\/program/);
-  assert.match(html, /sirius\.gov\.ru\/transport/);
-  assert.match(html, /temperaturavody\.com/);
-  assert.doesNotMatch(html, /codex-preview|react-loading-skeleton|Building your site/i);
+  assert.match(html, /^<!DOCTYPE html>/i);
+  assert.match(html, /<html\b[^>]*>/i);
+  assert.match(html, /<head\b[^>]*>[\s\S]*<title>[^<]+<\/title>[\s\S]*<\/head>/i);
+  assert.match(html, /<body\b[^>]*>[\s\S]*<main\b[\s\S]*<\/main>[\s\S]*<\/body>/i);
+  assert.equal((html.match(/<main\b/gi) ?? []).length, 1);
+  assert.equal((html.match(/<section\b/gi) ?? []).length, 2);
+  assert.equal((html.match(/<footer\b/gi) ?? []).length, 1);
+  assert.equal((html.match(/<header\b/gi) ?? []).length, 1);
+  assert.equal((html.match(/<nav\b/gi) ?? []).length, 1);
 });
 
-test("keeps one CTA component and the project interface contract", async () => {
-  const [layout, page, css] = await Promise.all([
-    readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
-    readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
-    readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
+test("keeps one registration outcome across both concept screens", async () => {
+  const [pageSource, html] = await Promise.all([
+    readProjectFile("app/page.tsx"),
+    readProjectFile("out/index.html"),
   ]);
 
-  assert.match(layout, /prefers-color-scheme/);
-  assert.match(layout, /localStorage\.getItem\('camp-theme'\)/);
-  assert.match(page, /function CampCta\(\)/);
-  assert.equal((page.match(/Обсудить участие/g) ?? []).length, 1);
-  assert.equal((page.match(/https:\/\/t\.me\/DDopenChat/g) ?? []).length, 1);
-  assert.equal((page.match(/<CampCta \/>/g) ?? []).length, 4);
+  assert.equal((pageSource.match(/const TELEGRAM_URL/g) ?? []).length, 1);
+  assert.equal((pageSource.match(/https:\/\/t\.me\/DDopenChat/g) ?? []).length, 1);
+  assert.equal((pageSource.match(/function CampCta/g) ?? []).length, 1);
+  assert.equal((pageSource.match(/<CampCta\b/g) ?? []).length, 2);
+  assert.equal((pageSource.match(/Обсудить участие/g) ?? []).length, 1);
 
-  assert.doesNotMatch(page, /energy-ribbon|SportMark|route-map|footer-wordmark/);
-  assert.doesNotMatch(css, /linear-gradient|radial-gradient|conic-gradient/);
-  assert.doesNotMatch(page, /hotline-ride\.jpg/);
+  const renderedCtas = html.match(
+    /<a\b[^>]*href="https:\/\/t\.me\/DDopenChat"[^>]*>[\s\S]*?Обсудить участие[\s\S]*?<\/a>/g,
+  ) ?? [];
+  assert.equal(renderedCtas.length, 2);
+});
 
-  assert.match(css, /--gutter:\s*clamp\(/);
-  assert.match(css, /--space-section:\s*clamp\(/);
-  assert.match(css, /--radius-control:/);
-  assert.match(css, /--radius-card:/);
-  assert.match(css, /--radius-panel:/);
+test("contains the current hero, trainers and final scene", async () => {
+  const [pageSource, layoutSource, themeToggleSource, css] = await Promise.all([
+    readProjectFile("app/page.tsx"),
+    readProjectFile("app/layout.tsx"),
+    readProjectFile("app/theme-toggle.tsx"),
+    readProjectFile("app/globals.css"),
+  ]);
 
-  const radiusValues = [...css.matchAll(/border-radius:\s*([^;]+);/g)].map((match) =>
-    match[1].trim(),
-  );
-  assert.ok(radiusValues.length > 0);
-  assert.ok(radiusValues.every((value) => /^var\(--radius-(?:control|card|panel)\)$/.test(value)));
+  assert.match(pageSource, /hero-time-trial\.jpg/);
+  assert.match(pageSource, /coach-evgeny-finish\.jpg/);
+  assert.match(pageSource, /final-finish\.jpg/);
+  assert.match(pageSource, /alt="Триатлет проходит велосипедный этап/);
+  assert.match(pageSource, /alt="Евгений Тихонин поднимает финишную ленту/);
+  assert.match(pageSource, /alt="Максим Кубышко пересекает финишную ленту/);
 
-  assert.match(css, /:focus-visible/);
-  assert.match(css, /prefers-reduced-motion:\s*reduce/);
-  assert.match(css, /forced-colors:\s*active/);
-  assert.match(css, /min-height:\s*3rem/);
-  assert.match(css, /\[data-theme="dark"\]/);
-  assert.match(css, /text-wrap:\s*balance/);
-  assert.match(css, /text-wrap:\s*pretty/);
+  assert.match(pageSource, /const sochiConditions/);
+  assert.equal((pageSource.match(/className="condition/g) ?? []).length, 1);
+  assert.match(pageSource, /Прогноз с\\u00a017 сентября/);
+  assert.match(pageSource, /погода: Open-Meteo, 16\.08 · 23:15/);
+  assert.doesNotMatch(`${pageSource}\n${layoutSource}`, /2026/);
+  assert.doesNotMatch(css, /999px|linear-gradient|clip-path/i);
+  assert.match(themeToggleSource, /useSyncExternalStore/);
+  assert.doesNotMatch(themeToggleSource, /requestAnimationFrame/);
+});
+
+test("keeps the standard Next static-export contract", async () => {
+  const [packageSource, config, workflow] = await Promise.all([
+    readProjectFile("package.json"),
+    readProjectFile("next.config.ts"),
+    readProjectFile(".github/workflows/pages.yml"),
+  ]);
+  const packageJson = JSON.parse(packageSource);
+
+  assert.equal(packageJson.scripts.dev, "next dev");
+  assert.equal(packageJson.scripts.build, "next build");
+  assert.equal(packageJson.scripts["build:pages"], "GITHUB_PAGES=true next build");
+  assert.deepEqual(Object.keys(packageJson.dependencies).sort(), [
+    "next",
+    "react",
+    "react-dom",
+  ]);
+
+  assert.match(config, /output:\s*"export"/);
+  assert.match(config, /basePath/);
+  assert.match(config, /images:\s*{\s*unoptimized:\s*true,?\s*}/);
+
+  assert.match(workflow, /pnpm build:pages/);
+  assert.match(workflow, /path:\s*(?:\.\/)?out/);
 });

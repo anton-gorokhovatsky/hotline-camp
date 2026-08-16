@@ -1,35 +1,44 @@
 import type { Metadata, Viewport } from "next";
+import localFont from "next/font/local";
 import "./globals.css";
+
+const onest = localFont({
+  src: "../public/fonts/Onest-Variable.ttf",
+  display: "swap",
+  style: "normal",
+  weight: "100 900",
+  variable: "--font-onest",
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://anton-gorokhovatsky.github.io/hotline-camp/"),
   title: {
-    default: "Hotline — триатлонный кэмп в\u00a0Сочи",
-    template: "%s · Hotline",
+    default: "Тренировочный сбор по\u00a0триатлону в\u00a0Сочи",
+    template: "%s · Сочи",
   },
-  description: "Триатлонный кэмп Hotline в\u00a0Сочи, 27\u00a0сентября–4\u00a0октября 2026\u00a0года.",
+  description: "Тренировочный сбор по\u00a0триатлону в\u00a0Сочи, 27\u00a0сентября — 4\u00a0октября.",
   openGraph: {
     type: "website",
     locale: "ru_RU",
-    siteName: "Hotline",
-    title: "Hotline — собираем старт",
+    siteName: "Тренировочный сбор по триатлону в Сочи",
+    title: "Тренировочный сбор по триатлону в Сочи",
     description:
-      "Финальная неделя перед стартом в\u00a0Сириусе: 27\u00a0сентября — 4\u00a0октября 2026\u00a0года.",
+      "Собираем накопленную форму в\u00a0готовность к\u00a0конкретной гонке.",
     url: "./",
     images: [
       {
         url: "./og.png",
         width: 1729,
         height: 910,
-        alt: "Hotline: собираем старт. Сочи / Сириус, 27 сентября — 4 октября 2026",
+        alt: "Тренировочный сбор по триатлону в Сочи, 27 сентября — 4 октября",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Hotline — собираем старт",
+    title: "Тренировочный сбор по триатлону в Сочи",
     description:
-      "Финальная неделя перед стартом в\u00a0Сириусе: 27\u00a0сентября — 4\u00a0октября 2026\u00a0года.",
+      "Собираем накопленную форму в\u00a0готовность к\u00a0конкретной гонке.",
     images: ["./og.png"],
   },
   icons: {
@@ -64,7 +73,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
-      <body>{children}</body>
+      <body className={onest.variable}>{children}</body>
     </html>
   );
 }
