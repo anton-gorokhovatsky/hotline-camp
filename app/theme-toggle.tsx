@@ -74,7 +74,7 @@ export function ThemeToggle() {
 
   return (
     <button
-      className="theme-toggle"
+      className="theme-toggle service-island material-glass"
       type="button"
       onClick={() => saveTheme(nextTheme)}
       aria-label={`Включить ${nextTheme === "dark" ? "тёмную" : "светлую"} тему`}

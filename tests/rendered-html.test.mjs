@@ -65,6 +65,47 @@ test("contains the current hero, trainers and final scene", async () => {
   assert.doesNotMatch(themeToggleSource, /requestAnimationFrame/);
 });
 
+test("locks the service rail to MATERIAL / 01 and content-sized tiles", async () => {
+  const [html, css] = await Promise.all([
+    readProjectFile("out/index.html"),
+    readProjectFile("app/globals.css"),
+  ]);
+
+  assert.equal((html.match(/class="[^"]*\bmaterial-glass\b[^"]*"/g) ?? []).length, 10);
+  assert.equal((html.match(/class="[^"]*\bglass-cluster\b[^"]*"/g) ?? []).length, 3);
+  assert.equal((html.match(/class="[^"]*\bservice-island\b[^"]*"/g) ?? []).length, 9);
+
+  assert.match(css, /--material-glass-fill:/);
+  assert.match(css, /--material-glass-stroke:/);
+  assert.match(css, /--material-glass-filter:/);
+  assert.match(css, /--material-glass-shadow:/);
+  assert.match(css, /--service-island-height:\s*4\.5rem;/);
+  assert.match(
+    css,
+    /\.material-glass\s*{[\s\S]*?background:\s*var\(--material-glass-fill\);[\s\S]*?backdrop-filter:\s*var\(--material-glass-filter\);[\s\S]*?}/,
+  );
+  assert.match(css, /\.conditions\s*{[\s\S]*?flex:\s*0 1 auto;/);
+  assert.match(css, /\.condition\s*{[\s\S]*?width:\s*max-content;[\s\S]*?flex:\s*0 0 auto;/);
+  assert.match(
+    css,
+    /\.service-island\s*{[\s\S]*?height:\s*var\(--service-island-height\);[\s\S]*?min-height:\s*var\(--service-island-height\);/,
+  );
+  assert.match(css, /--cluster-gap:\s*0\.7rem;/);
+  assert.match(css, /--cluster-neck-overlap:\s*2px;/);
+  const connectorRule = css.match(
+    /\.glass-cluster > \.material-glass \+ \.material-glass::before\s*{[^}]*}/,
+  )?.[0];
+  assert.ok(connectorRule);
+  assert.match(connectorRule, /border-block:\s*1px solid var\(--material-glass-stroke\);/);
+  assert.doesNotMatch(connectorRule, /\n\s*border:\s*1px/);
+  assert.doesNotMatch(css, /\.condition:nth-child/);
+  assert.match(
+    css,
+    /@media \(max-width: 72rem\)[\s\S]*?\.masthead-meta \.theme-toggle::before\s*\{[\s\S]*?display:\s*none;/,
+  );
+  assert.doesNotMatch(css, /--glass-fill|--glass-blur/);
+});
+
 test("keeps the standard Next static-export contract", async () => {
   const [packageSource, config, workflow] = await Promise.all([
     readProjectFile("package.json"),

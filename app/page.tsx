@@ -76,15 +76,15 @@ export default function HomePage() {
           <div className="hero-shell">
             <header className="masthead">
               <div className="masthead-nav">
-                <a className="brand" href="#top">
+                <a className="brand service-island material-glass" href="#top">
                   <strong>Тренировочный сбор</strong>
                   <span>по триатлону в&nbsp;Сочи</span>
                 </a>
 
-                <aside className="conditions" aria-label="Условия в Сочи">
+                <aside className="conditions glass-cluster" aria-label="Условия в Сочи">
                   {sochiConditions.map((condition, index) => (
                     <div
-                      className={`condition${index === sochiConditions.length - 1 ? " condition-forecast" : ""}`}
+                      className={`condition service-island material-glass${index === sochiConditions.length - 1 ? " condition-forecast" : ""}`}
                       key={condition.label}
                     >
                       <span>{condition.label}</span>
@@ -94,13 +94,13 @@ export default function HomePage() {
                   ))}
                 </aside>
 
-                <nav className="section-nav" aria-label="Разделы страницы">
-                  <a href="#top">О сборе</a>
-                  <a href="#trainers">Тренеры</a>
+                <nav className="section-nav glass-cluster" aria-label="Разделы страницы">
+                  <a className="service-island material-glass" href="#top">О сборе</a>
+                  <a className="service-island material-glass" href="#trainers">Тренеры</a>
                 </nav>
 
-                <div className="masthead-meta">
-                  <p className="masthead-place">27.09—04.10</p>
+                <div className="masthead-meta glass-cluster">
+                  <p className="masthead-place service-island material-glass">27.09—04.10</p>
                   <ThemeToggle />
                 </div>
               </div>
@@ -115,7 +115,7 @@ export default function HomePage() {
                   height="1599"
                   fetchPriority="high"
                 />
-                <figcaption>
+                <figcaption className="material-glass">
                   <span>Скорость собирается из&nbsp;деталей</span>
                   <span>Сочи / финальная неделя</span>
                 </figcaption>
