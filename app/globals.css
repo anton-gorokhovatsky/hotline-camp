@@ -33,10 +33,10 @@
   --type-title: clamp(3.35rem, 5.4vw, 6.25rem);
   --type-section: clamp(3rem, 6.2vw, 6.9rem);
 
-  --material-glass-fill: rgba(18, 34, 24, 0.72);
-  --material-glass-fill-hover: rgba(25, 43, 31, 0.86);
-  --material-glass-stroke: rgba(244, 241, 232, 0.24);
-  --material-glass-filter: blur(24px) saturate(0.7);
+  --material-glass-fill: rgba(13, 30, 20, 0.3);
+  --material-glass-fill-hover: rgba(18, 38, 26, 0.42);
+  --material-glass-stroke: rgba(244, 241, 232, 0.3);
+  --material-glass-filter: blur(18px) saturate(0.78) brightness(0.9);
   --material-glass-shadow:
     inset 0 1px 0 rgba(244, 241, 232, 0.08),
     0 0.35rem 1.15rem rgba(2, 6, 4, 0.08);
@@ -54,8 +54,8 @@
   --text: #eeeae1;
   --text-muted: #b7c2bb;
   --focus: #4fd5c4;
-  --material-glass-fill: rgba(8, 21, 13, 0.76);
-  --material-glass-fill-hover: rgba(17, 34, 24, 0.88);
+  --material-glass-fill: rgba(7, 22, 14, 0.34);
+  --material-glass-fill-hover: rgba(13, 32, 21, 0.46);
   --material-glass-text: #f3efe6;
   --material-glass-text-soft: #aeb9b1;
 }
