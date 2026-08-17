@@ -3,39 +3,16 @@
 
 import type { Metadata } from "next";
 
+import { CampCta } from "./camp-cta";
 import { ConditionsPanel } from "./conditions-panel";
 import { MobileMenu } from "./mobile-menu";
 import { ThemeToggle } from "./theme-toggle";
-
-const TELEGRAM_URL = "https://t.me/DDopenChat";
 
 export const metadata: Metadata = {
   title: "Тренировочный сбор по\u00a0триатлону в\u00a0Сочи",
   description:
     "Восемь дней подготовки к\u00a0старту: трасса, открытая вода, транзитные зоны и\u00a0питание. Сочи, 27\u00a0сентября — 4\u00a0октября.",
 };
-
-function ArrowUpRight() {
-  return (
-    <svg aria-hidden="true" viewBox="0 0 24 24">
-      <path d="M6 18 18 6M9 6h9v9" />
-    </svg>
-  );
-}
-
-function CampCta({ className = "" }: { className?: string }) {
-  return (
-    <a
-      className={["camp-cta", className].filter(Boolean).join(" ")}
-      href={TELEGRAM_URL}
-      target="_blank"
-      rel="noreferrer"
-    >
-      <span>Обсудить участие</span>
-      <ArrowUpRight />
-    </a>
-  );
-}
 
 const campFacts = [
   { label: "Когда", value: "27.09—04.10" },
@@ -174,35 +151,16 @@ export default function HomePage() {
             ))}
           </ol>
 
-          <div className="program-photo-pair" aria-label="Тренировки участников">
-            <figure className="program-shot">
-              <img
-                src="./media/program-cyclist.jpg"
-                alt="Триатлет Hotline едет на шоссейном велосипеде"
-                width="1200"
-                height="1800"
-                loading="lazy"
-              />
-            </figure>
-            <figure className="program-shot">
-              <img
-                src="./media/week-swimmer.jpg"
-                alt="Триатлет выходит из воды после плавательного этапа"
-                width="1600"
-                height="2400"
-                loading="lazy"
-              />
-            </figure>
-          </div>
         </section>
 
         <section className="trainers screen" id="trainers" aria-labelledby="trainers-title">
           <header className="trainers-heading">
             <p className="eyebrow">Тренеры</p>
-            <h2 id="trainers-title">Знают финиш изнутри</h2>
+            <h2 id="trainers-title">Сами выходят на&nbsp;старт</h2>
             <p>
-              Евгений и&nbsp;Максим ведут сбор вместе: разбирают технику,
-              темп, переходы и&nbsp;решения, которые понадобятся уже на&nbsp;старте.
+              Евгений и&nbsp;Максим ведут сбор вместе. Разбирают с&nbsp;вами
+              технику, темп, переходы и&nbsp;решения, которые понадобятся
+              в&nbsp;день гонки.
             </p>
           </header>
 
@@ -227,12 +185,12 @@ export default function HomePage() {
                   loading="lazy"
                 />
               </figure>
-              <figure className="coach-portrait">
+              <figure className="coach-context">
                 <img
-                  src="./media/evgeny.jpg"
-                  alt="Портрет Евгения Тихонина в форме Hotline"
-                  width="1440"
-                  height="1800"
+                  src="./media/week-swimmer.jpg"
+                  alt="Евгений Тихонин выходит из воды после плавательного этапа в гидрокостюме"
+                  width="1600"
+                  height="2400"
                   loading="lazy"
                 />
               </figure>
@@ -260,7 +218,7 @@ export default function HomePage() {
                   loading="lazy"
                 />
               </figure>
-              <figure className="coach-portrait">
+              <figure className="coach-context">
                 <img
                   src="./media/maksim-pool.jpg"
                   alt="Максим Кубышко поправляет очки перед тренировкой в бассейне"
@@ -300,7 +258,6 @@ export default function HomePage() {
       <footer className="site-footer">
         <div className="footer-meta">
           <span className="footer-year">© 2026</span>
-          <ThemeToggle />
           <a
             className="footer-credit"
             href="https://anton-gorokhovatsky.github.io/design/"
@@ -308,10 +265,6 @@ export default function HomePage() {
             rel="noreferrer"
           >
             Дизайн и&nbsp;разработка ↗
-          </a>
-          <a className="footer-top" href="#about">
-            <span>Наверх</span>
-            <span aria-hidden="true">↑</span>
           </a>
         </div>
       </footer>

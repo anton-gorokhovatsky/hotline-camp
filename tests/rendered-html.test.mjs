@@ -27,16 +27,20 @@ test("exports one complete document with three editorial screens", async () => {
 });
 
 test("keeps one registration outcome across the three screens", async () => {
-  const [pageSource, html] = await Promise.all([
+  const [pageSource, mobileMenuSource, ctaSource, html] = await Promise.all([
     readProjectFile("app/page.tsx"),
+    readProjectFile("app/mobile-menu.tsx"),
+    readProjectFile("app/camp-cta.tsx"),
     readProjectFile("out/index.html"),
   ]);
 
-  assert.equal((pageSource.match(/const TELEGRAM_URL/g) ?? []).length, 1);
-  assert.equal((pageSource.match(/https:\/\/t\.me\/DDopenChat/g) ?? []).length, 1);
-  assert.equal((pageSource.match(/function CampCta/g) ?? []).length, 1);
+  assert.equal((ctaSource.match(/const TELEGRAM_URL/g) ?? []).length, 1);
+  assert.equal((ctaSource.match(/https:\/\/t\.me\/DDopenChat/g) ?? []).length, 1);
+  assert.equal((ctaSource.match(/function CampCta/g) ?? []).length, 1);
   assert.equal((pageSource.match(/<CampCta\b/g) ?? []).length, 2);
-  assert.equal((pageSource.match(/Обсудить участие/g) ?? []).length, 1);
+  assert.equal((mobileMenuSource.match(/<CampCta\b/g) ?? []).length, 1);
+  assert.equal((ctaSource.match(/Обсудить участие/g) ?? []).length, 1);
+  assert.match(mobileMenuSource, /27 сентября — 4 октября/);
 
   const renderedCtas = html.match(
     /<a\b[^>]*href="https:\/\/t\.me\/DDopenChat"[^>]*>[\s\S]*?Обсудить участие[\s\S]*?<\/a>/g,
@@ -68,10 +72,8 @@ test("uses only the supplied photographic set as one three-part narrative", asyn
   const pageSource = await readProjectFile("app/page.tsx");
   const expectedPhotos = [
     "hero-time-trial.jpg",
-    "program-cyclist.jpg",
-    "week-swimmer.jpg",
     "coach-evgeny-finish.jpg",
-    "evgeny.jpg",
+    "week-swimmer.jpg",
     "coach-maksim-finish.jpg",
     "maksim-pool.jpg",
     "final-finish.jpg",
@@ -80,6 +82,8 @@ test("uses only the supplied photographic set as one three-part narrative", asyn
     "hotline-ride.jpg",
     "hotline-team-ride.jpg",
     "hotline-finish-sochi.jpg",
+    "program-cyclist.jpg",
+    "evgeny.jpg",
   ];
 
   for (const photo of expectedPhotos) {
@@ -100,10 +104,13 @@ test("uses only the supplied photographic set as one three-part narrative", asyn
     pageSource,
     /alt="Евгений Тихонин финиширует Ironman 70\.3 Durban под табло с результатом 03:56:27"/,
   );
+  assert.match(pageSource, /alt="Евгений Тихонин выходит из воды/);
   assert.match(pageSource, /alt="Максим Кубышко поправляет очки/);
   assert.match(pageSource, /alt="Максим Кубышко пересекает финишную ленту/);
   assert.match(pageSource, /Собрать гонку целиком/);
-  assert.match(pageSource, /Знают финиш изнутри/);
+  assert.match(pageSource, /Сами выходят на&nbsp;старт/);
+  assert.match(pageSource, /которые понадобятся[\s\S]*в&nbsp;день гонки/);
+  assert.doesNotMatch(pageSource, /program-photo-pair|program-shot/);
 });
 
 test("loads honest Open-Meteo states without embedded observations", async () => {
@@ -200,12 +207,13 @@ test("keeps the restrained fluid and accessible surface contract", async () => {
   assert.doesNotMatch(mastheadSource, /<ThemeToggle\s*\/>/);
   assert.match(mastheadSource, /<ThemeToggle variant="icon" \/>/);
   assert.match(mastheadSource, /<MobileMenu \/>/);
-  assert.match(
-    pageSource,
-    /<footer className="site-footer">[\s\S]*?<ThemeToggle\s*\/>[\s\S]*?<\/footer>/,
-  );
-  assert.match(pageSource, /© 2026/);
-  assert.match(pageSource, /Дизайн и&nbsp;разработка/);
+  const footerSource = pageSource.match(
+    /<footer className="site-footer">[\s\S]*?<\/footer>/,
+  )?.[0];
+  assert.ok(footerSource);
+  assert.match(footerSource, /© 2026/);
+  assert.match(footerSource, /Дизайн и&nbsp;разработка/);
+  assert.doesNotMatch(footerSource, /ThemeToggle|footer-top|Наверх/);
   const mobileStart = css.indexOf("@media (max-width: 46rem)");
   const narrowStart = css.indexOf("@media (max-width: 23rem)", mobileStart);
   assert.notEqual(mobileStart, -1);
@@ -230,29 +238,70 @@ test("keeps the restrained fluid and accessible surface contract", async () => {
   );
   assert.match(
     mobileCss,
-    /\.site-footer\s*{[\s\S]*?width:\s*100%;[\s\S]*?margin:\s*0;[\s\S]*?background:\s*var\(--sea-deep\);/,
+    /\.footer-meta\s*{[\s\S]*?grid-template-columns:\s*auto 1fr;[\s\S]*?gap:\s*1rem;/,
+  );
+  assert.match(
+    mobileCss,
+    /\.coach-context\s*{[\s\S]*?grid-column:\s*1;[\s\S]*?width:\s*100%;[\s\S]*?justify-self:\s*stretch;/,
   );
   assert.doesNotMatch(css, /999px|linear-gradient|clip-path/i);
   assert.equal((css.match(/corner-shape:\s*squircle/g) ?? []).length, 2);
   assert.match(
     css,
-    /\.hero-stage::before\s*{[\s\S]*?width:\s*100%;[\s\S]*?mask-image:\s*radial-gradient/,
+    /\.hero-stage::before\s*{[\s\S]*?inset:\s*0;[\s\S]*?width:\s*100%;[\s\S]*?mask-image:\s*radial-gradient/,
   );
+  assert.doesNotMatch(css, /--conditions-inset/);
+  assert.match(css, /\.masthead\s*{[\s\S]*?var\(--space-page\);/);
+  assert.match(css, /\.hero-copy\s*{[\s\S]*?margin-left:\s*var\(--space-page\);/);
+  assert.match(
+    css,
+    /\.conditions\s*{[\s\S]*?width:\s*calc\(100% - \(2 \* var\(--space-page\)\)\);[\s\S]*?margin:\s*auto var\(--space-page\) 0;/,
+  );
+  assert.match(css, /\.hero-media img\s*{[\s\S]*?width:\s*127%;/);
   assert.doesNotMatch(css, /width:\s*min\(64rem, 68vw\)|width:\s*min\(42rem, 67vw\)/);
   assert.match(css, /--material-accent-fill:\s*rgba\(120, 15, 40, 0\.7\);/);
   assert.match(css, /--material-accent-filter:\s*blur\(18px\) saturate\(0\.78\) brightness\(0\.9\);/);
   assert.match(
     css,
-    /\.site-footer\s*{[\s\S]*?background:\s*var\(--material-accent-fill\);[\s\S]*?backdrop-filter:\s*var\(--material-accent-filter\);/,
+    /\.site-footer\s*{[\s\S]*?width:\s*100%;[\s\S]*?margin:\s*-3\.75rem 0 0;[\s\S]*?border-radius:\s*0;[\s\S]*?background:\s*var\(--material-accent-fill\);[\s\S]*?backdrop-filter:\s*var\(--material-accent-filter\);/,
   );
+  assert.match(css, /\.footer-meta\s*{[\s\S]*?grid-template-columns:\s*1fr auto 1fr;/);
   assert.match(themeToggleSource, /useSyncExternalStore/);
   assert.match(themeToggleSource, /type ThemeToggleVariant = "text" \| "icon" \| "menu"/);
   assert.match(themeToggleSource, /aria-pressed={theme === "dark"}/);
   assert.doesNotMatch(themeToggleSource, /requestAnimationFrame/);
   assert.match(mobileMenuSource, /aria-expanded={isOpen}/);
   assert.match(mobileMenuSource, /event\.key !== "Escape"/);
+  assert.match(mobileMenuSource, /event\.key !== "Tab"/);
+  assert.match(mobileMenuSource, /querySelectorAll<HTMLElement>/);
+  assert.match(mobileMenuSource, /document\.activeElement === lastItem/);
+  assert.match(mobileMenuSource, /classList\.add\("menu-open"\)/);
+  assert.match(mobileMenuSource, /classList\.remove\("menu-open"\)/);
+  assert.match(mobileMenuSource, /body\.style\.position = "fixed"/);
+  assert.match(mobileMenuSource, /window\.scrollTo\(0, scrollPosition\)/);
+  assert.match(mobileMenuSource, /event\.preventDefault\(\)/);
+  assert.match(mobileMenuSource, /window\.history\.pushState\(null, "", href\)/);
   assert.match(mobileMenuSource, /<ThemeToggle variant="menu" \/>/);
   assert.equal((mobileMenuSource.match(/href: "#(?:program|trainers|registration)"/g) ?? []).length, 3);
+  assert.match(css, /html\.menu-open[\s\S]*?overflow:\s*hidden;/);
+  assert.match(
+    mobileCss,
+    /html\.menu-open \.masthead\s*{[\s\S]*?position:\s*fixed;/,
+  );
+  assert.match(mobileCss, /html\.menu-open \.hero\s*{[\s\S]*?z-index:\s*10;/);
+  assert.match(
+    mobileCss,
+    /\.mobile-menu-panel\s*{[\s\S]*?inset:\s*0;[\s\S]*?min-height:\s*100dvh;[\s\S]*?overflow-y:\s*auto;/,
+  );
+  assert.match(
+    css,
+    /\.coach-images\s*{[\s\S]*?display:\s*grid;[\s\S]*?grid-template-columns:\s*minmax\(0, 2\.15fr\) minmax\(11rem, 1fr\);/,
+  );
+  assert.match(
+    css,
+    /\.coach-story-maksim \.coach-images\s*{[\s\S]*?grid-template-columns:\s*minmax\(11rem, 1fr\) minmax\(0, 2\.15fr\);/,
+  );
+  assert.match(css, /\.coach-context\s*{[\s\S]*?position:\s*static;/);
 });
 
 test("keeps the standard Next static-export and GitHub Pages contract", async () => {
