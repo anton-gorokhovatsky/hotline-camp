@@ -44,6 +44,26 @@ test("keeps one registration outcome across the three screens", async () => {
   assert.equal(renderedCtas.length, 2);
 });
 
+test("places the concrete camp promise on the first screen exactly once", async () => {
+  const pageSource = await readProjectFile("app/page.tsx");
+  const promiseStart = "Заранее проедем велотрассу";
+  const heroCopy = pageSource.match(
+    /<div className="hero-copy">[\s\S]*?<\/div>/,
+  )?.[0];
+  const programPractical = pageSource.match(
+    /<div className="program-practical">[\s\S]*?<\/div>\s*<ol/,
+  )?.[0];
+
+  assert.equal((pageSource.match(new RegExp(promiseStart, "g")) ?? []).length, 1);
+  assert.ok(heroCopy);
+  assert.match(heroCopy, /className="hero-lead"/);
+  assert.match(heroCopy, /Отработаем навигацию/);
+  assert.match(heroCopy, /транзитные зоны/);
+  assert.match(heroCopy, /питание на&nbsp;дистанции/);
+  assert.ok(programPractical);
+  assert.doesNotMatch(programPractical, /program-lead|Заранее проедем/);
+});
+
 test("uses only the supplied photographic set as one three-part narrative", async () => {
   const pageSource = await readProjectFile("app/page.tsx");
   const expectedPhotos = [
@@ -150,9 +170,10 @@ test("locks the five-part weather rail to the approved MATERIAL / 01 token", asy
 });
 
 test("keeps the restrained fluid and accessible surface contract", async () => {
-  const [css, themeToggleSource, pageSource] = await Promise.all([
+  const [css, themeToggleSource, mobileMenuSource, pageSource] = await Promise.all([
     readProjectFile("app/globals.css"),
     readProjectFile("app/theme-toggle.tsx"),
+    readProjectFile("app/mobile-menu.tsx"),
     readProjectFile("app/page.tsx"),
   ]);
 
@@ -177,6 +198,8 @@ test("keeps the restrained fluid and accessible surface contract", async () => {
   )?.[0];
   assert.ok(mastheadSource);
   assert.doesNotMatch(mastheadSource, /<ThemeToggle\s*\/>/);
+  assert.match(mastheadSource, /<ThemeToggle variant="icon" \/>/);
+  assert.match(mastheadSource, /<MobileMenu \/>/);
   assert.match(
     pageSource,
     /<footer className="site-footer">[\s\S]*?<ThemeToggle\s*\/>[\s\S]*?<\/footer>/,
@@ -194,10 +217,42 @@ test("keeps the restrained fluid and accessible surface contract", async () => {
   );
   assert.match(mobileCss, /\.hero-copy\s*{[\s\S]*?grid-row:\s*1;/);
   assert.match(mobileCss, /\.conditions\s*{[\s\S]*?grid-row:\s*3;/);
+  assert.match(mobileCss, /\.mobile-menu\s*{[\s\S]*?display:\s*block;/);
+  assert.match(mobileCss, /\.menu-toggle\s*{[\s\S]*?width:\s*3rem;[\s\S]*?height:\s*3rem;/);
+  assert.match(mobileCss, /\.mobile-menu-panel\s*{[\s\S]*?position:\s*fixed;/);
+  assert.match(
+    mobileCss,
+    /\.conditions-row\s*{[\s\S]*?width:\s*max-content;[\s\S]*?padding-right:\s*var\(--space-page\);/,
+  );
+  assert.match(
+    mobileCss,
+    /\.condition-forecast\s*{[\s\S]*?width:\s*14rem;[\s\S]*?min-width:\s*14rem;/,
+  );
+  assert.match(
+    mobileCss,
+    /\.site-footer\s*{[\s\S]*?width:\s*100%;[\s\S]*?margin:\s*0;[\s\S]*?background:\s*var\(--sea-deep\);/,
+  );
   assert.doesNotMatch(css, /999px|linear-gradient|clip-path/i);
   assert.equal((css.match(/corner-shape:\s*squircle/g) ?? []).length, 2);
+  assert.match(
+    css,
+    /\.hero-stage::before\s*{[\s\S]*?width:\s*100%;[\s\S]*?mask-image:\s*radial-gradient/,
+  );
+  assert.doesNotMatch(css, /width:\s*min\(64rem, 68vw\)|width:\s*min\(42rem, 67vw\)/);
+  assert.match(css, /--material-accent-fill:\s*rgba\(120, 15, 40, 0\.7\);/);
+  assert.match(css, /--material-accent-filter:\s*blur\(18px\) saturate\(0\.78\) brightness\(0\.9\);/);
+  assert.match(
+    css,
+    /\.site-footer\s*{[\s\S]*?background:\s*var\(--material-accent-fill\);[\s\S]*?backdrop-filter:\s*var\(--material-accent-filter\);/,
+  );
   assert.match(themeToggleSource, /useSyncExternalStore/);
+  assert.match(themeToggleSource, /type ThemeToggleVariant = "text" \| "icon" \| "menu"/);
+  assert.match(themeToggleSource, /aria-pressed={theme === "dark"}/);
   assert.doesNotMatch(themeToggleSource, /requestAnimationFrame/);
+  assert.match(mobileMenuSource, /aria-expanded={isOpen}/);
+  assert.match(mobileMenuSource, /event\.key !== "Escape"/);
+  assert.match(mobileMenuSource, /<ThemeToggle variant="menu" \/>/);
+  assert.equal((mobileMenuSource.match(/href: "#(?:program|trainers|registration)"/g) ?? []).length, 3);
 });
 
 test("keeps the standard Next static-export and GitHub Pages contract", async () => {

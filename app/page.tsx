@@ -4,6 +4,7 @@
 import type { Metadata } from "next";
 
 import { ConditionsPanel } from "./conditions-panel";
+import { MobileMenu } from "./mobile-menu";
 import { ThemeToggle } from "./theme-toggle";
 
 const TELEGRAM_URL = "https://t.me/DDopenChat";
@@ -100,6 +101,8 @@ export default function HomePage() {
                 <a href="#trainers">Тренеры</a>
                 <a href="#registration">Участие</a>
               </nav>
+              <ThemeToggle variant="icon" />
+              <MobileMenu />
             </div>
           </header>
 
@@ -117,6 +120,11 @@ export default function HomePage() {
             <div className="hero-copy">
               <p className="eyebrow">Сочи · Сириус · 27 сентября — 4 октября</p>
               <h1 id="hero-title">Последняя неделя перед стартом</h1>
+              <p className="hero-lead">
+                Заранее проедем велотрассу и&nbsp;пройдём беговой маршрут.
+                Отработаем навигацию в&nbsp;открытой воде, транзитные зоны
+                и&nbsp;питание на&nbsp;дистанции.
+              </p>
               <CampCta />
             </div>
 
@@ -141,11 +149,6 @@ export default function HomePage() {
           </header>
 
           <div className="program-practical">
-            <p className="program-lead">
-              Заранее проедем велотрассу и&nbsp;пройдём беговой маршрут.
-              Отработаем навигацию в&nbsp;открытой воде, транзитные зоны
-              и&nbsp;питание на&nbsp;дистанции.
-            </p>
             <div>
               <dl className="camp-facts" aria-label="Главное о сборе">
                 {campFacts.map((fact) => (
