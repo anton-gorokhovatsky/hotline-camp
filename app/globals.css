@@ -17,6 +17,8 @@
   --surface-sea: #aebeb7;
   --text: #101410;
   --text-muted: #526159;
+  --line: rgba(16, 20, 16, 0.2);
+  --photo-mat: #16231c;
   --focus: #007d70;
 
   --radius-control: 0.78rem;
@@ -26,12 +28,13 @@
   --space-page: clamp(1rem, 3vw, 3.25rem);
   --space-section: clamp(4.5rem, 9vw, 9rem);
   --space-copy: clamp(1.25rem, 2.1vw, 2.25rem);
+  --grid-gap: clamp(1rem, 2vw, 2rem);
 
-  --type-label: clamp(0.82rem, 0.74rem + 0.18vw, 0.96rem);
-  --type-body: clamp(1.04rem, 0.93rem + 0.34vw, 1.35rem);
-  --type-body-large: clamp(1.2rem, 1rem + 0.68vw, 1.72rem);
-  --type-title: clamp(3.35rem, 5.4vw, 6.25rem);
-  --type-section: clamp(3rem, 6.2vw, 6.9rem);
+  --type-label: clamp(0.78rem, 0.73rem + 0.18vw, 0.94rem);
+  --type-body: clamp(1.02rem, 0.93rem + 0.31vw, 1.3rem);
+  --type-body-large: clamp(1.18rem, 1rem + 0.63vw, 1.66rem);
+  --type-title: clamp(3.5rem, 5.7vw, 6.6rem);
+  --type-section: clamp(3.1rem, 6.1vw, 7rem);
 
   --material-glass-fill: rgba(13, 30, 20, 0.3);
   --material-glass-fill-hover: rgba(18, 38, 26, 0.42);
@@ -53,6 +56,8 @@
   --surface-sea: #243b32;
   --text: #eeeae1;
   --text-muted: #b7c2bb;
+  --line: rgba(238, 234, 225, 0.22);
+  --photo-mat: #020805;
   --focus: #4fd5c4;
   --material-glass-fill: rgba(7, 22, 14, 0.34);
   --material-glass-fill-hover: rgba(13, 32, 21, 0.46);
@@ -66,6 +71,7 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 1rem;
   background: var(--page);
 }
 
@@ -104,12 +110,25 @@ h3,
 p,
 dl,
 dd,
+ol,
 ul {
   margin: 0;
 }
 
+ol,
 ul {
   padding: 0;
+}
+
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
+p,
+li {
+  text-wrap: pretty;
 }
 
 button,
@@ -119,7 +138,7 @@ a {
 
 :focus-visible {
   outline: 0.2rem solid var(--focus);
-  outline-offset: 0.22rem;
+  outline-offset: 0.24rem;
 }
 
 .skip-link {
@@ -137,74 +156,85 @@ a {
   transform: translateY(0);
 }
 
-main {
-  display: block;
+.screen {
+  scroll-margin-top: 1rem;
 }
 
-/* Первый экран: фотография задаёт пространство, интерфейс ей не мешает. */
+.eyebrow {
+  color: currentColor;
+  font-size: var(--type-label);
+  font-weight: 700;
+  letter-spacing: 0.075em;
+  line-height: 1.35;
+  text-transform: uppercase;
+}
+
+/* Первый экран: одна фотография, одно решение и вторичный сервисный слой. */
 .hero {
   position: relative;
+  isolation: isolate;
   background: #d9d9d5;
   color: var(--ink);
-  isolation: isolate;
 }
 
 .masthead {
   position: absolute;
   inset: 0 0 auto;
-  z-index: 5;
+  z-index: 6;
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   gap: 2rem;
-  padding: clamp(1.25rem, 2.4vw, 2.5rem) var(--space-page);
+  padding: clamp(1.2rem, 2.35vw, 2.4rem) var(--space-page);
 }
 
 .brand {
   display: grid;
+  min-height: 3rem;
+  align-content: center;
   gap: 0.08rem;
-  max-width: 19rem;
+  max-width: 20rem;
   color: var(--ink);
-  line-height: 1.1;
+  line-height: 1.08;
 }
 
 .brand strong {
-  font-size: clamp(1rem, 0.82rem + 0.55vw, 1.42rem);
-  font-weight: 760;
+  font-size: clamp(1rem, 0.84rem + 0.52vw, 1.4rem);
+  font-weight: 770;
   letter-spacing: -0.035em;
 }
 
 .brand span {
-  color: rgba(16, 20, 16, 0.68);
-  font-size: clamp(0.94rem, 0.84rem + 0.28vw, 1.1rem);
+  color: rgba(16, 20, 16, 0.7);
+  font-size: clamp(0.92rem, 0.83rem + 0.27vw, 1.08rem);
 }
 
 .masthead-actions {
   display: flex;
   align-items: center;
-  gap: clamp(0.75rem, 1.7vw, 1.8rem);
+  gap: clamp(0.75rem, 1.6vw, 1.75rem);
 }
 
 .section-nav {
   display: flex;
   align-items: center;
-  gap: clamp(1.1rem, 2vw, 2.2rem);
+  gap: clamp(1rem, 1.8vw, 2rem);
 }
 
 .section-nav a {
   position: relative;
-  min-height: 3rem;
   display: inline-flex;
+  min-height: 3rem;
   align-items: center;
-  color: rgba(16, 20, 16, 0.74);
-  font-size: clamp(0.94rem, 0.83rem + 0.3vw, 1.12rem);
-  font-weight: 610;
+  color: rgba(16, 20, 16, 0.78);
+  font-size: clamp(0.91rem, 0.82rem + 0.28vw, 1.08rem);
+  font-weight: 630;
 }
 
 .section-nav a::after {
   content: "";
   position: absolute;
-  inset: auto 0 0.42rem;
+  inset: auto 0 0.38rem;
   height: 0.12rem;
   transform: scaleX(0);
   transform-origin: left;
@@ -224,11 +254,16 @@ main {
   height: 3rem;
   flex: 0 0 3rem;
   place-items: center;
-  border: 0;
+  border: 1px solid rgba(16, 20, 16, 0.12);
   border-radius: var(--radius-control);
-  background: rgba(238, 234, 225, 0.72);
+  background: rgba(238, 234, 225, 0.82);
   color: var(--ink);
   cursor: pointer;
+  transition: background-color 180ms ease, color 180ms ease;
+}
+
+.theme-toggle:hover {
+  background: var(--paper);
 }
 
 .theme-toggle svg {
@@ -253,14 +288,15 @@ main {
 
 .hero-stage {
   position: relative;
-  min-height: min(66.625vw, 68rem);
+  min-height: max(50rem, 100svh);
   overflow: hidden;
+  isolation: isolate;
 }
 
 .hero-media {
   position: absolute;
   inset: 0;
-  z-index: -1;
+  z-index: -2;
 }
 
 .hero-media img {
@@ -272,60 +308,75 @@ main {
 
 .hero-copy {
   position: absolute;
-  inset: clamp(7.25rem, 9.6vw, 9.5rem) auto auto var(--space-page);
+  inset: clamp(7.3rem, 14vh, 9rem) auto auto var(--space-page);
   z-index: 2;
-  width: min(37rem, 40vw);
+  width: min(36rem, 41vw);
+  isolation: isolate;
+}
+
+.hero-copy::before {
+  content: "";
+  position: absolute;
+  inset: -2.6rem -4.5rem -2.8rem -4rem;
+  z-index: -1;
+  background: rgba(235, 233, 228, 0.7);
+  filter: blur(2.9rem);
+  pointer-events: none;
+}
+
+.hero-copy .eyebrow {
+  color: rgba(16, 20, 16, 0.72);
 }
 
 .hero-copy h1 {
-  max-width: 8.8ch;
-  color: var(--ink);
+  max-width: 8.7ch;
+  margin-top: clamp(0.75rem, 1.3vw, 1.2rem);
   font-size: var(--type-title);
   font-weight: 790;
-  letter-spacing: -0.068em;
-  line-height: 0.94;
+  letter-spacing: -0.065em;
+  line-height: 0.93;
 }
 
 .hero-lead {
   max-width: 32rem;
-  margin-top: clamp(1.1rem, 1.7vw, 1.7rem);
-  color: rgba(16, 20, 16, 0.77);
+  margin-top: clamp(1.05rem, 1.6vw, 1.6rem);
+  color: rgba(16, 20, 16, 0.8);
   font-size: var(--type-body);
-  font-weight: 490;
-  line-height: 1.48;
+  font-weight: 500;
+  line-height: 1.46;
 }
 
 .camp-facts {
   display: flex;
   flex-wrap: wrap;
-  gap: clamp(1.2rem, 2.4vw, 2.7rem);
-  margin-top: clamp(1.2rem, 1.9vw, 1.9rem);
+  gap: clamp(1.1rem, 2.25vw, 2.5rem);
+  margin-top: clamp(1.15rem, 1.8vw, 1.75rem);
 }
 
 .camp-facts div {
   display: grid;
-  gap: 0.28rem;
+  gap: 0.25rem;
 }
 
 .camp-facts dt {
-  color: rgba(16, 20, 16, 0.58);
+  color: rgba(16, 20, 16, 0.62);
   font-size: var(--type-label);
 }
 
 .camp-facts dd {
   color: var(--ink);
-  font-size: clamp(1.1rem, 0.98rem + 0.38vw, 1.4rem);
-  font-weight: 690;
+  font-size: clamp(1.08rem, 0.97rem + 0.34vw, 1.34rem);
+  font-weight: 700;
   letter-spacing: -0.025em;
   white-space: nowrap;
 }
 
 .cost-note {
   max-width: 32rem;
-  margin-top: 0.75rem;
-  color: rgba(16, 20, 16, 0.58);
+  margin-top: 0.72rem;
+  color: rgba(16, 20, 16, 0.62);
   font-size: var(--type-label);
-  line-height: 1.42;
+  line-height: 1.4;
 }
 
 .camp-cta {
@@ -333,13 +384,13 @@ main {
   min-height: 3.25rem;
   align-items: center;
   justify-content: center;
-  gap: 1.5rem;
-  margin-top: clamp(1.15rem, 1.8vw, 1.7rem);
-  padding: 0.85rem 1.05rem 0.85rem 1.25rem;
+  gap: 1.45rem;
+  margin-top: clamp(1.1rem, 1.7vw, 1.6rem);
+  padding: 0.84rem 1.05rem 0.84rem 1.22rem;
   border-radius: var(--radius-control);
   background: var(--sea-deep);
   color: var(--paper);
-  font-size: clamp(1rem, 0.9rem + 0.27vw, 1.18rem);
+  font-size: clamp(1rem, 0.91rem + 0.25vw, 1.16rem);
   font-weight: 680;
   letter-spacing: -0.02em;
   transition: background-color 180ms ease, color 180ms ease, transform 180ms ease;
@@ -372,12 +423,15 @@ main {
 
 .conditions {
   position: absolute;
-  inset: auto auto clamp(1.25rem, 2.8vw, 3rem) var(--space-page);
+  inset: auto auto clamp(1rem, 2vw, 2rem) var(--space-page);
   z-index: 4;
+  max-width: calc(100% - (2 * var(--space-page)));
+}
+
+.conditions-row {
   display: flex;
   align-items: stretch;
   gap: var(--service-island-gap);
-  max-width: calc(100% - (2 * var(--space-page)));
 }
 
 .service-island {
@@ -390,87 +444,240 @@ main {
   display: flex;
   width: max-content;
   min-width: max-content;
-  padding: 0.62rem clamp(0.62rem, 0.8vw, 0.82rem);
+  padding: 0.58rem clamp(0.62rem, 0.8vw, 0.82rem);
   justify-content: center;
   flex-direction: column;
   border-radius: var(--radius-control);
-  corner-shape: squircle;
   color: var(--material-glass-text);
   flex: 0 0 auto;
 }
 
 .condition > span {
   color: var(--material-glass-text-soft);
-  font-size: clamp(0.72rem, 0.76vw, 0.8rem);
-  font-weight: 520;
-  line-height: 1.25;
+  font-size: clamp(0.69rem, 0.72vw, 0.77rem);
+  font-weight: 560;
+  line-height: 1.18;
 }
 
 .condition strong {
-  margin-top: 0.25rem;
-  font-size: clamp(0.92rem, 1.05vw, 1.08rem);
-  font-weight: 680;
+  margin-top: 0.2rem;
+  font-size: clamp(0.9rem, 1vw, 1.05rem);
+  font-weight: 700;
   letter-spacing: -0.018em;
-  line-height: 1.1;
+  line-height: 1.05;
   white-space: nowrap;
 }
 
 .condition small {
-  margin-top: 0.2rem;
+  margin-top: 0.16rem;
+  overflow: hidden;
   color: var(--material-glass-text-soft);
-  font-size: clamp(0.7rem, 0.72vw, 0.76rem);
-  line-height: 1.25;
+  font-size: clamp(0.67rem, 0.7vw, 0.73rem);
+  line-height: 1.18;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-/* Тренеры: два редакционных разворота, где кадр остаётся целым. */
-.trainers {
+.conditions-source {
+  display: flex;
+  min-height: 3rem;
+  align-items: center;
+  gap: 0.28rem;
+  color: rgba(244, 241, 232, 0.82);
+  font-size: clamp(0.7rem, 0.7vw, 0.76rem);
+  line-height: 1.35;
+}
+
+.conditions-source a {
+  display: inline-flex;
+  min-height: 3rem;
+  align-items: center;
+  text-decoration: underline;
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.18em;
+}
+
+/* Второй экран: последовательность действий и единое фотографическое поле. */
+.program {
   padding: var(--space-section) var(--space-page);
   background: var(--surface);
   color: var(--text);
 }
 
-.section-heading {
-  margin-bottom: clamp(2rem, 4.2vw, 4.5rem);
+.program-heading {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  align-items: end;
+  gap: var(--grid-gap);
 }
 
-.section-heading h2 {
+.program-heading > div {
+  grid-column: 1 / 8;
+}
+
+.program-heading .eyebrow {
+  color: var(--text-muted);
+}
+
+.program-heading h2 {
+  max-width: 9ch;
+  margin-top: 0.8rem;
   font-size: var(--type-section);
   font-weight: 780;
-  letter-spacing: -0.065em;
-  line-height: 0.93;
+  letter-spacing: -0.064em;
+  line-height: 0.92;
 }
 
-.coach {
+.program-intro {
+  grid-column: 9 / 13;
+  max-width: 32rem;
+  color: var(--text-muted);
+  font-size: var(--type-body-large);
+  line-height: 1.4;
+}
+
+.program-notes {
   display: grid;
-  grid-template-columns: minmax(0, 1.72fr) minmax(20rem, 0.78fr);
-  align-items: stretch;
-  background: var(--surface-muted);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-top: clamp(3rem, 6vw, 6rem);
+  border-block: 1px solid var(--line);
+  list-style: none;
 }
 
-.coach + .coach {
-  margin-top: clamp(2rem, 4vw, 4.5rem);
+.program-notes li {
+  min-width: 0;
+  padding: clamp(1.15rem, 2vw, 2rem) clamp(0.8rem, 1.8vw, 1.7rem) clamp(1.5rem, 2.5vw, 2.5rem) 0;
 }
 
-.coach-photo {
-  align-self: center;
+.program-notes li + li {
+  padding-left: clamp(0.8rem, 1.8vw, 1.7rem);
+  border-left: 1px solid var(--line);
 }
 
-.coach-photo img {
+.program-notes span {
+  color: var(--text-muted);
+  font-size: var(--type-label);
+  font-variant-numeric: tabular-nums;
+}
+
+.program-notes h3 {
+  margin-top: 1.7rem;
+  font-size: clamp(1.45rem, 1.22rem + 0.8vw, 2.1rem);
+  font-weight: 710;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+}
+
+.program-notes p {
+  max-width: 24rem;
+  margin-top: 0.72rem;
+  color: var(--text-muted);
+  font-size: clamp(0.94rem, 0.88rem + 0.23vw, 1.1rem);
+  line-height: 1.48;
+}
+
+.program-contact-sheet {
+  display: grid;
+  height: clamp(36rem, 46.5vw, 50rem);
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+  gap: clamp(0.32rem, 0.55vw, 0.55rem);
+  margin-top: clamp(2.8rem, 5vw, 5.5rem);
+  background: var(--line);
+}
+
+.program-shot {
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  background: var(--photo-mat);
+}
+
+.program-shot img {
   width: 100%;
-  height: auto;
+  height: 100%;
+  object-fit: contain;
+}
+
+.program-shot-cyclist {
+  grid-column: 1 / 5;
+  grid-row: 1 / 3;
+}
+
+.program-shot-swimmer {
+  grid-column: 5 / 9;
+  grid-row: 1 / 3;
+}
+
+.program-shot-ride {
+  grid-column: 9 / 13;
+  grid-row: 1;
+}
+
+.program-shot-team {
+  grid-column: 9 / 11;
+  grid-row: 2;
+}
+
+.program-shot-sochi {
+  grid-column: 11 / 13;
+  grid-row: 2;
+}
+
+/* Третий экран: опыт тренеров и один финальный шаг. */
+.trainers {
+  padding-top: var(--space-section);
+  background: var(--sea-deep);
+  color: var(--paper);
+}
+
+.trainers-heading {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  align-items: end;
+  gap: var(--grid-gap);
+  padding: 0 var(--space-page) clamp(3.5rem, 7vw, 7rem);
+}
+
+.trainers-heading .eyebrow {
+  grid-column: 1 / 3;
+  align-self: start;
+  color: var(--sea-muted);
+}
+
+.trainers-heading h2 {
+  grid-column: 3 / 9;
+  max-width: 8ch;
+  font-size: var(--type-section);
+  font-weight: 770;
+  letter-spacing: -0.064em;
+  line-height: 0.92;
+}
+
+.trainers-heading > p:last-child {
+  grid-column: 9 / 13;
+  max-width: 31rem;
+  color: rgba(238, 234, 225, 0.72);
+  font-size: var(--type-body-large);
+  line-height: 1.4;
+}
+
+.coach-story {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: var(--grid-gap);
+  align-items: start;
+  padding: clamp(3rem, 6vw, 6rem) var(--space-page) clamp(5rem, 9vw, 9rem);
+  border-top: 1px solid rgba(238, 234, 225, 0.22);
 }
 
 .coach-copy {
-  display: flex;
-  min-width: 0;
-  flex-direction: column;
-  justify-content: flex-end;
-  padding: clamp(1.6rem, 3.5vw, 4rem);
+  grid-column: 1 / 5;
+  padding-top: clamp(0.25rem, 1vw, 1rem);
 }
 
 .coach-affiliation {
-  margin-bottom: 0.8rem;
-  color: #d8375c;
+  color: var(--oleander);
   font-size: var(--type-label);
   font-weight: 760;
   letter-spacing: 0.08em;
@@ -478,148 +685,212 @@ main {
 }
 
 .coach-copy h3 {
-  max-width: 10ch;
-  font-size: clamp(2.6rem, 4.7vw, 5.6rem);
-  font-weight: 770;
-  letter-spacing: -0.062em;
-  line-height: 0.94;
+  max-width: 9ch;
+  margin-top: 0.85rem;
+  font-size: clamp(3rem, 4.9vw, 5.8rem);
+  font-weight: 760;
+  letter-spacing: -0.06em;
+  line-height: 0.92;
 }
 
 .coach-credentials {
-  display: grid;
-  gap: clamp(0.75rem, 1.25vw, 1.2rem);
-  margin-top: clamp(1.7rem, 3.1vw, 3.2rem);
+  margin-top: clamp(2rem, 3.5vw, 3.6rem);
+  border-top: 1px solid rgba(238, 234, 225, 0.22);
   list-style: none;
 }
 
 .coach-credentials li {
-  max-width: 34rem;
-  color: var(--text-muted);
-  font-size: var(--type-body);
-  font-weight: 470;
-  line-height: 1.38;
+  padding: 0.85rem 0;
+  border-bottom: 1px solid rgba(238, 234, 225, 0.22);
+  color: rgba(238, 234, 225, 0.72);
+  font-size: clamp(0.96rem, 0.9rem + 0.24vw, 1.14rem);
+  line-height: 1.42;
 }
 
-.coach-maksim {
-  grid-template-columns: minmax(20rem, 0.78fr) minmax(0, 1.72fr);
-  background: var(--surface-sea);
-}
-
-.coach-maksim .coach-photo {
-  grid-column: 2;
-  grid-row: 1;
-}
-
-.coach-maksim .coach-copy {
-  grid-column: 1;
-  grid-row: 1;
-}
-
-/* Финал: вся сцена — фотография команды; CTA живёт в её свободном поле. */
-.finale {
+.coach-images {
   position: relative;
-  overflow: hidden;
-  background: var(--sea-deep);
-  color: var(--paper);
+  grid-column: 5 / 13;
+  min-width: 0;
+  padding: 0 clamp(1.2rem, 3vw, 3rem) clamp(2rem, 4vw, 4rem) 0;
 }
 
-.finale-media img {
+.coach-finish img {
   width: 100%;
   height: auto;
 }
 
+.coach-portrait {
+  position: absolute;
+  inset: auto 0 0 auto;
+  width: clamp(8.5rem, 18vw, 17rem);
+  border: clamp(0.3rem, 0.55vw, 0.55rem) solid var(--sea-deep);
+}
+
+.coach-portrait img {
+  width: 100%;
+  height: auto;
+}
+
+.coach-story-maksim .coach-copy {
+  grid-column: 9 / 13;
+}
+
+.coach-story-maksim .coach-images {
+  grid-column: 1 / 9;
+  grid-row: 1;
+  padding-right: 0;
+  padding-left: clamp(1.2rem, 3vw, 3rem);
+}
+
+.coach-story-maksim .coach-portrait {
+  inset: auto auto 0 0;
+}
+
+.closing-scene {
+  position: relative;
+  min-height: max(44rem, 92svh);
+  overflow: hidden;
+  isolation: isolate;
+  background: #62141f;
+}
+
+.closing-media {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+}
+
+.closing-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
 .closing-action {
   position: absolute;
-  inset: clamp(2.5rem, 7vw, 7rem) auto auto var(--space-page);
+  inset: 50% auto auto var(--space-page);
+  z-index: 2;
   width: min(34rem, 42vw);
+  transform: translateY(-50%);
+  isolation: isolate;
+}
+
+.closing-action::before {
+  content: "";
+  position: absolute;
+  inset: -3rem -4rem -3rem -4rem;
+  z-index: -1;
+  background: rgba(7, 20, 13, 0.76);
+  filter: blur(2.8rem);
+  pointer-events: none;
 }
 
 .closing-action h2 {
   max-width: 8ch;
-  font-size: clamp(3.2rem, 6.5vw, 7.2rem);
+  font-size: clamp(3.6rem, 6.3vw, 7.1rem);
   font-weight: 770;
   letter-spacing: -0.066em;
-  line-height: 0.92;
+  line-height: 0.91;
 }
 
 .closing-action p {
   max-width: 28rem;
-  margin-top: clamp(1.2rem, 2.2vw, 2.2rem);
-  color: rgba(238, 234, 225, 0.76);
+  margin-top: clamp(1.15rem, 2vw, 2rem);
+  color: rgba(238, 234, 225, 0.8);
   font-size: var(--type-body);
-  line-height: 1.48;
+  line-height: 1.47;
 }
 
 .camp-cta-closing {
+  background: var(--paper);
+  color: var(--sea-deep);
+}
+
+.camp-cta-closing:hover {
   background: var(--oleander);
   color: var(--oleander-ink);
 }
 
-.camp-cta-closing:hover {
-  background: var(--paper);
-}
-
-.finale-signoff {
-  position: absolute;
-  inset: auto var(--space-page) clamp(1.3rem, 2.6vw, 2.6rem);
+.site-footer {
   display: flex;
-  align-items: flex-end;
+  min-height: 7rem;
+  align-items: center;
   justify-content: space-between;
   gap: 2rem;
-  color: rgba(238, 234, 225, 0.7);
+  padding: 1.5rem var(--space-page);
+  border-top: 1px solid rgba(238, 234, 225, 0.22);
+  background: var(--sea-deep);
+  color: rgba(238, 234, 225, 0.68);
   font-size: var(--type-label);
 }
 
-.finale-signoff a {
+.site-footer > a,
+.site-footer p a {
+  display: inline-flex;
+  min-height: 3rem;
+  align-items: center;
+}
+
+.site-footer > a:first-child {
   max-width: 18rem;
   color: var(--paper);
   font-weight: 670;
 }
 
-.finale-signoff p {
-  text-align: right;
+.site-footer p a {
+  color: var(--paper);
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
 }
 
 @media (max-width: 74rem) {
-  .hero-stage {
-    min-height: 52rem;
-  }
-
-  .hero-media img {
-    object-position: 58% center;
-  }
-
   .hero-copy {
-    width: min(42rem, 58vw);
+    width: min(39rem, 52vw);
   }
 
-  .coach,
-  .coach-maksim {
-    grid-template-columns: minmax(0, 1.38fr) minmax(18rem, 0.82fr);
+  .program-intro {
+    grid-column: 8 / 13;
   }
 
-  .closing-action {
-    width: min(31rem, 45vw);
+  .trainers-heading h2 {
+    grid-column: 3 / 8;
+  }
+
+  .trainers-heading > p:last-child {
+    grid-column: 8 / 13;
   }
 }
 
-@media (max-width: 58rem) {
+@media (max-width: 62rem) {
   .masthead {
     position: relative;
-    background: var(--paper);
+    align-items: center;
+    background: var(--surface);
+    color: var(--text);
   }
 
-  .masthead-actions {
-    gap: 0.5rem;
+  .brand {
+    color: var(--text);
   }
 
-  .section-nav {
-    display: none;
+  .brand span {
+    color: var(--text-muted);
+  }
+
+  .section-nav a {
+    color: var(--text-muted);
   }
 
   .theme-toggle {
+    border-color: var(--line);
     background: var(--sea-deep);
     color: var(--paper);
+  }
+
+  :root[data-theme="dark"] .theme-toggle {
+    background: var(--paper);
+    color: var(--sea-deep);
   }
 
   .hero-stage {
@@ -627,29 +898,50 @@ main {
     min-height: 0;
     flex-direction: column;
     overflow: visible;
-    background: var(--paper);
+    background: var(--surface);
+    color: var(--text);
   }
 
   .hero-copy {
     position: relative;
     inset: auto;
+    order: 1;
     width: auto;
-    padding: clamp(2.25rem, 8vw, 4rem) var(--space-page);
+    padding: clamp(2.7rem, 7vw, 4.5rem) var(--space-page);
   }
 
-  .hero-copy h1 {
-    max-width: 10ch;
-    font-size: clamp(3.3rem, 12.5vw, 6rem);
+  .hero-copy::before {
+    display: none;
   }
 
-  .hero-lead {
-    max-width: 40rem;
+  .hero-copy .eyebrow,
+  .hero-lead,
+  .camp-facts dt,
+  .cost-note {
+    color: var(--text-muted);
+  }
+
+  .hero-copy h1,
+  .camp-facts dd {
+    color: var(--text);
+  }
+
+  :root[data-theme="dark"] .hero .camp-cta {
+    background: var(--paper);
+    color: var(--sea-deep);
+  }
+
+  :root[data-theme="dark"] .hero .camp-cta:hover {
+    background: var(--oleander);
+    color: var(--oleander-ink);
   }
 
   .hero-media {
     position: relative;
+    inset: auto;
     z-index: auto;
     order: 2;
+    background: var(--photo-mat);
   }
 
   .hero-media img {
@@ -661,78 +953,88 @@ main {
   .conditions {
     position: relative;
     inset: auto;
-    z-index: 4;
-    width: calc(100% - (2 * var(--space-page)));
+    order: 3;
+    width: auto;
     max-width: none;
-    margin: calc(-1 * (var(--service-island-height) / 2)) var(--space-page) 0;
-    overflow-x: auto;
-    padding-bottom: 0.35rem;
-    scrollbar-width: thin;
+    padding: 1rem var(--space-page) 0.35rem;
+    background: var(--sea-deep);
   }
 
-  .coach,
-  .coach-maksim {
-    display: flex;
-    flex-direction: column;
+  .conditions-row {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
-  .coach-maksim .coach-photo,
-  .coach-maksim .coach-copy {
-    order: initial;
+  .condition {
+    width: auto;
+    min-width: 0;
   }
 
-  .coach-copy {
-    min-height: 30rem;
-    justify-content: flex-start;
+  .program-heading,
+  .trainers-heading {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .finale {
-    display: flex;
-    flex-direction: column;
+  .program-heading > div,
+  .program-intro,
+  .trainers-heading .eyebrow,
+  .trainers-heading h2,
+  .trainers-heading > p:last-child {
+    grid-column: auto;
+  }
+
+  .program-intro,
+  .trainers-heading > p:last-child {
+    align-self: end;
+  }
+
+  .program-notes {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .program-notes li:nth-child(3) {
+    border-left: 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .program-notes li:nth-child(4) {
+    border-top: 1px solid var(--line);
+  }
+
+  .coach-story {
+    grid-template-columns: minmax(16rem, 0.8fr) minmax(0, 1.2fr);
+  }
+
+  .coach-copy,
+  .coach-story-maksim .coach-copy {
+    grid-column: 1;
+  }
+
+  .coach-images,
+  .coach-story-maksim .coach-images {
+    grid-column: 2;
+    grid-row: 1;
+    padding-right: clamp(1rem, 2.5vw, 2rem);
+    padding-left: 0;
+  }
+
+  .coach-story-maksim .coach-portrait {
+    inset: auto 0 0 auto;
   }
 
   .closing-action {
-    position: relative;
-    inset: auto;
-    order: -1;
-    width: auto;
-    padding: var(--space-section) var(--space-page) clamp(2.5rem, 7vw, 4rem);
-  }
-
-  .closing-action h2 {
-    font-size: clamp(3.5rem, 11vw, 6rem);
-  }
-
-  .finale-signoff {
-    position: relative;
-    inset: auto;
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 1.5rem var(--space-page) 2rem;
-  }
-
-  .finale-signoff p {
-    text-align: left;
+    width: min(35rem, 52vw);
   }
 }
 
-@media (max-width: 40rem) {
-  .masthead {
-    align-items: center;
-    padding-block: 1rem;
-  }
-
-  .brand {
-    max-width: 15rem;
-  }
-
-  .hero-copy {
-    padding-top: 2.5rem;
+@media (max-width: 46rem) {
+  .section-nav {
+    display: none;
   }
 
   .hero-copy h1 {
-    font-size: clamp(3rem, 15.4vw, 4.8rem);
-    letter-spacing: -0.06em;
+    max-width: 9.5ch;
+    font-size: clamp(3.25rem, 14.2vw, 5rem);
   }
 
   .camp-facts {
@@ -749,38 +1051,174 @@ main {
     justify-content: space-between;
   }
 
-  .conditions {
-    margin-top: -2.2rem;
+  .conditions-source {
+    flex-wrap: wrap;
+    padding-top: 0.25rem;
   }
 
-  .service-island {
-    height: var(--service-island-height);
-    min-height: var(--service-island-height);
+  .program-heading,
+  .trainers-heading {
+    display: block;
   }
 
-  .condition {
-    min-width: max-content;
+  .program-intro,
+  .trainers-heading > p:last-child {
+    margin-top: 1.5rem;
   }
 
-  .trainers {
-    padding-inline: 0;
+  .program-notes {
+    display: block;
+    margin-top: 2.8rem;
   }
 
-  .section-heading {
-    padding-inline: var(--space-page);
+  .program-notes li,
+  .program-notes li + li {
+    padding: 1.25rem 0 1.5rem;
+    border-left: 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .program-notes li:first-child {
+    border-top: 0;
+  }
+
+  .program-notes h3 {
+    margin-top: 0.85rem;
+  }
+
+  .program-contact-sheet {
+    height: auto;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: auto;
+  }
+
+  .program-shot-cyclist,
+  .program-shot-swimmer {
+    grid-column: auto;
+    grid-row: 1;
+    aspect-ratio: 2 / 3;
+  }
+
+  .program-shot-ride {
+    grid-column: 1 / 3;
+    grid-row: 2;
+    aspect-ratio: 3 / 2;
+  }
+
+  .program-shot-team {
+    grid-column: 1;
+    grid-row: 3;
+    aspect-ratio: 3 / 2;
+  }
+
+  .program-shot-sochi {
+    grid-column: 2;
+    grid-row: 3;
+    aspect-ratio: 3 / 2;
+  }
+
+  .trainers-heading {
+    padding-bottom: 3.5rem;
+  }
+
+  .trainers-heading h2 {
+    margin-top: 0.8rem;
+  }
+
+  .coach-story {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+    padding-block: 3.5rem 5rem;
   }
 
   .coach-copy {
-    min-height: 0;
-    padding: 2rem var(--space-page) 3.2rem;
+    order: 1;
+    width: 100%;
+  }
+
+  .coach-images,
+  .coach-story-maksim .coach-images {
+    order: 2;
+    width: 100%;
+    padding-right: clamp(1rem, 4vw, 2rem);
+    padding-left: 0;
   }
 
   .coach-copy h3 {
-    font-size: clamp(3rem, 14vw, 4.8rem);
+    font-size: clamp(3.1rem, 14vw, 4.8rem);
   }
 
-  .coach-credentials {
-    gap: 0.9rem;
+  .coach-portrait {
+    width: clamp(7.5rem, 32vw, 12rem);
+  }
+
+  .closing-scene {
+    display: flex;
+    min-height: 0;
+    flex-direction: column;
+    overflow: visible;
+    background: var(--sea-deep);
+  }
+
+  .closing-media {
+    position: relative;
+    inset: auto;
+    z-index: auto;
+    order: 2;
+  }
+
+  .closing-media img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+  }
+
+  .closing-action {
+    position: relative;
+    inset: auto;
+    order: 1;
+    width: auto;
+    padding: var(--space-section) var(--space-page) clamp(2.75rem, 8vw, 4rem);
+    transform: none;
+  }
+
+  .closing-action::before {
+    display: none;
+  }
+
+  .closing-action h2 {
+    font-size: clamp(3.5rem, 15vw, 5.2rem);
+  }
+
+  .site-footer {
+    min-height: 0;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+    padding-block: 1.5rem 2rem;
+  }
+}
+
+@media (max-width: 23rem) {
+  .brand {
+    max-width: 13rem;
+  }
+
+  .hero-copy h1 {
+    font-size: 3.1rem;
+  }
+
+  .condition {
+    padding-inline: 0.45rem;
+  }
+
+  .condition strong {
+    font-size: 0.82rem;
+  }
+
+  .condition small {
+    font-size: 0.62rem;
   }
 }
 
@@ -798,6 +1236,33 @@ main {
 }
 
 @media (forced-colors: active) {
+  .hero,
+  .hero-stage,
+  .closing-scene {
+    background: Canvas;
+    color: CanvasText;
+  }
+
+  .hero-media,
+  .closing-media {
+    opacity: 0;
+  }
+
+  .hero-copy::before,
+  .closing-action::before {
+    background: Canvas;
+    filter: none;
+  }
+
+  .hero-copy h1,
+  .hero-copy .eyebrow,
+  .hero-lead,
+  .camp-facts dd,
+  .cost-note,
+  .closing-action p {
+    color: CanvasText;
+  }
+
   .theme-toggle,
   .camp-cta,
   .service-island {
@@ -812,7 +1277,8 @@ main {
   }
 
   .condition span,
-  .condition small {
+  .condition small,
+  .conditions-source {
     color: CanvasText;
   }
 }
