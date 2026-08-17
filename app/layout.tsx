@@ -2,12 +2,12 @@ import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 
-const onest = localFont({
-  src: "../public/fonts/Onest-Variable.ttf",
+const ibmPlexSans = localFont({
+  src: "../public/fonts/IBMPlexSans-Variable.woff2",
   display: "swap",
   style: "normal",
-  weight: "100 900",
-  variable: "--font-onest",
+  weight: "100 700",
+  variable: "--font-ibm-plex-sans",
 });
 
 export const metadata: Metadata = {
@@ -73,7 +73,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
-      <body className={`${onest.variable} ${onest.className}`}>{children}</body>
+      <body className={`${ibmPlexSans.variable} ${ibmPlexSans.className}`}>{children}</body>
     </html>
   );
 }

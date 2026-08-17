@@ -71,6 +71,7 @@ export function ThemeToggle() {
   const theme = useSyncExternalStore(subscribeToTheme, getTheme, () => "light");
 
   const nextTheme = theme === "dark" ? "light" : "dark";
+  const nextThemeLabel = nextTheme === "dark" ? "Тёмная тема" : "Светлая тема";
 
   return (
     <button
@@ -78,7 +79,6 @@ export function ThemeToggle() {
       type="button"
       onClick={() => saveTheme(nextTheme)}
       aria-label={`Включить ${nextTheme === "dark" ? "тёмную" : "светлую"} тему`}
-      title={`Включить ${nextTheme === "dark" ? "тёмную" : "светлую"} тему`}
     >
       <svg className="sun-icon" viewBox="0 0 24 24" aria-hidden="true">
         <circle cx="12" cy="12" r="4" />
@@ -87,6 +87,7 @@ export function ThemeToggle() {
       <svg className="moon-icon" viewBox="0 0 24 24" aria-hidden="true">
         <path d="M20 15.2A8.5 8.5 0 0 1 8.8 4a8.5 8.5 0 1 0 11.2 11.2Z" />
       </svg>
+      <span className="theme-toggle-label">{nextThemeLabel}</span>
     </button>
   );
 }

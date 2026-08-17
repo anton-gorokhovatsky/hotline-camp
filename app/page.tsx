@@ -108,7 +108,7 @@ export default function HomePage() {
             <figure className="hero-media">
               <img
                 src="./media/hero-time-trial.jpg"
-                alt="Триатлет проходит велосипедный этап на разделочном велосипеде"
+                alt="Евгений Тихонин проходит велосипедный этап на разделочном велосипеде"
                 width="2400"
                 height="1599"
                 fetchPriority="high"
@@ -117,7 +117,8 @@ export default function HomePage() {
 
             <div className="hero-copy">
               <p className="eyebrow">Сочи · Сириус · 27 сентября — 4 октября</p>
-              <h1 id="hero-title">Последняя неделя перед стартом.</h1>
+              <h1 id="hero-title">Последняя неделя перед стартом</h1>
+              <CampCta />
               <p className="hero-lead">
                 Заранее проедем велотрассу и&nbsp;пройдём беговой маршрут.
                 Отработаем навигацию в&nbsp;открытой воде, транзитные зоны
@@ -135,7 +136,6 @@ export default function HomePage() {
               <p className="cost-note">
                 Аренда дорожки в&nbsp;бассейне оплачивается отдельно.
               </p>
-              <CampCta />
             </div>
 
             <ConditionsPanel />
@@ -146,12 +146,15 @@ export default function HomePage() {
           <header className="program-heading">
             <div>
               <p className="eyebrow">Подготовка на&nbsp;месте</p>
-              <h2 id="program-title">Собрать гонку целиком.</h2>
+              <h2 id="program-title">Собрать гонку целиком</h2>
             </div>
             <p className="program-intro">
-              Восемь дней нужны не&nbsp;для объёма ради объёма. Мы знакомимся
-              с&nbsp;местом старта и&nbsp;связываем три дисциплины в&nbsp;понятную
-              последовательность действий.
+              <strong>8 дней</strong>
+              <span>
+                Не&nbsp;для объёма ради объёма. Мы знакомимся с&nbsp;местом старта
+                и&nbsp;связываем три дисциплины в&nbsp;понятную последовательность
+                действий.
+              </span>
             </p>
           </header>
 
@@ -165,8 +168,8 @@ export default function HomePage() {
             ))}
           </ol>
 
-          <div className="program-contact-sheet" aria-label="Тренировки и старты участников Hotline">
-            <figure className="program-shot program-shot-cyclist">
+          <div className="program-photo-pair" aria-label="Тренировки участников">
+            <figure className="program-shot">
               <img
                 src="./media/program-cyclist.jpg"
                 alt="Триатлет Hotline едет на шоссейном велосипеде"
@@ -175,39 +178,12 @@ export default function HomePage() {
                 loading="lazy"
               />
             </figure>
-            <figure className="program-shot program-shot-swimmer">
+            <figure className="program-shot">
               <img
                 src="./media/week-swimmer.jpg"
                 alt="Триатлет выходит из воды после плавательного этапа"
                 width="1600"
                 height="2400"
-                loading="lazy"
-              />
-            </figure>
-            <figure className="program-shot program-shot-ride">
-              <img
-                src="./media/hotline-ride.jpg"
-                alt="Участники Hotline держат строй на групповой велотренировке"
-                width="1680"
-                height="1117"
-                loading="lazy"
-              />
-            </figure>
-            <figure className="program-shot program-shot-team">
-              <img
-                src="./media/hotline-team-ride.jpg"
-                alt="Пелотон Hotline проходит поворот на тренировке"
-                width="1680"
-                height="1117"
-                loading="lazy"
-              />
-            </figure>
-            <figure className="program-shot program-shot-sochi">
-              <img
-                src="./media/hotline-finish-sochi.jpg"
-                alt="Участник Hotline финиширует на соревновании в Сириусе"
-                width="1680"
-                height="1116"
                 loading="lazy"
               />
             </figure>
@@ -217,7 +193,7 @@ export default function HomePage() {
         <section className="trainers screen" id="trainers" aria-labelledby="trainers-title">
           <header className="trainers-heading">
             <p className="eyebrow">Тренеры</p>
-            <h2 id="trainers-title">Знают финиш изнутри.</h2>
+            <h2 id="trainers-title">Знают финиш изнутри</h2>
             <p>
               Евгений и&nbsp;Максим ведут сбор вместе: разбирают технику,
               темп, переходы и&nbsp;решения, которые понадобятся уже на&nbsp;старте.
@@ -280,10 +256,10 @@ export default function HomePage() {
               </figure>
               <figure className="coach-portrait">
                 <img
-                  src="./media/maksim.jpg"
-                  alt="Портрет Максима Кубышко в беговой форме"
-                  width="933"
-                  height="1400"
+                  src="./media/maksim-pool.jpg"
+                  alt="Максим Кубышко поправляет очки перед тренировкой в бассейне"
+                  width="1597"
+                  height="2400"
                   loading="lazy"
                 />
               </figure>
@@ -314,14 +290,16 @@ export default function HomePage() {
       </main>
 
       <footer className="site-footer">
-        <a href="#about">Тренировочный сбор по&nbsp;триатлону в&nbsp;Сочи</a>
-        <p>
-          Условия:{" "}
-          <a href="https://open-meteo.com/" target="_blank" rel="noreferrer">
-            Open-Meteo
-          </a>
-        </p>
-        <a href="#about">Наверх</a>
+        <span className="footer-year">© 2026</span>
+        <a
+          className="footer-credit"
+          href="https://anton-gorokhovatsky.github.io/design/"
+          target="_blank"
+          rel="noreferrer"
+        >
+          Дизайн и&nbsp;разработка ↗
+        </a>
+        <a className="footer-top" href="#about">Наверх ↑</a>
       </footer>
     </>
   );

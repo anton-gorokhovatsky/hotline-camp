@@ -17,6 +17,7 @@ type ConditionsState = {
   status: "loading" | "ready" | "partial" | "error";
   values: [ConditionValue, ConditionValue, ConditionValue];
   summary: string;
+  sourceNote: string;
 };
 
 type WeatherResponse = {
@@ -41,11 +42,12 @@ type MarineResponse = {
 const loadingState: ConditionsState = {
   status: "loading",
   values: [
-    { label: "Воздух", value: "Загрузка", note: "Сочи" },
-    { label: "Море", value: "Загрузка", note: "у берега" },
-    { label: "Свет", value: "Загрузка", note: "рассвет / закат" },
+    { label: "Сочи сейчас", value: "Загрузка", note: "воздух" },
+    { label: "Чёрное море", value: "Загрузка", note: "у берега" },
+    { label: "Рассвет / закат", value: "Загрузка", note: "сегодня" },
   ],
   summary: "Загружаем наблюдения Open-Meteo",
+  sourceNote: "обновляем данные",
 };
 
 const unavailableValue = (label: string, note: string): ConditionValue => ({
@@ -87,10 +89,10 @@ function formatObservation(value: string | undefined) {
   }
 
   const [date, time] = value.split("T");
-  const dateLabel = formatDate(date);
+  const [, month, day] = date.split("-");
   const clock = time?.slice(0, 5);
 
-  return dateLabel && clock ? dateLabel + ", " + clock : null;
+  return month && day && clock ? day + "." + month + " · " + clock : null;
 }
 
 function describeWeather(code: number | undefined) {
@@ -139,9 +141,9 @@ export function ConditionsPanel() {
         return;
       }
 
-      let air = unavailableValue("Воздух", "не удалось обновить");
-      let daylight = unavailableValue("Свет", "не удалось обновить");
-      let sea = unavailableValue("Море", "не удалось обновить");
+      let air = unavailableValue("Сочи сейчас", "не удалось обновить");
+      let daylight = unavailableValue("Рассвет / закат", "не удалось обновить");
+      let sea = unavailableValue("Чёрное море", "не удалось обновить");
       let observation: string | null = null;
       let availableGroups = 0;
 
@@ -153,7 +155,7 @@ export function ConditionsPanel() {
 
         if (isNumber(current?.temperature_2m)) {
           air = {
-            label: "Воздух",
+            label: "Сочи сейчас",
             value: formatTemperature(current.temperature_2m),
             note: describeWeather(current.weather_code),
           };
@@ -162,8 +164,8 @@ export function ConditionsPanel() {
 
         if (sunrise && sunset) {
           daylight = {
-            label: "Свет",
-            value: sunrise + "—" + sunset,
+            label: "Рассвет / закат",
+            value: sunrise + " / " + sunset,
             note: formatDate(daily?.time?.[0]) || "сегодня",
           };
           availableGroups += 1;
@@ -177,9 +179,9 @@ export function ConditionsPanel() {
         && isNumber(marineResult.value.current?.sea_surface_temperature)
       ) {
         sea = {
-          label: "Море",
+          label: "Чёрное море",
           value: formatTemperature(marineResult.value.current.sea_surface_temperature),
-          note: "поверхность воды",
+          note: "у берега",
         };
         availableGroups += 1;
       }
@@ -192,11 +194,18 @@ export function ConditionsPanel() {
           : status === "partial"
             ? "Часть данных недоступна" + (observation ? " · " + observation : "")
             : "Данные Open-Meteo сейчас недоступны";
+      const sourceNote =
+        status === "ready"
+          ? observation || "наблюдение обновлено"
+          : status === "partial"
+            ? "часть данных недоступна"
+            : "данные недоступны";
 
       setConditions({
         status,
         values: [air, sea, daylight],
         summary,
+        sourceNote,
       });
     }
 
@@ -215,9 +224,14 @@ export function ConditionsPanel() {
       aria-busy={conditions.status === "loading"}
     >
       <div className="conditions-row">
-        {conditions.values.map((condition) => (
+        {conditions.values.map((condition, index) => (
           <div
-            className="condition service-island material-glass"
+            className={[
+              "condition",
+              ["condition-air", "condition-sea", "condition-daylight"][index],
+              "service-island",
+              "material-glass",
+            ].join(" ")}
             key={condition.label}
           >
             <span>{condition.label}</span>
@@ -225,17 +239,24 @@ export function ConditionsPanel() {
             <small>{condition.note}</small>
           </div>
         ))}
-      </div>
-      <p className="conditions-source" role="status" aria-atomic="true">
-        {conditions.summary}
-        {" · "}
+        <div className="condition condition-forecast service-island material-glass">
+          <span>27.09—04.10</span>
+          <strong>Прогноз с&nbsp;17 сентября</strong>
+          <small>за 10 дней до старта</small>
+        </div>
         <a
+          className="condition condition-source service-island material-glass"
           href="https://open-meteo.com/en/docs"
           target="_blank"
           rel="noreferrer"
         >
-          Источник наблюдений
+          <span>Источник</span>
+          <strong>Open-Meteo</strong>
+          <small>{conditions.sourceNote}</small>
         </a>
+      </div>
+      <p className="visually-hidden" role="status" aria-atomic="true">
+        {conditions.summary}
       </p>
     </aside>
   );
