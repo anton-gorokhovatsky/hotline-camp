@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     siteName: "Тренировочный сбор по триатлону в Сочи",
     title: "Тренировочный сбор по триатлону в Сочи",
     description:
-      "Собираем накопленную форму в\u00a0готовность к\u00a0конкретной гонке.",
+      "Восемь дней подготовки к\u00a0старту: трасса, открытая вода, транзитные зоны и\u00a0питание.",
     url: "./",
     images: [
       {
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Тренировочный сбор по триатлону в Сочи",
     description:
-      "Собираем накопленную форму в\u00a0готовность к\u00a0конкретной гонке.",
+      "Восемь дней подготовки к\u00a0старту: трасса, открытая вода, транзитные зоны и\u00a0питание.",
     images: ["./og.png"],
   },
   icons: {
@@ -73,7 +73,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
-      <body className={onest.variable}>{children}</body>
+      <body className={`${onest.variable} ${onest.className}`}>{children}</body>
     </html>
   );
 }

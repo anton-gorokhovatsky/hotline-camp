@@ -18,7 +18,7 @@ test("exports a complete static document", async () => {
   assert.equal((html.match(/<main\b/gi) ?? []).length, 1);
   assert.equal((html.match(/<section\b/gi) ?? []).length, 2);
   assert.equal((html.match(/<footer\b/gi) ?? []).length, 1);
-  assert.equal((html.match(/<header\b/gi) ?? []).length, 1);
+  assert.equal((html.match(/<header\b/gi) ?? []).length, 2);
   assert.equal((html.match(/<nav\b/gi) ?? []).length, 1);
 });
 
@@ -52,14 +52,23 @@ test("contains the current hero, trainers and final scene", async () => {
   assert.match(pageSource, /coach-evgeny-finish\.jpg/);
   assert.match(pageSource, /final-finish\.jpg/);
   assert.match(pageSource, /alt="Триатлет проходит велосипедный этап/);
-  assert.match(pageSource, /alt="Евгений Тихонин поднимает финишную ленту/);
+  assert.match(pageSource, /alt="Евгений Тихонин держит финишную ленту/);
   assert.match(pageSource, /alt="Максим Кубышко пересекает финишную ленту/);
 
   assert.match(pageSource, /const sochiConditions/);
-  assert.equal((pageSource.match(/className="condition/g) ?? []).length, 1);
-  assert.match(pageSource, /Прогноз с\\u00a017 сентября/);
-  assert.match(pageSource, /погода: Open-Meteo, 16\.08 · 23:15/);
-  assert.doesNotMatch(`${pageSource}\n${layoutSource}`, /2026/);
+  assert.equal(
+    (pageSource.match(/className="condition service-island material-glass"/g) ?? []).length,
+    1,
+  );
+  assert.match(pageSource, /Сочи сейчас/);
+  assert.match(pageSource, /Чёрное море/);
+  assert.match(pageSource, /Рассвет \/ закат/);
+  assert.doesNotMatch(pageSource, /Прогноз с\\u00a017 сентября/);
+  assert.match(pageSource, /Погода: Open-Meteo · обновлено 16 августа, 23:15/);
+  assert.doesNotMatch(
+    `${pageSource}\n${layoutSource}`,
+    /27\.09—04\.10(?:\.2026|\s*[·,]\s*2026)/,
+  );
   assert.doesNotMatch(css, /999px|linear-gradient|clip-path/i);
   assert.match(themeToggleSource, /useSyncExternalStore/);
   assert.doesNotMatch(themeToggleSource, /requestAnimationFrame/);
@@ -71,38 +80,31 @@ test("locks the service rail to MATERIAL / 01 and content-sized tiles", async ()
     readProjectFile("app/globals.css"),
   ]);
 
-  assert.equal((html.match(/class="[^"]*\bmaterial-glass\b[^"]*"/g) ?? []).length, 10);
-  assert.equal((html.match(/class="[^"]*\bglass-cluster\b[^"]*"/g) ?? []).length, 3);
-  assert.equal((html.match(/class="[^"]*\bservice-island\b[^"]*"/g) ?? []).length, 9);
+  assert.equal((html.match(/class="[^"]*\bmaterial-glass\b[^"]*"/g) ?? []).length, 3);
+  assert.equal((html.match(/class="[^"]*\bglass-cluster\b[^"]*"/g) ?? []).length, 0);
+  assert.equal((html.match(/class="[^"]*\bservice-island\b[^"]*"/g) ?? []).length, 3);
 
   assert.match(css, /--material-glass-fill:/);
   assert.match(css, /--material-glass-stroke:/);
   assert.match(css, /--material-glass-filter:/);
   assert.match(css, /--material-glass-shadow:/);
   assert.match(css, /--service-island-height:\s*4\.5rem;/);
+  assert.match(css, /--service-island-gap:\s*0\.7rem;/);
   assert.match(
     css,
     /\.material-glass\s*{[\s\S]*?background:\s*var\(--material-glass-fill\);[\s\S]*?backdrop-filter:\s*var\(--material-glass-filter\);[\s\S]*?}/,
   );
-  assert.match(css, /\.conditions\s*{[\s\S]*?flex:\s*0 1 auto;/);
+  assert.match(
+    css,
+    /\.conditions\s*{[\s\S]*?display:\s*flex;[\s\S]*?max-width:\s*calc\(100% - \(2 \* var\(--space-page\)\)\);/,
+  );
   assert.match(css, /\.condition\s*{[\s\S]*?width:\s*max-content;[\s\S]*?flex:\s*0 0 auto;/);
   assert.match(
     css,
     /\.service-island\s*{[\s\S]*?height:\s*var\(--service-island-height\);[\s\S]*?min-height:\s*var\(--service-island-height\);/,
   );
-  assert.match(css, /--cluster-gap:\s*0\.7rem;/);
-  assert.match(css, /--cluster-neck-overlap:\s*2px;/);
-  const connectorRule = css.match(
-    /\.glass-cluster > \.material-glass \+ \.material-glass::before\s*{[^}]*}/,
-  )?.[0];
-  assert.ok(connectorRule);
-  assert.match(connectorRule, /border-block:\s*1px solid var\(--material-glass-stroke\);/);
-  assert.doesNotMatch(connectorRule, /\n\s*border:\s*1px/);
+  assert.doesNotMatch(css, /glass-cluster|cluster-neck|cluster-gap/);
   assert.doesNotMatch(css, /\.condition:nth-child/);
-  assert.match(
-    css,
-    /@media \(max-width: 72rem\)[\s\S]*?\.masthead-meta \.theme-toggle::before\s*\{[\s\S]*?display:\s*none;/,
-  );
   assert.doesNotMatch(css, /--glass-fill|--glass-blur/);
 });
 
