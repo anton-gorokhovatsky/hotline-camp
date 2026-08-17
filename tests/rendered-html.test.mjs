@@ -76,7 +76,10 @@ test("uses only the supplied photographic set as one three-part narrative", asyn
 
   assert.equal((pageSource.match(/\balt="/g) ?? []).length, expectedPhotos.length);
   assert.match(pageSource, /alt="Евгений Тихонин проходит велосипедный этап/);
-  assert.match(pageSource, /alt="Евгений Тихонин держит финишную ленту/);
+  assert.match(
+    pageSource,
+    /alt="Евгений Тихонин финиширует Ironman 70\.3 Durban под табло с результатом 03:56:27"/,
+  );
   assert.match(pageSource, /alt="Максим Кубышко поправляет очки/);
   assert.match(pageSource, /alt="Максим Кубышко пересекает финишную ленту/);
   assert.match(pageSource, /Собрать гонку целиком/);
@@ -125,9 +128,9 @@ test("locks the five-part weather rail to the approved MATERIAL / 01 token", asy
 
   assert.match(css, /--material-glass-fill:\s*rgba\(13, 30, 20, 0\.3\);/);
   assert.match(css, /--material-glass-fill-hover:\s*rgba\(18, 38, 26, 0\.42\);/);
-  assert.match(css, /--material-glass-stroke:\s*rgba\(244, 241, 232, 0\.3\);/);
+  assert.match(css, /--material-glass-stroke:\s*rgba\(244, 241, 232, 0\.08\);/);
   assert.match(css, /--material-glass-filter:\s*blur\(18px\) saturate\(0\.78\) brightness\(0\.9\);/);
-  assert.match(css, /--service-island-height:\s*4\.5rem;/);
+  assert.match(css, /--service-island-height:\s*5\.125rem;/);
   assert.match(css, /--service-island-gap:\s*0\.25rem;/);
   assert.equal((css.match(/--material-glass-fill:/g) ?? []).length, 1);
   assert.equal((css.match(/--material-glass-fill-hover:/g) ?? []).length, 1);
@@ -147,9 +150,10 @@ test("locks the five-part weather rail to the approved MATERIAL / 01 token", asy
 });
 
 test("keeps the restrained fluid and accessible surface contract", async () => {
-  const [css, themeToggleSource] = await Promise.all([
+  const [css, themeToggleSource, pageSource] = await Promise.all([
     readProjectFile("app/globals.css"),
     readProjectFile("app/theme-toggle.tsx"),
+    readProjectFile("app/page.tsx"),
   ]);
 
   assert.match(css, /--space-page:\s*clamp\(/);
@@ -163,10 +167,33 @@ test("keeps the restrained fluid and accessible surface contract", async () => {
   assert.match(css, /forced-colors:\s*active/);
   assert.match(
     css,
-    /\.masthead\s*{[\s\S]*?border-bottom:\s*1px solid var\(--line\);[\s\S]*?background:\s*var\(--surface\);/,
+    /\.masthead\s*{[\s\S]*?position:\s*absolute;[\s\S]*?background:\s*transparent;/,
   );
+  assert.doesNotMatch(css, /\.masthead\s*{[^}]*border-(?:top|right|bottom|left):/);
   assert.match(css, /\.section-nav a\s*{[\s\S]*?min-height:\s*3rem;/);
   assert.match(css, /\.theme-toggle\s*{[\s\S]*?min-height:\s*3rem;/);
+  const mastheadSource = pageSource.match(
+    /<header className="masthead">[\s\S]*?<\/header>/,
+  )?.[0];
+  assert.ok(mastheadSource);
+  assert.doesNotMatch(mastheadSource, /<ThemeToggle\s*\/>/);
+  assert.match(
+    pageSource,
+    /<footer className="site-footer">[\s\S]*?<ThemeToggle\s*\/>[\s\S]*?<\/footer>/,
+  );
+  assert.match(pageSource, /© 2026/);
+  assert.match(pageSource, /Дизайн и&nbsp;разработка/);
+  const mobileStart = css.indexOf("@media (max-width: 46rem)");
+  const narrowStart = css.indexOf("@media (max-width: 23rem)", mobileStart);
+  assert.notEqual(mobileStart, -1);
+  assert.notEqual(narrowStart, -1);
+  const mobileCss = css.slice(mobileStart, narrowStart);
+  assert.match(
+    mobileCss,
+    /\.hero-stage\s*{[\s\S]*?grid-template-rows:\s*auto minmax\(0, 1fr\) auto;/,
+  );
+  assert.match(mobileCss, /\.hero-copy\s*{[\s\S]*?grid-row:\s*1;/);
+  assert.match(mobileCss, /\.conditions\s*{[\s\S]*?grid-row:\s*3;/);
   assert.doesNotMatch(css, /999px|linear-gradient|clip-path/i);
   assert.equal((css.match(/corner-shape:\s*squircle/g) ?? []).length, 2);
   assert.match(themeToggleSource, /useSyncExternalStore/);

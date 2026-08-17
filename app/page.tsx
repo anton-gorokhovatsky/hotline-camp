@@ -100,7 +100,6 @@ export default function HomePage() {
                 <a href="#trainers">Тренеры</a>
                 <a href="#registration">Участие</a>
               </nav>
-              <ThemeToggle />
             </div>
           </header>
 
@@ -119,23 +118,6 @@ export default function HomePage() {
               <p className="eyebrow">Сочи · Сириус · 27 сентября — 4 октября</p>
               <h1 id="hero-title">Последняя неделя перед стартом</h1>
               <CampCta />
-              <p className="hero-lead">
-                Заранее проедем велотрассу и&nbsp;пройдём беговой маршрут.
-                Отработаем навигацию в&nbsp;открытой воде, транзитные зоны
-                и&nbsp;питание на&nbsp;дистанции.
-              </p>
-
-              <dl className="camp-facts" aria-label="Главное о сборе">
-                {campFacts.map((fact) => (
-                  <div key={fact.label}>
-                    <dt>{fact.label}</dt>
-                    <dd>{fact.value}</dd>
-                  </div>
-                ))}
-              </dl>
-              <p className="cost-note">
-                Аренда дорожки в&nbsp;бассейне оплачивается отдельно.
-              </p>
             </div>
 
             <ConditionsPanel />
@@ -151,12 +133,33 @@ export default function HomePage() {
             <p className="program-intro">
               <strong>8 дней</strong>
               <span>
-                Не&nbsp;для объёма ради объёма. Мы знакомимся с&nbsp;местом старта
+                Не&nbsp;для объёма ради объёма. Мы&nbsp;знакомимся с&nbsp;местом старта
                 и&nbsp;связываем три дисциплины в&nbsp;понятную последовательность
                 действий.
               </span>
             </p>
           </header>
+
+          <div className="program-practical">
+            <p className="program-lead">
+              Заранее проедем велотрассу и&nbsp;пройдём беговой маршрут.
+              Отработаем навигацию в&nbsp;открытой воде, транзитные зоны
+              и&nbsp;питание на&nbsp;дистанции.
+            </p>
+            <div>
+              <dl className="camp-facts" aria-label="Главное о сборе">
+                {campFacts.map((fact) => (
+                  <div key={fact.label}>
+                    <dt>{fact.label}</dt>
+                    <dd>{fact.value}</dd>
+                  </div>
+                ))}
+              </dl>
+              <p className="cost-note">
+                Аренда дорожки в&nbsp;бассейне оплачивается отдельно.
+              </p>
+            </div>
+          </div>
 
           <ol className="program-notes" aria-label="Что отрабатываем на сборе">
             {programNotes.map((item) => (
@@ -215,9 +218,9 @@ export default function HomePage() {
               <figure className="coach-finish">
                 <img
                   src="./media/coach-evgeny-finish.jpg"
-                  alt="Евгений Тихонин держит финишную ленту над головой"
-                  width="1800"
-                  height="1202"
+                  alt="Евгений Тихонин финиширует Ironman 70.3 Durban под табло с результатом 03:56:27"
+                  width="2400"
+                  height="1599"
                   loading="lazy"
                 />
               </figure>
@@ -266,40 +269,48 @@ export default function HomePage() {
             </div>
           </article>
 
-          <div className="closing-scene" id="registration">
-            <figure className="closing-media">
-              <img
-                src="./media/final-finish.jpg"
-                alt="Максим Кубышко пересекает финишную ленту с поднятыми руками"
-                width="2400"
-                height="1599"
-                loading="lazy"
-              />
-            </figure>
-
-            <div className="closing-action">
-              <h2>Встретимся в&nbsp;Сочи?</h2>
-              <p>
-                Напиши нам в&nbsp;Telegram. Расскажем, как устроен сбор,
-                и&nbsp;ответим на&nbsp;вопросы.
-              </p>
-              <CampCta className="camp-cta-closing" />
-            </div>
+      <div className="closing-scene" id="registration">
+        <div className="closing-action">
+          <h2>Встретимся в&nbsp;Сочи?</h2>
+          <div className="closing-action-copy">
+            <p>
+              Напиши нам в&nbsp;Telegram. Расскажем, как устроен сбор,
+              и&nbsp;ответим на&nbsp;вопросы.
+            </p>
+            <CampCta className="camp-cta-closing" />
           </div>
+        </div>
+
+        <figure className="closing-media">
+          <img
+            src="./media/final-finish.jpg"
+            alt="Максим Кубышко пересекает финишную ленту с поднятыми руками"
+            width="2400"
+            height="1599"
+            loading="lazy"
+          />
+        </figure>
+      </div>
         </section>
       </main>
 
       <footer className="site-footer">
-        <span className="footer-year">© 2026</span>
-        <a
-          className="footer-credit"
-          href="https://anton-gorokhovatsky.github.io/design/"
-          target="_blank"
-          rel="noreferrer"
-        >
-          Дизайн и&nbsp;разработка ↗
-        </a>
-        <a className="footer-top" href="#about">Наверх ↑</a>
+        <div className="footer-meta">
+          <span className="footer-year">© 2026</span>
+          <ThemeToggle />
+          <a
+            className="footer-credit"
+            href="https://anton-gorokhovatsky.github.io/design/"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Дизайн и&nbsp;разработка ↗
+          </a>
+          <a className="footer-top" href="#about">
+            <span>Наверх</span>
+            <span aria-hidden="true">↑</span>
+          </a>
+        </div>
       </footer>
     </>
   );

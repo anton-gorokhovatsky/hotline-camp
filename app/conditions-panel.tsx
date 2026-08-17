@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
 const WEATHER_URL =
   "https://api.open-meteo.com/v1/forecast?latitude=43.5855&longitude=39.7231&current=temperature_2m%2Cweather_code&daily=sunrise%2Csunset&timezone=Europe%2FMoscow&forecast_days=1";
@@ -126,6 +126,28 @@ async function fetchJson<T>(url: string, signal: AbortSignal): Promise<T> {
 
 export function ConditionsPanel() {
   const [conditions, setConditions] = useState<ConditionsState>(loadingState);
+  const railRef = useRef<HTMLElement>(null);
+
+  useLayoutEffect(() => {
+    const rail = railRef.current;
+
+    if (!rail) {
+      return;
+    }
+
+    const resetPosition = () => {
+      rail.scrollLeft = 0;
+    };
+
+    resetPosition();
+    const frame = window.requestAnimationFrame(resetPosition);
+    window.addEventListener("pageshow", resetPosition);
+
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.removeEventListener("pageshow", resetPosition);
+    };
+  }, []);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -220,6 +242,7 @@ export function ConditionsPanel() {
   return (
     <aside
       className="conditions"
+      ref={railRef}
       aria-label="Условия в Сочи"
       aria-busy={conditions.status === "loading"}
     >
