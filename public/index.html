@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f2eee7" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#101110" media="(prefers-color-scheme: dark)">
+    <title>Тренировочный сбор по триатлону в Сочи</title>
+    <meta name="description" content="Восемь дней подготовки к старту: трасса, открытая вода, транзитные зоны и питание. Сочи, 27 сентября — 4 октября.">
+    <link rel="canonical" href="https://anton-gorokhovatsky.github.io/hotline-camp/">
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="ru_RU">
+    <meta property="og:site_name" content="Тренировочный сбор по триатлону в Сочи">
+    <meta property="og:title" content="Тренировочный сбор по триатлону в Сочи">
+    <meta property="og:description" content="Восемь дней подготовки к старту: трасса, открытая вода, транзитные зоны и питание.">
+    <meta property="og:url" content="https://anton-gorokhovatsky.github.io/hotline-camp/">
+    <meta property="og:image" content="https://anton-gorokhovatsky.github.io/hotline-camp/og.png">
+    <meta property="og:image:width" content="1729">
+    <meta property="og:image:height" content="910">
+    <meta property="og:image:alt" content="Тренировочный сбор по триатлону в Сочи, 27 сентября — 4 октября">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <script>
+      try {
+        const storedTheme = localStorage.getItem("camp-theme");
+        const theme = storedTheme === "dark" || storedTheme === "light"
+          ? storedTheme
+          : matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        document.documentElement.dataset.theme = theme;
+        document.documentElement.style.colorScheme = theme;
+      } catch (_) {}
+    </script>
+    <link rel="stylesheet" href="./styles.css">
+    <script src="./app.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#about">Перейти к&nbsp;содержанию</a>
+
+    <main>
+      <section class="hero screen" id="about" aria-labelledby="hero-title">
+        <header class="masthead" id="masthead">
+          <a class="brand" href="#about" aria-label="Тренировочный сбор по триатлону в Сочи — наверх">
+            <strong>Тренировочный сбор</strong>
+            <span>по&nbsp;триатлону в&nbsp;Сочи</span>
+          </a>
+
+          <div class="masthead-actions">
+            <nav class="section-nav" aria-label="Разделы страницы">
+              <a href="#program">Программа</a>
+              <a href="#trainers">Тренеры</a>
+              <a href="#registration">Участие</a>
+            </nav>
+
+            <button class="theme-toggle theme-toggle--icon" type="button" data-theme-toggle aria-pressed="false">
+              <svg class="theme-toggle-icon theme-toggle-icon--moon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M20 15.2A8.5 8.5 0 0 1 8.8 4a8.5 8.5 0 1 0 11.2 11.2Z"></path>
+              </svg>
+              <svg class="theme-toggle-icon theme-toggle-icon--sun" viewBox="0 0 24 24" aria-hidden="true" hidden>
+                <circle cx="12" cy="12" r="4"></circle>
+                <path d="M12 2v2m0 16v2M2 12h2m16 0h2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4"></path>
+              </svg>
+            </button>
+
+            <div class="mobile-menu">
+              <button
+                class="menu-toggle"
+                id="menu-toggle"
+                type="button"
+                aria-expanded="false"
+                aria-controls="mobile-menu-panel"
+                aria-label="Открыть меню"
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path class="menu-icon-open" d="M4 8h16M4 16h16"></path>
+                  <path class="menu-icon-close" d="M5 5l14 14M19 5 5 19" hidden></path>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <nav class="mobile-menu-panel" id="mobile-menu-panel" aria-label="Меню страницы" hidden>
+            <div class="mobile-menu-links">
+              <a href="#program">Программа</a>
+              <a href="#trainers">Тренеры</a>
+              <a href="#registration">Участие</a>
+            </div>
+            <div class="mobile-menu-details">
+              <p class="mobile-menu-dates">
+                <span>Сочи · Сириус</span>
+                <strong>27 сентября — 4 октября</strong>
+              </p>
+              <a class="camp-cta camp-cta-menu" href="https://t.me/DDopenChat" target="_blank" rel="noreferrer">
+                <span>Обсудить участие</span>
+                <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M6 18 18 6M9 6h9v9"></path></svg>
+              </a>
+            </div>
+            <div class="mobile-menu-theme">
+              <button class="theme-toggle theme-toggle--menu" type="button" data-theme-toggle aria-pressed="false">
+                <svg class="theme-toggle-icon theme-toggle-icon--moon" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M20 15.2A8.5 8.5 0 0 1 8.8 4a8.5 8.5 0 1 0 11.2 11.2Z"></path>
+                </svg>
+                <svg class="theme-toggle-icon theme-toggle-icon--sun" viewBox="0 0 24 24" aria-hidden="true" hidden>
+                  <circle cx="12" cy="12" r="4"></circle>
+                  <path d="M12 2v2m0 16v2M2 12h2m16 0h2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4"></path>
+                </svg>
+                <span class="theme-toggle-label">Ночная версия</span>
+              </button>
+            </div>
+          </nav>
+        </header>
+
+        <div class="hero-stage">
+          <figure class="hero-media">
+            <img
+              src="./media/hero-time-trial.jpg"
+              alt="Евгений Тихонин проходит велосипедный этап на разделочном велосипеде"
+              width="2400"
+              height="1599"
+              fetchpriority="high"
+            >
+          </figure>
+
+          <div class="hero-copy">
+            <p class="eyebrow">Сочи · Сириус · 27 сентября — 4 октября</p>
+            <h1 id="hero-title">Последняя неделя перед стартом</h1>
+            <p class="hero-lead">
+              Заранее проедем велотрассу и&nbsp;пройдём беговой маршрут.
+              Отработаем навигацию в&nbsp;открытой воде, транзитные зоны
+              и&nbsp;питание на&nbsp;дистанции.
+            </p>
+            <a class="camp-cta" href="https://t.me/DDopenChat" target="_blank" rel="noreferrer">
+              <span>Обсудить участие</span>
+              <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M6 18 18 6M9 6h9v9"></path></svg>
+            </a>
+          </div>
+
+          <aside class="conditions" aria-label="Условия в Сочи" aria-busy="true">
+            <div class="conditions-row">
+              <div class="condition condition-air service-island material-glass">
+                <span>Сочи сейчас</span>
+                <strong data-condition="air-value">Загрузка</strong>
+                <small data-condition="air-note">воздух</small>
+              </div>
+              <div class="condition condition-sea service-island material-glass">
+                <span>Чёрное море</span>
+                <strong data-condition="sea-value">Загрузка</strong>
+                <small data-condition="sea-note">у&nbsp;берега</small>
+              </div>
+              <div class="condition condition-daylight service-island material-glass">
+                <span>Рассвет / закат</span>
+                <strong data-condition="daylight-value">Загрузка</strong>
+                <small data-condition="daylight-note">сегодня</small>
+              </div>
+              <div class="condition condition-forecast service-island material-glass">
+                <span>27.09—04.10</span>
+                <strong>Прогноз с&nbsp;17 сентября</strong>
+                <small>за&nbsp;10 дней до&nbsp;старта</small>
+              </div>
+              <a class="condition condition-source service-island material-glass" href="https://open-meteo.com/en/docs" target="_blank" rel="noreferrer">
+                <span>Источник</span>
+                <strong>Open-Meteo</strong>
+                <small data-condition="source-note">обновляем данные</small>
+              </a>
+            </div>
+            <p class="visually-hidden" data-condition="status" role="status" aria-atomic="true">Загружаем наблюдения Open-Meteo</p>
+          </aside>
+        </div>
+      </section>
+
+      <section class="program screen" id="program" aria-labelledby="program-title">
+        <header class="program-heading">
+          <div class="program-title-block">
+            <p class="eyebrow">Подготовка на&nbsp;месте</p>
+            <h2 id="program-title">Собрать гонку целиком</h2>
+          </div>
+
+          <div class="program-side">
+            <p class="program-intro">
+              <strong>8 дней</strong>
+              <span>
+                Не&nbsp;для объёма ради объёма. Мы&nbsp;знакомимся с&nbsp;местом старта
+                и&nbsp;связываем три дисциплины в&nbsp;понятную последовательность действий.
+              </span>
+            </p>
+            <dl class="camp-facts" aria-label="Главное о сборе">
+              <div><dt>Когда</dt><dd>27.09—04.10</dd></div>
+              <div><dt>Группа</dt><dd>До&nbsp;15 человек</dd></div>
+              <div><dt>Стоимость</dt><dd>30&#8239;000&nbsp;₽</dd></div>
+            </dl>
+            <p class="cost-note">Аренда дорожки в&nbsp;бассейне оплачивается отдельно.</p>
+          </div>
+        </header>
+
+        <ol class="program-notes" aria-label="Что отрабатываем на сборе">
+          <li>
+            <span>01</span>
+            <h3>Велосипед</h3>
+            <p>Заранее проедем соревновательную трассу и&nbsp;разберём, где держать темп.</p>
+          </li>
+          <li>
+            <span>02</span>
+            <h3>Бег</h3>
+            <p>Пройдём беговой маршрут, чтобы на&nbsp;старте не&nbsp;тратить внимание на&nbsp;незнакомые повороты.</p>
+          </li>
+          <li>
+            <span>03</span>
+            <h3>Открытая вода</h3>
+            <p>Отработаем ориентирование и&nbsp;спокойный вход в&nbsp;дистанцию.</p>
+          </li>
+          <li>
+            <span>04</span>
+            <h3>Транзит и&nbsp;питание</h3>
+            <p>Соберём переходы и&nbsp;план питания в&nbsp;один повторяемый сценарий.</p>
+          </li>
+        </ol>
+      </section>
+
+      <section class="trainers screen" id="trainers" aria-labelledby="trainers-title">
+        <header class="trainers-heading">
+          <p class="eyebrow">Тренеры</p>
+          <h2 id="trainers-title">Сами выходят на&nbsp;старт</h2>
+          <p>
+            Евгений и&nbsp;Максим ведут сбор вместе. Разбирают с&nbsp;вами технику,
+            темп, переходы и&nbsp;решения, которые понадобятся в&nbsp;день гонки.
+          </p>
+        </header>
+
+        <article class="coach-story coach-story-evgeny">
+          <div class="coach-copy">
+            <p class="coach-affiliation">Hotline</p>
+            <h3>Евгений Тихонин</h3>
+            <ul class="coach-credentials">
+              <li>Четырёхкратный чемпион России</li>
+              <li>Бронзовый призёр чемпионата мира Ironman 70.3, 2025</li>
+              <li>Победитель Ironman 70.3 Oman 2025 и&nbsp;Durban 2026</li>
+              <li>Победитель T100 Qatar 2025</li>
+            </ul>
+          </div>
+
+          <div class="coach-images">
+            <figure class="coach-finish">
+              <img
+                src="./media/coach-evgeny-finish.jpg"
+                alt="Евгений Тихонин финиширует Ironman 70.3 Durban под табло с результатом 03:56:27"
+                width="2400"
+                height="1599"
+                loading="lazy"
+              >
+            </figure>
+            <figure class="coach-context">
+              <img
+                src="./media/week-swimmer.jpg"
+                alt="Евгений Тихонин выходит из воды после плавательного этапа в гидрокостюме"
+                width="1600"
+                height="2400"
+                loading="lazy"
+              >
+            </figure>
+          </div>
+        </article>
+
+        <article class="coach-story coach-story-maksim">
+          <div class="coach-copy">
+            <p class="coach-affiliation">Dusty Dumbbells</p>
+            <h3>Максим Кубышко</h3>
+            <ul class="coach-credentials">
+              <li>Мастер спорта по&nbsp;современному пятиборью</li>
+              <li>Чемпион Москвы по&nbsp;современному пятиборью, 2014 и&nbsp;2017</li>
+              <li>Победитель Всероссийской летней спартакиады учащихся, 2015</li>
+              <li>Победитель Ironstar Sprint в&nbsp;составе эстафетной команды, 2024</li>
+            </ul>
+          </div>
+
+          <div class="coach-images">
+            <figure class="coach-finish">
+              <img
+                src="./media/coach-maksim-finish.jpg"
+                alt="Максим Кубышко приближается к финишной ленте"
+                width="1800"
+                height="1199"
+                loading="lazy"
+              >
+            </figure>
+            <figure class="coach-context">
+              <img
+                src="./media/maksim-pool.jpg"
+                alt="Максим Кубышко поправляет очки перед тренировкой в бассейне"
+                width="1597"
+                height="2400"
+                loading="lazy"
+              >
+            </figure>
+          </div>
+        </article>
+      </section>
+
+      <section class="closing-scene screen" id="registration" aria-labelledby="registration-title">
+        <div class="closing-action">
+          <h2 id="registration-title">Встретимся в&nbsp;Сочи?</h2>
+          <div class="closing-action-copy">
+            <p>Напиши нам в&nbsp;Telegram. Расскажем, как устроен сбор, и&nbsp;ответим на&nbsp;вопросы.</p>
+            <a class="camp-cta camp-cta-closing" href="https://t.me/DDopenChat" target="_blank" rel="noreferrer">
+              <span>Обсудить участие</span>
+              <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M6 18 18 6M9 6h9v9"></path></svg>
+            </a>
+          </div>
+        </div>
+
+        <figure class="closing-media">
+          <img
+            src="./media/final-finish.jpg"
+            alt="Максим Кубышко пересекает финишную ленту с поднятыми руками"
+            width="2400"
+            height="1599"
+            loading="lazy"
+          >
+        </figure>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-meta">
+        <span class="footer-year">© 2026</span>
+        <a class="footer-credit" href="https://anton-gorokhovatsky.github.io/design/" target="_blank" rel="noreferrer">
+          Дизайн и&nbsp;разработка ↗
+        </a>
+      </div>
+    </footer>
+  </body>
+</html>

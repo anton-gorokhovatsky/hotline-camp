@@ -9,30 +9,34 @@
 - тренеры Евгений Тихонин и Максим Кубышко;
 - светлая и тёмная темы;
 - регистрационный CTA в Telegram;
-- статическая сборка для GitHub Pages.
+- чистая статическая публикация через GitHub Pages.
 
 ## Локальная разработка
 
-Нужен Node.js `>=22.13.0` и pnpm.
+Сборка и Node.js не нужны. Исходник сайта находится в `public/`.
 
 ```bash
-pnpm install
-pnpm dev
-pnpm lint
-pnpm test
+python3 -m http.server 3000 --directory public
+```
+
+После запуска сайт доступен на `http://localhost:3000/`.
+
+Контракт страницы проверяется стандартной библиотекой Python, без сторонних
+зависимостей:
+
+```bash
+python3 scripts/check_static.py
 ```
 
 ## GitHub Pages
 
-Workflow `.github/workflows/pages.yml` собирает проект с базовым путём
-`/hotline-camp/`. Стандартный статический export Next.js сразу создаёт папку
-`out/`, которую workflow публикует через GitHub Pages Actions.
-
-Локальная разработка идёт через pnpm, а единственный настроенный канал
-публикации — GitHub Pages workflow выше.
+Workflow `.github/workflows/pages.yml` проверяет статический контракт и
+публикует папку `public/` без шага сборки. Единственный настроенный канал
+публикации остаётся прежним: GitHub Pages Actions.
 
 ## Контент, который ещё нужно заменить
 
 Кнопки сейчас ведут в публичный чат Dusty Dumbbells `@DDopenChat`. Когда команда
-даст отдельный Telegram-контакт для регистрации, достаточно заменить константу
-`telegramUrl` в `app/page.tsx`.
+даст отдельный Telegram-контакт для регистрации, нужно заменить одинаковый
+адрес во всех трёх CTA в `public/index.html`; проверка не пропустит разные URL
+или разные формулировки.
