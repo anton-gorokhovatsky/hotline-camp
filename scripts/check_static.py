@@ -94,7 +94,7 @@ def main() -> int:
     require(len(cta_indexes) == 3, "hero, menu and closing must expose the same CTA")
     for index in cta_indexes:
         require(parser.links[index].get("href") == CTA_URL, "every CTA must use the approved form URL")
-        require(parser.anchor_texts[index].startswith("Обсудить участие"), "every CTA must use the approved text")
+        require(parser.anchor_texts[index].startswith("Заполнить заявку"), "every CTA must use the approved text")
 
     selected_photos = {
         "hero-time-trial.jpg",
