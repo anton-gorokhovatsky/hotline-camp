@@ -8,26 +8,44 @@
 
 :root {
   --font-sans: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-display: var(--font-sans);
 
-  --ink: #101410;
-  --ink-soft: #34423a;
-  --paper: #eeeae1;
-  --paper-soft: #dce2dc;
-  --sea-deep: #07140d;
-  --sea-muted: #77938a;
-  --sand-muted: #c9b99d;
-  --oleander: #ff5b78;
+  /* Наблюдаемая палитра Сочи: известняк, сланец, магнолия, эвкалипт, море и олеандр. */
+  --sochi-limestone-wet: #c7cac4;
+  --sochi-limestone-sun: #f2ecdf;
+  --sochi-slate: #131c1a;
+  --sochi-magnolia: #0b2b1d;
+  --sochi-eucalyptus: #789aa0;
+  --sochi-autumn-sea: #319395;
+  --sochi-fern: #c87451;
+  --sochi-oleander: #df5673;
+  --sochi-oleander-deep: #86172f;
+
+  /* Fallback сохраняется статичным; app.js уточняет эти три тона по солнцу в Сочи. */
+  --solar-surface-tint: #eee5d7;
+  --solar-accent: #398f91;
+  --solar-deep: #0b2b1d;
+
+  --ink: #111713;
+  --ink-soft: #35443c;
+  --paper: #f2eee5;
+  --paper-soft: #dce2df;
+  --sea-deep: color-mix(in oklab, var(--sochi-slate) 78%, var(--solar-deep));
+  --sea-muted: color-mix(in oklab, var(--sochi-eucalyptus) 78%, var(--solar-accent));
+  --sand-muted: color-mix(in oklab, #c7b49a 86%, var(--solar-surface-tint));
+  --oleander: color-mix(in oklab, var(--sochi-oleander) 82%, var(--solar-accent));
   --oleander-ink: #18070c;
+  --final-red: color-mix(in oklab, var(--sochi-oleander-deep) 90%, var(--solar-accent));
 
-  --page: #d4dbd5;
-  --surface: #f0ede5;
-  --surface-muted: #d9dfd9;
-  --surface-sea: #aebeb7;
-  --text: #101410;
-  --text-muted: #526159;
-  --line: rgba(16, 20, 16, 0.2);
-  --photo-mat: #16231c;
-  --focus: #006f63;
+  --page: color-mix(in oklab, var(--sochi-limestone-wet) 78%, var(--solar-surface-tint));
+  --surface: color-mix(in oklab, var(--sochi-limestone-sun) 86%, var(--solar-surface-tint));
+  --surface-muted: color-mix(in oklab, var(--sochi-limestone-wet) 84%, var(--sochi-eucalyptus));
+  --surface-sea: color-mix(in oklab, var(--sochi-eucalyptus) 78%, var(--solar-accent));
+  --text: var(--ink);
+  --text-muted: color-mix(in oklab, var(--ink-soft) 82%, var(--sochi-eucalyptus));
+  --line: color-mix(in oklab, var(--ink) 20%, transparent);
+  --photo-mat: color-mix(in oklab, var(--sochi-slate) 74%, var(--solar-deep));
+  --focus: color-mix(in oklab, var(--sochi-autumn-sea) 78%, var(--solar-accent));
 
   --radius-control: 0.78rem;
   --radius-card: 1.18rem;
@@ -44,15 +62,15 @@
   --type-title: clamp(3.4rem, 4.7vw, 5.5rem);
   --type-section: clamp(3.1rem, 6.1vw, 7rem);
 
-  --material-glass-fill: rgba(13, 30, 20, 0.3);
-  --material-glass-fill-hover: rgba(18, 38, 26, 0.42);
-  --material-glass-stroke: rgba(244, 241, 232, 0.08);
+  --material-glass-fill: color-mix(in srgb, var(--sea-deep) 46%, transparent);
+  --material-glass-fill-hover: color-mix(in srgb, var(--sea-deep) 58%, transparent);
+  --material-glass-stroke: color-mix(in srgb, var(--paper) 12%, transparent);
   --material-glass-filter: blur(18px) saturate(0.78) brightness(0.9);
   --material-glass-shadow: 0 0.35rem 1.15rem rgba(2, 6, 4, 0.06);
-  --material-glass-text: #f4f1e8;
-  --material-glass-text-soft: #b8c3ba;
-  --material-accent-fill: rgba(120, 15, 40, 0.7);
-  --material-accent-stroke: rgba(255, 204, 212, 0.2);
+  --material-glass-text: var(--paper);
+  --material-glass-text-soft: color-mix(in oklab, var(--paper) 72%, var(--sochi-eucalyptus));
+  --material-accent-fill: color-mix(in srgb, var(--final-red) 84%, transparent);
+  --material-accent-stroke: color-mix(in srgb, var(--paper) 22%, transparent);
   --material-accent-filter: blur(18px) saturate(0.78) brightness(0.9);
   --material-accent-shadow: 0 0.55rem 1.5rem rgba(44, 3, 12, 0.18);
   --service-island-height: 5.125rem;
@@ -60,15 +78,15 @@
 }
 
 :root[data-theme="dark"] {
-  --page: #020805;
-  --surface: #08140d;
-  --surface-muted: #16241b;
-  --surface-sea: #243b32;
-  --text: #eeeae1;
-  --text-muted: #b7c2bb;
-  --line: rgba(255, 91, 120, 0.23);
-  --photo-mat: #020805;
-  --focus: #4fd5c4;
+  --page: color-mix(in oklab, #030807 90%, var(--solar-deep));
+  --surface: color-mix(in oklab, var(--sochi-slate) 84%, var(--solar-deep));
+  --surface-muted: color-mix(in oklab, #17231f 82%, var(--solar-deep));
+  --surface-sea: color-mix(in oklab, #263d37 76%, var(--solar-accent));
+  --text: var(--paper);
+  --text-muted: color-mix(in oklab, var(--paper-soft) 78%, var(--sochi-eucalyptus));
+  --line: color-mix(in oklab, var(--solar-accent) 34%, transparent);
+  --photo-mat: color-mix(in oklab, #020605 88%, var(--solar-deep));
+  --focus: color-mix(in oklab, #61d8c8 78%, var(--solar-accent));
 }
 
 * {
@@ -141,6 +159,15 @@ h3 {
   text-wrap: balance;
 }
 
+.hero-copy h1,
+.program-heading h2,
+.trainers-heading h2,
+.coach-copy h3,
+.closing-action h2 {
+  font-family: var(--font-display);
+  font-synthesis: none;
+}
+
 p,
 li {
   text-wrap: pretty;
@@ -188,7 +215,7 @@ a {
 .hero {
   position: relative;
   isolation: isolate;
-  background: #d9d9d5;
+  background: var(--surface-muted);
   color: var(--ink);
 }
 
@@ -724,18 +751,23 @@ a {
 
 /* Третий экран: опыт тренеров и один финальный шаг. */
 .trainers {
-  padding-top: clamp(3.5rem, 6vw, 6rem);
+  overflow: hidden;
+  padding-top: 0;
   background: var(--sea-deep);
   color: var(--paper);
 }
 
 .trainers-heading {
+  position: relative;
   display: grid;
+  min-height: clamp(34rem, 68svh, 50rem);
   grid-template-columns: repeat(12, minmax(0, 1fr));
-  align-items: start;
+  align-content: end;
+  align-items: end;
   column-gap: var(--grid-gap);
   row-gap: clamp(1rem, 1.5vw, 1.75rem);
-  padding: 0 var(--space-page) clamp(3rem, 5vw, 5rem);
+  padding: clamp(5rem, 9vw, 9rem) var(--space-page) clamp(4rem, 6vw, 6rem);
+  border-bottom: 1px solid color-mix(in srgb, var(--paper) 12%, transparent);
 }
 
 .trainers-heading .eyebrow {
@@ -747,11 +779,11 @@ a {
 .trainers-heading h2 {
   grid-column: 1 / 8;
   grid-row: 2;
-  max-width: 11ch;
-  font-size: clamp(3.5rem, 5.3vw, 6.5rem);
-  font-weight: 700;
-  letter-spacing: -0.028em;
-  line-height: 1.01;
+  max-width: 8ch;
+  font-size: clamp(5.25rem, 9vw, 10rem);
+  font-weight: 760;
+  letter-spacing: -0.018em;
+  line-height: 0.8;
 }
 
 .trainers-heading > p:last-child {
@@ -765,19 +797,45 @@ a {
 }
 
 .coach-story {
+  position: relative;
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
-  gap: var(--grid-gap);
+  grid-template-rows: auto 1fr;
+  column-gap: var(--grid-gap);
+  row-gap: clamp(2rem, 3vw, 3rem);
   align-items: start;
-  padding: clamp(2.75rem, 4.5vw, 4.5rem) var(--space-page) clamp(4rem, 7vw, 7rem);
+  min-height: clamp(46rem, 92svh, 67rem);
+  overflow: hidden;
+  padding: clamp(4rem, 6vw, 6rem) var(--space-page) clamp(4.5rem, 7vw, 7rem);
+  border-bottom: 1px solid color-mix(in srgb, var(--paper) 10%, transparent);
+  isolation: isolate;
+}
+
+.coach-story::before {
+  content: attr(data-coach-index);
+  position: absolute;
+  inset: clamp(1rem, 2vw, 2rem) var(--space-page) auto auto;
+  z-index: -1;
+  color: color-mix(in srgb, var(--solar-accent) 12%, transparent);
+  font-family: var(--font-display);
+  font-size: clamp(15rem, 34vw, 38rem);
+  font-weight: 780;
+  letter-spacing: -0.08em;
+  line-height: 0.72;
+  pointer-events: none;
+  user-select: none;
 }
 
 .coach-copy {
   grid-column: 1 / 5;
-  padding-top: clamp(0.25rem, 1vw, 1rem);
+  grid-row: 1;
+  padding-top: 0;
 }
 
 .coach-affiliation {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
   color: var(--oleander);
   font-size: var(--type-label);
   font-weight: 700;
@@ -785,33 +843,61 @@ a {
   text-transform: uppercase;
 }
 
+.coach-affiliation::after {
+  content: "";
+  width: min(7rem, 20vw);
+  height: 1px;
+  background: currentColor;
+  opacity: 0.58;
+}
+
 .coach-copy h3 {
-  max-width: 9ch;
-  margin-top: 0.85rem;
-  font-size: clamp(3rem, 4.9vw, 5.8rem);
-  font-weight: 700;
-  letter-spacing: -0.028em;
-  line-height: 1;
+  max-width: 100%;
+  margin-top: clamp(1rem, 1.5vw, 1.4rem);
+  font-size: clamp(4.25rem, 6.4vw, 7.4rem);
+  font-weight: 760;
+  letter-spacing: -0.018em;
+  line-height: 0.78;
 }
 
 .coach-credentials {
   display: grid;
-  gap: clamp(0.72rem, 1.2vw, 1.05rem);
-  margin-top: clamp(2rem, 3.5vw, 3.6rem);
+  grid-column: 1 / 5;
+  grid-row: 2;
+  align-self: end;
+  gap: 0;
+  margin-top: 0;
+  border-top: 1px solid color-mix(in srgb, var(--paper) 16%, transparent);
+  counter-reset: achievement;
   list-style: none;
 }
 
 .coach-credentials li {
+  display: grid;
+  grid-template-columns: 1.7rem minmax(0, 1fr);
+  gap: 0.7rem;
   max-width: 30rem;
-  padding: 0;
-  color: rgba(238, 234, 225, 0.72);
+  padding: clamp(0.72rem, 1vw, 0.95rem) 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--paper) 12%, transparent);
+  color: color-mix(in oklab, var(--paper) 74%, var(--sea-muted));
   font-size: clamp(0.96rem, 0.9rem + 0.24vw, 1.14rem);
   line-height: 1.42;
+  counter-increment: achievement;
+}
+
+.coach-credentials li::before {
+  content: "0" counter(achievement);
+  color: var(--oleander);
+  font-family: var(--font-display);
+  font-size: 1.05em;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
 }
 
 .coach-images {
   display: grid;
   grid-column: 5 / 13;
+  grid-row: 1 / 3;
   grid-template-columns: minmax(0, 2.15fr) minmax(11rem, 1fr);
   align-items: end;
   gap: clamp(0.75rem, 1.2vw, 1.35rem);
@@ -828,6 +914,7 @@ a {
 .coach-finish img {
   width: 100%;
   height: auto;
+  background: var(--photo-mat);
 }
 
 .coach-context {
@@ -840,15 +927,20 @@ a {
 .coach-context img {
   width: 100%;
   height: auto;
+  background: var(--photo-mat);
 }
 
 .coach-story-maksim .coach-copy {
   grid-column: 9 / 13;
 }
 
+.coach-story-maksim .coach-credentials {
+  grid-column: 9 / 13;
+}
+
 .coach-story-maksim .coach-images {
   grid-column: 1 / 9;
-  grid-row: 1;
+  grid-row: 1 / 3;
   grid-template-columns: minmax(11rem, 1fr) minmax(0, 2.15fr);
   padding: 0;
 }
@@ -865,12 +957,14 @@ a {
   display: grid;
   grid-template-rows: auto auto;
   overflow: hidden;
-  background: var(--surface);
-  color: var(--text);
+  background: var(--final-red);
+  color: var(--paper);
 }
 
 .closing-media {
   position: relative;
+  z-index: 1;
+  grid-row: 1;
   width: 100%;
   aspect-ratio: 2400 / 1599;
   overflow: hidden;
@@ -885,7 +979,32 @@ a {
 }
 
 .closing-media::after {
-  display: none;
+  content: "";
+  position: absolute;
+  inset: 0;
+  display: block;
+  background: var(--final-red);
+  -webkit-backdrop-filter: var(--material-accent-filter);
+  backdrop-filter: var(--material-accent-filter);
+  -webkit-mask-image: radial-gradient(
+    ellipse 120% 78% at 42% 112%,
+    #000 0%,
+    #000 44%,
+    rgba(0, 0, 0, 0.86) 58%,
+    rgba(0, 0, 0, 0.5) 73%,
+    rgba(0, 0, 0, 0.12) 87%,
+    transparent 100%
+  );
+  mask-image: radial-gradient(
+    ellipse 120% 78% at 42% 112%,
+    #000 0%,
+    #000 44%,
+    rgba(0, 0, 0, 0.86) 58%,
+    rgba(0, 0, 0, 0.5) 73%,
+    rgba(0, 0, 0, 0.12) 87%,
+    transparent 100%
+  );
+  pointer-events: none;
 }
 
 :root[data-theme="dark"] .coach-finish img,
@@ -894,20 +1013,24 @@ a {
 }
 
 .closing-action {
+  position: relative;
+  z-index: 2;
   display: grid;
+  grid-row: 2;
   grid-template-columns: minmax(0, 1.2fr) minmax(20rem, 0.55fr);
   align-items: end;
   gap: var(--grid-gap);
   min-width: 0;
-  padding: clamp(3rem, 5vw, 5rem) var(--space-page) clamp(2.5rem, 4vw, 4rem);
+  padding: clamp(3.5rem, 5vw, 5rem) var(--space-page) clamp(2.75rem, 4vw, 4rem);
+  background: var(--final-red);
 }
 
 .closing-action h2 {
-  max-width: 12ch;
-  font-size: clamp(3.25rem, 4.4vw, 5.5rem);
-  font-weight: 700;
-  letter-spacing: -0.028em;
-  line-height: 0.99;
+  max-width: 10ch;
+  font-size: clamp(5rem, 6.6vw, 8rem);
+  font-weight: 760;
+  letter-spacing: -0.018em;
+  line-height: 0.8;
 }
 
 .closing-action-copy {
@@ -918,25 +1041,25 @@ a {
 .closing-action p {
   max-width: 28rem;
   margin: 0;
-  color: var(--text-muted);
+  color: color-mix(in oklab, var(--paper) 78%, var(--sochi-oleander));
   font-size: var(--type-body);
   line-height: 1.47;
 }
 
 .camp-cta-closing {
   width: 100%;
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.camp-cta-closing:hover {
   background: var(--sea-deep);
   color: var(--paper);
 }
 
-.camp-cta-closing:hover {
-  background: var(--oleander);
-  color: var(--oleander-ink);
-}
-
 :root[data-theme="dark"] .camp-cta-closing {
-  background: var(--oleander);
-  color: var(--oleander-ink);
+  background: var(--paper);
+  color: var(--ink);
 }
 
 .site-footer {
@@ -944,14 +1067,12 @@ a {
   z-index: 4;
   width: 100%;
   min-height: 0;
-  margin: -3.75rem 0 0;
-  padding: 0.375rem var(--space-page);
+  margin: 0;
+  padding: 0.5rem var(--space-page);
   border: 0;
   border-radius: 0;
-  background: var(--material-accent-fill);
-  -webkit-backdrop-filter: var(--material-accent-filter);
-  backdrop-filter: var(--material-accent-filter);
-  box-shadow: var(--material-accent-shadow);
+  background: var(--final-red);
+  box-shadow: none;
   color: var(--paper);
 }
 
@@ -1098,13 +1219,20 @@ a {
   .coach-copy,
   .coach-story-maksim .coach-copy {
     grid-column: 1;
+    grid-row: 1;
   }
 
   .coach-images,
   .coach-story-maksim .coach-images {
     grid-column: 2;
-    grid-row: 1;
+    grid-row: 1 / 3;
     padding: 0;
+  }
+
+  .coach-credentials,
+  .coach-story-maksim .coach-credentials {
+    grid-column: 1;
+    grid-row: 2;
   }
 
 }
@@ -1118,6 +1246,7 @@ a {
     scroll-margin-top: 0;
   }
 
+  .hero,
   html.menu-open .hero {
     z-index: 10;
   }
@@ -1130,31 +1259,41 @@ a {
     padding-top: max(0.62rem, env(safe-area-inset-top));
     padding-bottom: 0.62rem;
     background: transparent;
-    transition: background-color 180ms ease, box-shadow 180ms ease;
+    transition: color 180ms ease;
+  }
+
+  .masthead.is-scrolled {
+    pointer-events: none;
+  }
+
+  .masthead.is-scrolled .masthead-actions,
+  html.menu-open .masthead {
+    pointer-events: auto;
   }
 
   .masthead.is-scrolled,
   html.menu-open .masthead {
-    background: color-mix(in srgb, var(--surface) 90%, transparent);
-    -webkit-backdrop-filter: blur(18px) saturate(0.78);
-    backdrop-filter: blur(18px) saturate(0.78);
-    box-shadow: 0 0.35rem 1.2rem rgba(2, 8, 5, 0.11);
+    background: transparent;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    box-shadow: none;
   }
 
-  .masthead.is-scrolled .brand,
   .masthead.is-scrolled .menu-toggle,
-  html.menu-open .masthead .brand,
   html.menu-open .masthead .menu-toggle {
-    color: var(--text) !important;
+    color: var(--material-glass-text) !important;
   }
 
-  .masthead.is-scrolled .brand span,
-  html.menu-open .masthead .brand span {
-    color: var(--text-muted) !important;
+  html:not(.menu-open) .masthead.is-scrolled .brand {
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(-0.5rem);
+    pointer-events: none;
   }
 
   .brand {
     max-width: 11.5rem;
+    transition: opacity 180ms ease, transform 180ms ease, visibility 180ms step-end;
   }
 
   .section-nav {
@@ -1166,7 +1305,23 @@ a {
   }
 
   .mobile-menu {
-    display: block;
+    position: relative;
+    z-index: 3;
+    display: flex;
+    width: 3.5rem;
+    min-width: 3.5rem;
+    height: 3.5rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+  }
+
+  html:not(.menu-open) .masthead:not(.is-scrolled) .mobile-menu {
+    border-color: transparent;
+    background: transparent;
+    box-shadow: none;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
   }
 
   .menu-toggle {
@@ -1208,12 +1363,8 @@ a {
     padding: 5.2rem var(--space-page) 1.25rem;
     overflow-y: auto;
     overscroll-behavior: contain;
-    border-bottom: 1px solid var(--line);
-    background: color-mix(in srgb, var(--surface) 92%, transparent);
-    -webkit-backdrop-filter: blur(18px) saturate(0.78);
-    backdrop-filter: blur(18px) saturate(0.78);
-    box-shadow: 0 0.8rem 1.8rem rgba(2, 8, 5, 0.14);
-    color: var(--text);
+    border-radius: 0;
+    color: var(--material-glass-text);
   }
 
   .mobile-menu-links {
@@ -1224,10 +1375,12 @@ a {
     display: flex;
     min-height: 3.5rem;
     align-items: center;
-    border-bottom: 1px solid var(--line);
-    font-size: clamp(1.35rem, 6vw, 1.75rem);
-    font-weight: 650;
-    letter-spacing: -0.02em;
+    border-bottom: 1px solid color-mix(in srgb, var(--material-glass-text) 18%, transparent);
+    font-family: var(--font-display);
+    font-size: clamp(2.35rem, 11vw, 3.35rem);
+    font-weight: 720;
+    letter-spacing: -0.012em;
+    line-height: 0.95;
   }
 
   .mobile-menu-theme {
@@ -1243,13 +1396,13 @@ a {
   .mobile-menu-dates {
     display: grid;
     gap: 0.18rem;
-    color: var(--text-muted);
+    color: var(--material-glass-text-soft);
     font-size: var(--type-label);
     line-height: 1.35;
   }
 
   .mobile-menu-dates strong {
-    color: var(--text);
+    color: var(--material-glass-text);
     font-size: clamp(1.05rem, 4.8vw, 1.2rem);
     font-weight: 650;
     letter-spacing: -0.015em;
@@ -1260,9 +1413,14 @@ a {
     margin-top: 0;
   }
 
+  .camp-cta-menu,
   :root[data-theme="dark"] .camp-cta-menu {
     background: var(--oleander);
     color: var(--oleander-ink);
+  }
+
+  .mobile-menu-panel .theme-toggle {
+    color: var(--material-glass-text);
   }
 
   .hero-stage {
@@ -1360,7 +1518,7 @@ a {
     align-self: end;
     width: 100%;
     margin: 0;
-    padding: 0.75rem var(--space-page) 0.4rem;
+    padding: 0.75rem var(--space-page) max(1.35rem, env(safe-area-inset-bottom));
     overflow-x: auto;
     overscroll-behavior-x: contain;
     scroll-padding-inline: var(--space-page);
@@ -1467,18 +1625,27 @@ a {
   }
 
   .trainers-heading {
+    min-height: clamp(30rem, 72svh, 42rem);
     padding-bottom: 3.5rem;
   }
 
   .trainers-heading h2 {
     margin-top: 0.8rem;
+    font-size: clamp(4.25rem, 21.5vw, 6.5rem);
+    line-height: 0.78;
   }
 
   .coach-story {
     display: flex;
     flex-direction: column;
-    gap: 2.5rem;
-    padding-block: 3.5rem 5rem;
+    gap: clamp(2rem, 8vw, 3rem);
+    min-height: 0;
+    padding-block: 4rem 5rem;
+  }
+
+  .coach-story::before {
+    inset: 0.5rem var(--space-page) auto auto;
+    font-size: clamp(13rem, 74vw, 20rem);
   }
 
   .coach-copy {
@@ -1495,6 +1662,13 @@ a {
     padding: 0;
   }
 
+  .coach-credentials,
+  .coach-story-maksim .coach-credentials {
+    order: 3;
+    width: 100%;
+    margin-top: 0;
+  }
+
   .coach-finish,
   .coach-story-maksim .coach-finish {
     grid-column: 1;
@@ -1502,26 +1676,28 @@ a {
   }
 
   .coach-copy h3 {
-    font-size: clamp(3.1rem, 14vw, 4.8rem);
+    max-width: 100%;
+    font-size: clamp(4rem, 20vw, 6.25rem);
+    line-height: 0.78;
   }
 
   .coach-context {
     grid-column: 1;
     grid-row: auto;
-    width: 100%;
-    justify-self: stretch;
+    width: 72%;
+    justify-self: end;
   }
 
   .coach-story-maksim .coach-context {
     grid-column: 1;
-    justify-self: stretch;
+    justify-self: start;
   }
 
   .closing-scene {
     display: grid;
     grid-template-rows: auto auto;
     overflow: visible;
-    background: var(--surface);
+    background: var(--final-red);
   }
 
   .closing-media {
@@ -1542,7 +1718,7 @@ a {
   }
 
   .closing-media::after {
-    display: none;
+    display: block;
   }
 
   .closing-action {
@@ -1550,12 +1726,13 @@ a {
     grid-template-columns: minmax(0, 1fr);
     gap: clamp(1.5rem, 6vw, 2.25rem);
     width: auto;
-    padding: clamp(2.75rem, 10vw, 4rem) var(--space-page) clamp(3.5rem, 12vw, 5rem);
+    padding: clamp(3rem, 12vw, 4.5rem) var(--space-page) clamp(3.5rem, 12vw, 5rem);
   }
 
   .closing-action h2 {
     max-width: 11ch;
-    font-size: clamp(3.25rem, 14vw, 4.8rem);
+    font-size: clamp(3.2rem, 16vw, 6rem);
+    line-height: 0.8;
   }
 
   .closing-action-copy {

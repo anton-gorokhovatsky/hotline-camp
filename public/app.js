@@ -218,11 +218,15 @@
 (() => {
   "use strict";
 
+  const root = document.documentElement;
   const panel = document.querySelector(".conditions");
   if (!(panel instanceof HTMLElement)) return;
 
+  const SOCHI_TIME_ZONE = "Europe/Moscow";
   const WEATHER_URL = "https://api.open-meteo.com/v1/forecast?latitude=43.5855&longitude=39.7231&current=temperature_2m%2Cweather_code&daily=sunrise%2Csunset&timezone=Europe%2FMoscow&forecast_days=1";
   const MARINE_URL = "https://marine-api.open-meteo.com/v1/marine?latitude=43.55&longitude=39.69&current=sea_surface_temperature&timezone=Europe%2FMoscow&forecast_days=1";
+  let solarTimes = null;
+  let solarTimer = null;
 
   const field = (name) => panel.querySelector(`[data-condition="${name}"]`);
   const setField = (name, value) => {
@@ -251,6 +255,82 @@
     const [, month, day] = date.split("-");
     const clock = time?.slice(0, 5);
     return month && day && clock ? `${day}.${month} · ${clock}` : null;
+  };
+  const minutesFromIso = (value) => {
+    const match = typeof value === "string" ? value.match(/T(\d{2}):(\d{2})/) : null;
+    if (!match) return null;
+    return (Number(match[1]) * 60) + Number(match[2]);
+  };
+  const sochiMinutesNow = () => {
+    const parts = new Intl.DateTimeFormat("en-GB", {
+      timeZone: SOCHI_TIME_ZONE,
+      hour: "2-digit",
+      minute: "2-digit",
+      hourCycle: "h23",
+    }).formatToParts(new Date());
+    const hour = Number(parts.find((part) => part.type === "hour")?.value);
+    const minute = Number(parts.find((part) => part.type === "minute")?.value);
+    return Number.isFinite(hour) && Number.isFinite(minute) ? (hour * 60) + minute : null;
+  };
+  const mixHex = (from, to, amount) => {
+    const channels = (hex) => [1, 3, 5].map((index) => Number.parseInt(hex.slice(index, index + 2), 16));
+    const a = channels(from);
+    const b = channels(to);
+    const t = Math.min(1, Math.max(0, amount));
+    return `#${a.map((channel, index) => Math.round(channel + ((b[index] - channel) * t))
+      .toString(16).padStart(2, "0")).join("")}`;
+  };
+  const solarPalette = (minute, sunrise, sunset) => {
+    const dawnStart = Math.max(0, sunrise - 90);
+    const solarNoon = sunrise + ((sunset - sunrise) / 2);
+    const duskEnd = Math.min(1440, sunset + 90);
+    const stops = [
+      { at: 0, surface: "#c8d0d0", accent: "#6f898e", deep: "#081611" },
+      { at: dawnStart, surface: "#ccd4d1", accent: "#789aa0", deep: "#0a1b15" },
+      { at: sunrise, surface: "#ead7d7", accent: "#d06d83", deep: "#163025" },
+      { at: solarNoon, surface: "#f4ead7", accent: "#319395", deep: "#0a2f20" },
+      { at: sunset, surface: "#ead5c2", accent: "#c87451", deep: "#2a2118" },
+      { at: duskEnd, surface: "#c9cfce", accent: "#708485", deep: "#091713" },
+      { at: 1440, surface: "#c8d0d0", accent: "#6f898e", deep: "#081611" },
+    ];
+    const upperIndex = Math.max(1, stops.findIndex((stop) => minute <= stop.at));
+    const from = stops[upperIndex - 1];
+    const to = stops[upperIndex];
+    const progress = to.at === from.at ? 0 : (minute - from.at) / (to.at - from.at);
+    const phase = minute < dawnStart || minute >= duskEnd
+      ? "night"
+      : minute < sunrise + 60
+        ? "dawn"
+        : minute < sunset - 60
+          ? "day"
+          : "dusk";
+
+    return {
+      phase,
+      progress: Math.min(1, Math.max(0, (minute - sunrise) / (sunset - sunrise))),
+      surface: mixHex(from.surface, to.surface, progress),
+      accent: mixHex(from.accent, to.accent, progress),
+      deep: mixHex(from.deep, to.deep, progress),
+    };
+  };
+  const updateSolarPalette = () => {
+    if (!solarTimes) return;
+    const minute = sochiMinutesNow();
+    if (!isNumber(minute)) return;
+    const palette = solarPalette(minute, solarTimes.sunrise, solarTimes.sunset);
+    root.dataset.solarPhase = palette.phase;
+    root.style.setProperty("--solar-surface-tint", palette.surface);
+    root.style.setProperty("--solar-accent", palette.accent);
+    root.style.setProperty("--solar-deep", palette.deep);
+    root.style.setProperty("--solar-progress", palette.progress.toFixed(3));
+  };
+  const setSolarTimes = (sunriseValue, sunsetValue) => {
+    const sunrise = minutesFromIso(sunriseValue);
+    const sunset = minutesFromIso(sunsetValue);
+    if (!isNumber(sunrise) || !isNumber(sunset) || sunset <= sunrise) return;
+    solarTimes = { sunrise, sunset };
+    updateSolarPalette();
+    if (solarTimer === null) solarTimer = window.setInterval(updateSolarPalette, 5 * 60 * 1000);
   };
   const describeWeather = (code) => {
     if (!isNumber(code)) return "текущие условия";
@@ -297,6 +377,7 @@
         const daily = weatherResult.value.daily;
         const sunrise = formatClock(daily?.sunrise?.[0]);
         const sunset = formatClock(daily?.sunset?.[0]);
+        setSolarTimes(daily?.sunrise?.[0], daily?.sunset?.[0]);
 
         if (isNumber(current?.temperature_2m)) {
           setField("air-value", formatTemperature(current.temperature_2m));
