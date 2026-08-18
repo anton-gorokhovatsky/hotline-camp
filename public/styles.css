@@ -221,7 +221,7 @@ a {
   color: var(--ink);
 }
 
-.hero::after {
+.hero-stage::after {
   content: "";
   position: absolute;
   inset: auto clamp(1.5rem, 4vw, 4rem) clamp(2rem, 6vw, 6rem) auto;
