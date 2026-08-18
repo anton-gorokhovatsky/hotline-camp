@@ -25,27 +25,29 @@
   --solar-surface-tint: #eee5d7;
   --solar-accent: #398f91;
   --solar-deep: #0b2b1d;
+  --solar-marker-soft: color-mix(in oklab, var(--sochi-eucalyptus) 58%, var(--solar-accent));
+  --solar-marker: color-mix(in oklab, var(--sochi-eucalyptus) 34%, var(--solar-accent));
 
   --ink: #111713;
   --ink-soft: #35443c;
   --paper: #f2eee5;
   --paper-soft: #dce2df;
   --sea-deep: color-mix(in oklab, var(--sochi-slate) 78%, var(--solar-deep));
-  --sea-muted: color-mix(in oklab, var(--sochi-eucalyptus) 78%, var(--solar-accent));
-  --sand-muted: color-mix(in oklab, #c7b49a 86%, var(--solar-surface-tint));
-  --oleander: color-mix(in oklab, var(--sochi-oleander) 82%, var(--solar-accent));
+  --sea-muted: color-mix(in oklab, var(--sochi-eucalyptus) 64%, var(--solar-accent));
+  --sand-muted: color-mix(in oklab, #c7b49a 74%, var(--solar-surface-tint));
+  --oleander: color-mix(in oklab, var(--sochi-oleander) 76%, var(--solar-accent));
   --oleander-ink: #18070c;
-  --final-red: color-mix(in oklab, var(--sochi-oleander-deep) 90%, var(--solar-accent));
+  --final-red: color-mix(in oklab, var(--sochi-oleander-deep) 84%, var(--solar-accent));
 
   --page: color-mix(in oklab, var(--sochi-limestone-wet) 78%, var(--solar-surface-tint));
   --surface: color-mix(in oklab, var(--sochi-limestone-sun) 86%, var(--solar-surface-tint));
   --surface-muted: color-mix(in oklab, var(--sochi-limestone-wet) 84%, var(--sochi-eucalyptus));
-  --surface-sea: color-mix(in oklab, var(--sochi-eucalyptus) 78%, var(--solar-accent));
+  --surface-sea: color-mix(in oklab, var(--sochi-eucalyptus) 64%, var(--solar-accent));
   --text: var(--ink);
   --text-muted: color-mix(in oklab, var(--ink-soft) 82%, var(--sochi-eucalyptus));
   --line: color-mix(in oklab, var(--ink) 20%, transparent);
-  --photo-mat: color-mix(in oklab, var(--sochi-slate) 74%, var(--solar-deep));
-  --focus: color-mix(in oklab, var(--sochi-autumn-sea) 78%, var(--solar-accent));
+  --photo-mat: color-mix(in oklab, var(--sochi-slate) 66%, var(--solar-deep));
+  --focus: color-mix(in oklab, var(--sochi-autumn-sea) 52%, var(--solar-accent));
 
   --radius-control: 0.78rem;
   --radius-card: 1.18rem;
@@ -83,12 +85,12 @@
   --page: color-mix(in oklab, #030807 90%, var(--solar-deep));
   --surface: color-mix(in oklab, var(--sochi-slate) 84%, var(--solar-deep));
   --surface-muted: color-mix(in oklab, #17231f 82%, var(--solar-deep));
-  --surface-sea: color-mix(in oklab, #263d37 76%, var(--solar-accent));
+  --surface-sea: color-mix(in oklab, #263d37 62%, var(--solar-accent));
   --text: var(--paper);
   --text-muted: color-mix(in oklab, var(--paper-soft) 78%, var(--sochi-eucalyptus));
-  --line: color-mix(in oklab, var(--solar-accent) 34%, transparent);
-  --photo-mat: color-mix(in oklab, #020605 88%, var(--solar-deep));
-  --focus: color-mix(in oklab, #61d8c8 78%, var(--solar-accent));
+  --line: color-mix(in oklab, var(--solar-accent) 42%, transparent);
+  --photo-mat: color-mix(in oklab, #020605 72%, var(--solar-deep));
+  --focus: color-mix(in oklab, #61d8c8 54%, var(--solar-accent));
 }
 
 * {
@@ -230,7 +232,7 @@ a {
   height: clamp(13rem, 22vw, 22rem);
   background-image: var(--sochi-dot-field);
   background-size: clamp(0.42rem, 0.52vw, 0.56rem) clamp(0.42rem, 0.52vw, 0.56rem);
-  color: color-mix(in srgb, var(--paper) 28%, transparent);
+  color: color-mix(in srgb, var(--solar-marker) 38%, transparent);
   -webkit-mask-image: radial-gradient(circle at 50% 16%, #000 0 13%, transparent 14%), linear-gradient(130deg, transparent 0 44%, #000 45% 53%, transparent 54%), linear-gradient(to top, #000 0 16%, transparent 17%);
   mask-image: radial-gradient(circle at 50% 16%, #000 0 13%, transparent 14%), linear-gradient(130deg, transparent 0 44%, #000 45% 53%, transparent 54%), linear-gradient(to top, #000 0 16%, transparent 17%);
   pointer-events: none;
@@ -668,7 +670,7 @@ a {
 
 .program::before {
   inset: clamp(2rem, 4vw, 4rem) calc(-1 * var(--space-page)) auto auto;
-  color: color-mix(in srgb, var(--sea-muted) 28%, transparent);
+  color: color-mix(in srgb, var(--solar-marker) 42%, transparent);
   -webkit-mask-image: radial-gradient(circle at 78% 28%, #000 0 17%, transparent 18%), linear-gradient(150deg, transparent 0 43%, #000 44% 63%, transparent 64%), linear-gradient(to top, #000 0 22%, transparent 23%);
   mask-image: radial-gradient(circle at 78% 28%, #000 0 17%, transparent 18%), linear-gradient(150deg, transparent 0 43%, #000 44% 63%, transparent 64%), linear-gradient(to top, #000 0 22%, transparent 23%);
 }
@@ -886,7 +888,7 @@ a {
 
 .trainers-heading::before {
   inset: auto var(--space-page) clamp(2.5rem, 5vw, 5rem) auto;
-  color: color-mix(in srgb, var(--sea-muted) 44%, transparent);
+  color: color-mix(in srgb, var(--solar-marker) 52%, transparent);
   -webkit-mask-image: radial-gradient(circle at 78% 28%, #000 0 17%, transparent 18%), linear-gradient(150deg, transparent 0 43%, #000 44% 63%, transparent 64%), linear-gradient(to top, #000 0 22%, transparent 23%);
   mask-image: radial-gradient(circle at 78% 28%, #000 0 17%, transparent 18%), linear-gradient(150deg, transparent 0 43%, #000 44% 63%, transparent 64%), linear-gradient(to top, #000 0 22%, transparent 23%);
 }
@@ -937,7 +939,7 @@ a {
   position: absolute;
   inset: clamp(1rem, 2vw, 2rem) var(--space-page) auto auto;
   z-index: -1;
-  color: color-mix(in srgb, var(--solar-accent) 12%, transparent);
+  color: color-mix(in srgb, var(--solar-marker-soft) 20%, transparent);
   font-family: var(--font-display);
   font-size: clamp(15rem, 34vw, 38rem);
   font-weight: 780;
@@ -960,7 +962,7 @@ a {
   width: clamp(10rem, 16vw, 16rem);
   height: clamp(6rem, 10vw, 10rem);
   background-size: clamp(0.48rem, 0.6vw, 0.64rem) clamp(0.48rem, 0.6vw, 0.64rem);
-  color: color-mix(in srgb, var(--oleander) 22%, transparent);
+  color: color-mix(in srgb, var(--solar-marker) 34%, transparent);
   -webkit-mask-image: radial-gradient(ellipse at 30% 52%, #000 0 28%, transparent 29%), linear-gradient(118deg, transparent 0 43%, #000 44% 57%, transparent 58%);
   mask-image: radial-gradient(ellipse at 30% 52%, #000 0 28%, transparent 29%), linear-gradient(118deg, transparent 0 43%, #000 44% 57%, transparent 58%);
 }
@@ -970,7 +972,7 @@ a {
   width: clamp(10rem, 16vw, 16rem);
   height: clamp(14rem, 22vw, 22rem);
   background-size: clamp(0.4rem, 0.5vw, 0.54rem) clamp(0.4rem, 0.5vw, 0.54rem);
-  color: color-mix(in srgb, var(--sea-muted) 32%, transparent);
+  color: color-mix(in srgb, var(--solar-marker) 40%, transparent);
   -webkit-mask-image: radial-gradient(circle at 68% 18%, #000 0 11%, transparent 12%), linear-gradient(52deg, transparent 0 46%, #000 47% 58%, transparent 59%), linear-gradient(to top, #000 0 17%, transparent 18%);
   mask-image: radial-gradient(circle at 68% 18%, #000 0 11%, transparent 12%), linear-gradient(52deg, transparent 0 46%, #000 47% 58%, transparent 59%), linear-gradient(to top, #000 0 17%, transparent 18%);
 }
@@ -1177,7 +1179,7 @@ a {
   height: clamp(5rem, 8vw, 8rem);
   background-image: var(--sochi-dot-field);
   background-size: clamp(0.42rem, 0.52vw, 0.56rem) clamp(0.42rem, 0.52vw, 0.56rem);
-  color: color-mix(in srgb, var(--paper) 17%, transparent);
+  color: color-mix(in srgb, var(--solar-surface-tint) 26%, transparent);
   -webkit-mask-image: radial-gradient(ellipse at 25% 42%, #000 0 24%, transparent 25%), linear-gradient(14deg, transparent 0 42%, #000 43% 55%, transparent 56%);
   mask-image: radial-gradient(ellipse at 25% 42%, #000 0 24%, transparent 25%), linear-gradient(14deg, transparent 0 42%, #000 43% 55%, transparent 56%);
   pointer-events: none;
