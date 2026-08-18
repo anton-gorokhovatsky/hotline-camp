@@ -814,9 +814,11 @@ a {
 
 .race-targets {
   display: grid;
-  grid-template-columns: minmax(14rem, 4fr) minmax(24rem, 8fr);
+  grid-template-columns: minmax(18rem, 5fr) minmax(24rem, 7fr);
   align-items: start;
-  gap: var(--grid-gap);
+  column-gap: clamp(2.5rem, 5vw, 6rem);
+  row-gap: 1rem;
+  max-width: 84rem;
   margin-top: clamp(3rem, 5vw, 5rem);
 }
 
@@ -835,6 +837,13 @@ a {
   line-height: 1.05;
 }
 
+.race-target-details {
+  display: grid;
+  min-width: 0;
+  align-content: start;
+  gap: clamp(1.25rem, 2vw, 1.75rem);
+}
+
 .race-targets nav {
   display: flex;
   flex-wrap: wrap;
@@ -850,7 +859,7 @@ a {
 }
 
 .program-support {
-  grid-column: 2;
+  max-width: 44rem;
   color: var(--text-muted);
   font-size: var(--type-label);
   line-height: 1.42;
@@ -1849,14 +1858,11 @@ a {
 
   .race-targets {
     grid-template-columns: minmax(0, 1fr);
+    row-gap: 1.5rem;
   }
 
   .race-targets nav {
     justify-content: flex-start;
-  }
-
-  .program-support {
-    grid-column: 1;
   }
 
   .program::before,
