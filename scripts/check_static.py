@@ -15,7 +15,7 @@ PUBLIC = ROOT / "public"
 HTML_PATH = PUBLIC / "index.html"
 CSS_PATH = PUBLIC / "styles.css"
 JS_PATH = PUBLIC / "app.js"
-TELEGRAM_URL = "https://t.me/DDopenChat"
+TELEGRAM_URL = "https://t.me/elenarodionova_happy"
 
 
 class DocumentParser(HTMLParser):
@@ -113,7 +113,7 @@ def main() -> int:
 
     require("Четырёхкратный чемпион России" in html, "the trainer credential must use natural Russian wording")
     require("4-кратный" not in html, "the technical numeral wording must be removed")
-    require(html.count("Заранее проедем велотрассу") == 1, "the hero promise must appear exactly once")
+    require(html.count("Финальная неделя перед стартом определяет результат") == 1, "the hero promise must appear exactly once")
     require("Встретимся в&nbsp;Сочи?" in html, "the registration section needs its own heading")
 
     for endpoint in ("api.open-meteo.com/v1/forecast", "marine-api.open-meteo.com/v1/marine"):

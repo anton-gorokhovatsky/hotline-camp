@@ -75,6 +75,8 @@
   --material-accent-shadow: 0 0.55rem 1.5rem rgba(44, 3, 12, 0.18);
   --service-island-height: 5.125rem;
   --service-island-gap: 0.25rem;
+  --sochi-dot-field: radial-gradient(circle at center, currentColor 1px, transparent 1.25px);
+  --sochi-dot-step: clamp(0.56rem, 0.68vw, 0.72rem);
 }
 
 :root[data-theme="dark"] {
@@ -217,6 +219,21 @@ a {
   isolation: isolate;
   background: var(--surface-muted);
   color: var(--ink);
+}
+
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: auto clamp(1.5rem, 4vw, 4rem) clamp(2rem, 6vw, 6rem) auto;
+  z-index: 1;
+  width: clamp(8rem, 13vw, 13rem);
+  height: clamp(13rem, 22vw, 22rem);
+  background-image: var(--sochi-dot-field);
+  background-size: clamp(0.42rem, 0.52vw, 0.56rem) clamp(0.42rem, 0.52vw, 0.56rem);
+  color: color-mix(in srgb, var(--paper) 28%, transparent);
+  -webkit-mask-image: radial-gradient(circle at 50% 16%, #000 0 13%, transparent 14%), linear-gradient(130deg, transparent 0 44%, #000 45% 53%, transparent 54%), linear-gradient(to top, #000 0 16%, transparent 17%);
+  mask-image: radial-gradient(circle at 50% 16%, #000 0 13%, transparent 14%), linear-gradient(130deg, transparent 0 44%, #000 45% 53%, transparent 54%), linear-gradient(to top, #000 0 16%, transparent 17%);
+  pointer-events: none;
 }
 
 .masthead {
@@ -615,9 +632,36 @@ a {
 
 /* Второй экран: последовательность действий и единое фотографическое поле. */
 .program {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   padding: clamp(4.5rem, 7vw, 7rem) var(--space-page);
   background: var(--surface);
   color: var(--text);
+}
+
+.program::before,
+.trainers-heading::before {
+  content: "";
+  position: absolute;
+  width: clamp(15rem, 28vw, 28rem);
+  height: clamp(7rem, 12vw, 12rem);
+  background-image: var(--sochi-dot-field);
+  background-size: var(--sochi-dot-step) var(--sochi-dot-step);
+  pointer-events: none;
+}
+
+.program::before {
+  inset: clamp(2rem, 4vw, 4rem) calc(-1 * var(--space-page)) auto auto;
+  color: color-mix(in srgb, var(--sea-muted) 28%, transparent);
+  -webkit-mask-image: radial-gradient(circle at 78% 28%, #000 0 17%, transparent 18%), linear-gradient(150deg, transparent 0 43%, #000 44% 63%, transparent 64%), linear-gradient(to top, #000 0 22%, transparent 23%);
+  mask-image: radial-gradient(circle at 78% 28%, #000 0 17%, transparent 18%), linear-gradient(150deg, transparent 0 43%, #000 44% 63%, transparent 64%), linear-gradient(to top, #000 0 22%, transparent 23%);
+}
+
+.program > *,
+.trainers-heading > * {
+  position: relative;
+  z-index: 1;
 }
 
 .program-heading {
@@ -705,6 +749,17 @@ a {
   line-height: 1.4;
 }
 
+.camp-terms {
+  display: grid;
+  gap: 0.35rem;
+  max-width: 34rem;
+  margin-top: 1rem;
+  color: var(--text-muted);
+  font-size: var(--type-label);
+  line-height: 1.42;
+  list-style: none;
+}
+
 :root[data-theme="dark"] .program-notes span {
   color: var(--oleander);
 }
@@ -749,6 +804,50 @@ a {
   line-height: 1.48;
 }
 
+.race-targets {
+  display: grid;
+  grid-template-columns: minmax(14rem, 1fr) minmax(18rem, 1fr);
+  align-items: end;
+  gap: var(--grid-gap);
+  margin-top: clamp(3rem, 5vw, 5rem);
+}
+
+.race-targets > p:first-child {
+  display: grid;
+  gap: 0.5rem;
+  max-width: 34rem;
+  color: var(--text-muted);
+  font-size: var(--type-body);
+  line-height: 1.42;
+}
+
+.race-targets strong {
+  color: var(--text);
+  font-size: clamp(1.5rem, 2.2vw, 2.4rem);
+  line-height: 1.05;
+}
+
+.race-targets nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem 1.25rem;
+  justify-content: flex-end;
+  font-size: var(--type-body);
+  font-weight: 650;
+}
+
+.race-targets a:hover,
+.race-targets a:focus-visible {
+  color: var(--solar-accent);
+}
+
+.program-support {
+  grid-column: 2;
+  color: var(--text-muted);
+  font-size: var(--type-label);
+  line-height: 1.42;
+}
+
 /* Третий экран: опыт тренеров и один финальный шаг. */
 .trainers {
   overflow: hidden;
@@ -767,7 +866,14 @@ a {
   column-gap: var(--grid-gap);
   row-gap: clamp(1rem, 1.5vw, 1.75rem);
   padding: clamp(5rem, 9vw, 9rem) var(--space-page) clamp(4rem, 6vw, 6rem);
-  border-bottom: 1px solid color-mix(in srgb, var(--paper) 12%, transparent);
+  border-bottom: 0;
+}
+
+.trainers-heading::before {
+  inset: auto var(--space-page) clamp(2.5rem, 5vw, 5rem) auto;
+  color: color-mix(in srgb, var(--sea-muted) 44%, transparent);
+  -webkit-mask-image: radial-gradient(circle at 78% 28%, #000 0 17%, transparent 18%), linear-gradient(150deg, transparent 0 43%, #000 44% 63%, transparent 64%), linear-gradient(to top, #000 0 22%, transparent 23%);
+  mask-image: radial-gradient(circle at 78% 28%, #000 0 17%, transparent 18%), linear-gradient(150deg, transparent 0 43%, #000 44% 63%, transparent 64%), linear-gradient(to top, #000 0 22%, transparent 23%);
 }
 
 .trainers-heading .eyebrow {
@@ -800,14 +906,14 @@ a {
   position: relative;
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
-  grid-template-rows: auto 1fr;
+  grid-template-rows: auto auto;
   column-gap: var(--grid-gap);
   row-gap: clamp(2rem, 3vw, 3rem);
   align-items: start;
-  min-height: clamp(46rem, 92svh, 67rem);
+  min-height: 0;
   overflow: hidden;
   padding: clamp(4rem, 6vw, 6rem) var(--space-page) clamp(4.5rem, 7vw, 7rem);
-  border-bottom: 1px solid color-mix(in srgb, var(--paper) 10%, transparent);
+  border-bottom: 0;
   isolation: isolate;
 }
 
@@ -824,6 +930,34 @@ a {
   line-height: 0.72;
   pointer-events: none;
   user-select: none;
+}
+
+.coach-story::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  background-image: var(--sochi-dot-field);
+  pointer-events: none;
+}
+
+.coach-story-evgeny::after {
+  inset: clamp(3rem, 5vw, 5rem) clamp(1rem, 2vw, 2rem) auto auto;
+  width: clamp(12rem, 20vw, 20rem);
+  height: clamp(7rem, 11vw, 11rem);
+  background-size: clamp(0.48rem, 0.6vw, 0.64rem) clamp(0.48rem, 0.6vw, 0.64rem);
+  color: color-mix(in srgb, var(--oleander) 22%, transparent);
+  -webkit-mask-image: radial-gradient(ellipse at 30% 52%, #000 0 28%, transparent 29%), linear-gradient(118deg, transparent 0 43%, #000 44% 57%, transparent 58%);
+  mask-image: radial-gradient(ellipse at 30% 52%, #000 0 28%, transparent 29%), linear-gradient(118deg, transparent 0 43%, #000 44% 57%, transparent 58%);
+}
+
+.coach-story-maksim::after {
+  inset: auto auto clamp(2rem, 4vw, 4rem) clamp(1rem, 3vw, 3rem);
+  width: clamp(8rem, 13vw, 13rem);
+  height: clamp(14rem, 23vw, 23rem);
+  background-size: clamp(0.4rem, 0.5vw, 0.54rem) clamp(0.4rem, 0.5vw, 0.54rem);
+  color: color-mix(in srgb, var(--sea-muted) 32%, transparent);
+  -webkit-mask-image: radial-gradient(circle at 68% 18%, #000 0 11%, transparent 12%), linear-gradient(52deg, transparent 0 46%, #000 47% 58%, transparent 59%), linear-gradient(to top, #000 0 17%, transparent 18%);
+  mask-image: radial-gradient(circle at 68% 18%, #000 0 11%, transparent 12%), linear-gradient(52deg, transparent 0 46%, #000 47% 58%, transparent 59%), linear-gradient(to top, #000 0 17%, transparent 18%);
 }
 
 .coach-copy {
@@ -843,14 +977,6 @@ a {
   text-transform: uppercase;
 }
 
-.coach-affiliation::after {
-  content: "";
-  width: min(7rem, 20vw);
-  height: 1px;
-  background: currentColor;
-  opacity: 0.58;
-}
-
 .coach-copy h3 {
   max-width: 100%;
   margin-top: clamp(1rem, 1.5vw, 1.4rem);
@@ -862,12 +988,13 @@ a {
 
 .coach-credentials {
   display: grid;
-  grid-column: 1 / 5;
+  grid-column: 1 / 13;
   grid-row: 2;
-  align-self: end;
-  gap: 0;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-self: start;
+  gap: 0.2rem var(--grid-gap);
   margin-top: 0;
-  border-top: 1px solid color-mix(in srgb, var(--paper) 16%, transparent);
+  border-top: 0;
   counter-reset: achievement;
   list-style: none;
 }
@@ -876,9 +1003,9 @@ a {
   display: grid;
   grid-template-columns: 1.7rem minmax(0, 1fr);
   gap: 0.7rem;
-  max-width: 30rem;
-  padding: clamp(0.72rem, 1vw, 0.95rem) 0;
-  border-bottom: 1px solid color-mix(in srgb, var(--paper) 12%, transparent);
+  max-width: none;
+  padding: clamp(0.45rem, 0.72vw, 0.68rem) 0;
+  border-bottom: 0;
   color: color-mix(in oklab, var(--paper) 74%, var(--sea-muted));
   font-size: clamp(0.96rem, 0.9rem + 0.24vw, 1.14rem);
   line-height: 1.42;
@@ -897,7 +1024,7 @@ a {
 .coach-images {
   display: grid;
   grid-column: 5 / 13;
-  grid-row: 1 / 3;
+  grid-row: 1;
   grid-template-columns: minmax(0, 2.15fr) minmax(11rem, 1fr);
   align-items: end;
   gap: clamp(0.75rem, 1.2vw, 1.35rem);
@@ -935,12 +1062,12 @@ a {
 }
 
 .coach-story-maksim .coach-credentials {
-  grid-column: 9 / 13;
+  grid-column: 1 / 13;
 }
 
 .coach-story-maksim .coach-images {
   grid-column: 1 / 9;
-  grid-row: 1 / 3;
+  grid-row: 1;
   grid-template-columns: minmax(11rem, 1fr) minmax(0, 2.15fr);
   padding: 0;
 }
@@ -956,6 +1083,7 @@ a {
 .closing-scene {
   display: grid;
   grid-template-rows: auto auto;
+  min-height: auto;
   overflow: hidden;
   background: var(--final-red);
   color: var(--paper);
@@ -987,7 +1115,7 @@ a {
   -webkit-backdrop-filter: var(--material-accent-filter);
   backdrop-filter: var(--material-accent-filter);
   -webkit-mask-image: radial-gradient(
-    ellipse 120% 78% at 42% 112%,
+    ellipse 96% 42% at 42% 118%,
     #000 0%,
     #000 44%,
     rgba(0, 0, 0, 0.86) 58%,
@@ -996,7 +1124,7 @@ a {
     transparent 100%
   );
   mask-image: radial-gradient(
-    ellipse 120% 78% at 42% 112%,
+    ellipse 96% 42% at 42% 118%,
     #000 0%,
     #000 44%,
     rgba(0, 0, 0, 0.86) 58%,
@@ -1023,6 +1151,26 @@ a {
   min-width: 0;
   padding: clamp(3.5rem, 5vw, 5rem) var(--space-page) clamp(2.75rem, 4vw, 4rem);
   background: var(--final-red);
+}
+
+.closing-action::before {
+  content: "";
+  position: absolute;
+  inset: clamp(1rem, 2vw, 2rem) auto auto 52%;
+  z-index: 0;
+  width: clamp(8rem, 12vw, 12rem);
+  height: clamp(5rem, 8vw, 8rem);
+  background-image: var(--sochi-dot-field);
+  background-size: clamp(0.42rem, 0.52vw, 0.56rem) clamp(0.42rem, 0.52vw, 0.56rem);
+  color: color-mix(in srgb, var(--paper) 17%, transparent);
+  -webkit-mask-image: radial-gradient(ellipse at 25% 42%, #000 0 24%, transparent 25%), linear-gradient(14deg, transparent 0 42%, #000 43% 55%, transparent 56%);
+  mask-image: radial-gradient(ellipse at 25% 42%, #000 0 24%, transparent 25%), linear-gradient(14deg, transparent 0 42%, #000 43% 55%, transparent 56%);
+  pointer-events: none;
+}
+
+.closing-action > * {
+  position: relative;
+  z-index: 1;
 }
 
 .closing-action h2 {
@@ -1225,14 +1373,15 @@ a {
   .coach-images,
   .coach-story-maksim .coach-images {
     grid-column: 2;
-    grid-row: 1 / 3;
+    grid-row: 1;
     padding: 0;
   }
 
   .coach-credentials,
   .coach-story-maksim .coach-credentials {
-    grid-column: 1;
+    grid-column: 1 / -1;
     grid-row: 2;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
 }
@@ -1335,9 +1484,15 @@ a {
     justify-content: center;
     padding: 0;
     border: 0;
+    border-radius: 50%;
     background: transparent;
     color: var(--ink);
     cursor: pointer;
+  }
+
+  .menu-toggle:focus-visible {
+    outline: 0;
+    box-shadow: 0 0 0 0.12rem var(--focus);
   }
 
   .menu-toggle svg {
@@ -1363,24 +1518,34 @@ a {
     padding: 5.2rem var(--space-page) 1.25rem;
     overflow-y: auto;
     overscroll-behavior: contain;
+    border: 0;
     border-radius: 0;
     color: var(--material-glass-text);
   }
 
   .mobile-menu-links {
     display: grid;
+    gap: 0.15rem;
   }
 
   .mobile-menu-links a {
     display: flex;
     min-height: 3.5rem;
     align-items: center;
-    border-bottom: 1px solid color-mix(in srgb, var(--material-glass-text) 18%, transparent);
+    border-bottom: 0;
     font-family: var(--font-display);
     font-size: clamp(2.35rem, 11vw, 3.35rem);
     font-weight: 720;
     letter-spacing: -0.012em;
     line-height: 0.95;
+  }
+
+  .mobile-menu-links a:focus-visible {
+    outline: 0;
+    text-decoration: underline;
+    text-decoration-color: var(--focus);
+    text-decoration-thickness: 0.08em;
+    text-underline-offset: 0.12em;
   }
 
   .mobile-menu-theme {
@@ -1624,6 +1789,48 @@ a {
     margin-top: 0.85rem;
   }
 
+  .race-targets {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .race-targets nav {
+    justify-content: flex-start;
+  }
+
+  .program-support {
+    grid-column: 1;
+  }
+
+  .program::before,
+  .trainers-heading::before {
+    width: 14rem;
+    height: 7rem;
+  }
+
+  .hero::after {
+    inset: auto 0.5rem 8rem auto;
+    width: 6.5rem;
+    height: 9rem;
+  }
+
+  .coach-story-evgeny::after {
+    inset: 12rem 0 auto auto;
+    width: 9rem;
+    height: 5rem;
+  }
+
+  .coach-story-maksim::after {
+    inset: auto auto 10rem 0;
+    width: 6rem;
+    height: 10rem;
+  }
+
+  .closing-action::before {
+    inset: 1rem 1rem auto auto;
+    width: 7rem;
+    height: 4rem;
+  }
+
   .trainers-heading {
     min-height: clamp(30rem, 72svh, 42rem);
     padding-bottom: 3.5rem;
@@ -1665,6 +1872,7 @@ a {
   .coach-credentials,
   .coach-story-maksim .coach-credentials {
     order: 3;
+    grid-template-columns: minmax(0, 1fr);
     width: 100%;
     margin-top: 0;
   }
