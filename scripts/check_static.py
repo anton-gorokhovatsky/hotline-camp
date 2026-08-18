@@ -15,7 +15,7 @@ PUBLIC = ROOT / "public"
 HTML_PATH = PUBLIC / "index.html"
 CSS_PATH = PUBLIC / "styles.css"
 JS_PATH = PUBLIC / "app.js"
-TELEGRAM_URL = "https://t.me/elenarodionova_happy"
+CTA_URL = "https://forms.gle/uhrh9pppLXSnwSN56"
 
 
 class DocumentParser(HTMLParser):
@@ -93,7 +93,7 @@ def main() -> int:
     ]
     require(len(cta_indexes) == 3, "hero, menu and closing must expose the same CTA")
     for index in cta_indexes:
-        require(parser.links[index].get("href") == TELEGRAM_URL, "every CTA must use the Telegram URL")
+        require(parser.links[index].get("href") == CTA_URL, "every CTA must use the approved form URL")
         require(parser.anchor_texts[index].startswith("Обсудить участие"), "every CTA must use the approved text")
 
     selected_photos = {
