@@ -571,13 +571,15 @@ a {
   color: rgba(238, 234, 225, 0.72);
 }
 
-:root[data-theme="dark"] .hero .camp-cta {
+:root[data-theme="dark"] .hero .camp-cta,
+:root[data-theme="dark"] .program .camp-cta {
   background: var(--oleander);
   color: var(--oleander-ink);
   box-shadow: 0 0 1.8rem rgba(255, 91, 120, 0.2);
 }
 
-:root[data-theme="dark"] .hero .camp-cta:hover {
+:root[data-theme="dark"] .hero .camp-cta:hover,
+:root[data-theme="dark"] .program .camp-cta:hover {
   background: var(--oleander);
   color: var(--oleander-ink);
 }
