@@ -247,14 +247,67 @@ a {
   mask-repeat: no-repeat;
   -webkit-mask-size: contain;
   mask-size: contain;
-  animation: sochi-dot-flow var(--dot-flow-duration, 5.8s) ease-in-out infinite alternate;
+  opacity: 0.72;
+  transform-origin: var(--dot-origin, 50% 50%);
+  animation-name: var(--dot-motion, sochi-dot-horizon);
+  animation-duration: var(--dot-flow-duration, 8s);
+  animation-timing-function: cubic-bezier(0.38, 0, 0.22, 1);
+  animation-delay: var(--dot-flow-delay, 0s);
+  animation-iteration-count: infinite;
 }
 
 .dot-motif > * { display: none; }
 
-@keyframes sochi-dot-flow {
-  0% { background-position: 0 0; opacity: 0.64; }
-  100% { background-position: var(--dot-shift-x, 1.1rem) var(--dot-shift-y, -0.55rem); opacity: 0.96; }
+@keyframes sochi-dot-bike {
+  0%, 100% { background-position: 0 0; transform: translate3d(0, 0, 0); opacity: 0.68; }
+  22% { background-position: 0.3rem -0.08rem; transform: translate3d(0.04rem, -0.02rem, 0); opacity: 0.76; }
+  56% { background-position: 1.05rem -0.24rem; transform: translate3d(0.16rem, -0.04rem, 0); opacity: 0.9; }
+  76% { background-position: 1.32rem -0.18rem; transform: translate3d(0.2rem, 0, 0); opacity: 0.82; }
+}
+
+@keyframes sochi-dot-horizon {
+  0%, 100% { background-position: 0 0; transform: translate3d(0, 0, 0); opacity: 0.68; }
+  34% { background-position: 0.18rem -0.12rem; transform: translate3d(0, -0.03rem, 0); opacity: 0.76; }
+  68% { background-position: 0.5rem -0.22rem; transform: translate3d(0.03rem, -0.06rem, 0); opacity: 0.88; }
+  86% { background-position: 0.36rem -0.1rem; transform: translate3d(0.01rem, -0.02rem, 0); opacity: 0.78; }
+}
+
+@keyframes sochi-dot-crown {
+  0%, 100% { background-position: 0 0; transform: scale(1); opacity: 0.66; }
+  32% { background-position: 0.12rem -0.06rem; transform: scale(1.001); opacity: 0.72; }
+  49% { background-position: 0.84rem -0.28rem; transform: scale(1.004); opacity: 0.91; }
+  64% { background-position: 0.56rem -0.16rem; transform: scale(1.002); opacity: 0.76; }
+  84% { background-position: 0.18rem 0.04rem; transform: scale(1); opacity: 0.7; }
+}
+
+@keyframes sochi-dot-runner {
+  0%, 100% { background-position: 0 0; transform: translate3d(0, 0, 0); opacity: 0.66; }
+  17% { background-position: 0.24rem -0.04rem; transform: translate3d(0.04rem, 0.03rem, 0); opacity: 0.74; }
+  41% { background-position: 0.96rem -0.32rem; transform: translate3d(0.22rem, -0.08rem, 0); opacity: 0.92; }
+  61% { background-position: 1.28rem -0.18rem; transform: translate3d(0.28rem, -0.01rem, 0); opacity: 0.84; }
+  82% { background-position: 0.46rem -0.06rem; transform: translate3d(0.08rem, 0.04rem, 0); opacity: 0.72; }
+}
+
+@keyframes sochi-dot-wave {
+  0%, 100% { background-position: 0 0; transform: translate3d(0, 0, 0); opacity: 0.68; }
+  27% { background-position: -0.38rem 0.08rem; transform: translate3d(-0.03rem, 0.03rem, 0); opacity: 0.77; }
+  54% { background-position: -1.18rem -0.12rem; transform: translate3d(-0.08rem, -0.04rem, 0); opacity: 0.9; }
+  78% { background-position: -0.74rem 0.12rem; transform: translate3d(-0.04rem, 0.05rem, 0); opacity: 0.8; }
+}
+
+@keyframes sochi-dot-palm {
+  0%, 100% { background-position: 0 0; transform: rotate(0); opacity: 0.67; }
+  29% { background-position: 0.16rem -0.12rem; transform: rotate(-0.32deg); opacity: 0.75; }
+  66% { background-position: 0.52rem -0.28rem; transform: rotate(0.24deg); opacity: 0.88; }
+  86% { background-position: 0.28rem -0.1rem; transform: rotate(-0.08deg); opacity: 0.76; }
+}
+
+@keyframes sochi-dot-finish {
+  0%, 100% { background-position: 0 0; transform: skewX(0); opacity: 0.68; }
+  24% { background-position: 0.2rem -0.06rem; transform: skewX(-0.18deg); opacity: 0.76; }
+  51% { background-position: 0.9rem -0.22rem; transform: skewX(0.36deg); opacity: 0.91; }
+  73% { background-position: 1.18rem -0.12rem; transform: skewX(-0.16deg); opacity: 0.82; }
+  88% { background-position: 0.42rem -0.04rem; transform: skewX(0.05deg); opacity: 0.73; }
 }
 
 .eyebrow {
@@ -283,8 +336,9 @@ a {
   color: color-mix(in srgb, var(--solar-marker) 48%, transparent);
   --dot-motif-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 80'%3E%3Cg fill='none' stroke='black' stroke-linecap='round' stroke-linejoin='round' stroke-width='12'%3E%3Ccircle cx='27' cy='55' r='17'/%3E%3Ccircle cx='91' cy='55' r='17'/%3E%3Cpath d='M27 55 44 29h19L47 55h44L72 24M44 29l22 26M67 18h15M72 24l13-8h10'/%3E%3C/g%3E%3C/svg%3E");
   --dot-step: clamp(0.42rem, 0.52vw, 0.56rem);
-  --dot-flow-duration: 3.8s;
-  --dot-shift-x: 1.4rem;
+  --dot-motion: sochi-dot-bike;
+  --dot-flow-duration: 6.8s;
+  --dot-flow-delay: -1.2s;
 }
 
 .masthead {
@@ -729,7 +783,9 @@ a {
   inset: clamp(2rem, 4vw, 4rem) calc(-0.55 * var(--space-page)) auto auto;
   color: color-mix(in srgb, var(--solar-marker) 50%, transparent);
   --dot-motif-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 72'%3E%3Cpath fill='black' d='M7 62 39 19l22 29 15-20 37 34H7Z'/%3E%3Ccircle fill='black' cx='91' cy='14' r='8'/%3E%3C/svg%3E");
-  --dot-flow-duration: 7.2s;
+  --dot-motion: sochi-dot-horizon;
+  --dot-flow-duration: 12s;
+  --dot-flow-delay: -4.1s;
 }
 
 .program > :not(.dot-motif),
@@ -958,7 +1014,9 @@ a {
   height: clamp(11rem, 20vw, 20rem);
   color: color-mix(in srgb, var(--solar-marker) 60%, transparent);
   --dot-motif-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 72'%3E%3Cpath fill='black' d='M11 22 31 36 50 11l19 25 20-14-9 37Q50 50 20 59Z'/%3E%3Cpath fill='none' stroke='black' stroke-linecap='round' stroke-width='9' d='M24 66Q50 59 76 66'/%3E%3C/svg%3E");
-  --dot-flow-duration: 6.4s;
+  --dot-motion: sochi-dot-crown;
+  --dot-flow-duration: 10.4s;
+  --dot-flow-delay: -2.7s;
 }
 
 .trainers-heading .eyebrow {
@@ -1024,8 +1082,9 @@ a {
   color: color-mix(in srgb, var(--solar-marker) 34%, transparent);
   --dot-motif-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 104 84'%3E%3Ccircle fill='black' cx='66' cy='13' r='10'/%3E%3Cpath fill='none' stroke='black' stroke-linecap='round' stroke-linejoin='round' stroke-width='14' d='m55 27 15 13 18-2M55 27 39 39l-16-3M58 29 48 51m0 0 18 10 15 17M48 51 34 69 15 70'/%3E%3C/svg%3E");
   --dot-step: clamp(0.48rem, 0.6vw, 0.64rem);
-  --dot-flow-duration: 3.6s;
-  --dot-shift-x: 1.5rem;
+  --dot-motion: sochi-dot-runner;
+  --dot-flow-duration: 5.6s;
+  --dot-flow-delay: -0.8s;
 }
 
 .dot-motif--wave {
@@ -1035,8 +1094,9 @@ a {
   color: color-mix(in srgb, var(--solar-marker) 48%, transparent);
   --dot-motif-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 72'%3E%3Cg fill='none' stroke='black' stroke-linecap='round' stroke-width='10'%3E%3Cpath d='M8 18c12 0 12 12 24 12s12-12 24-12 12 12 24 12 12-12 24-12'/%3E%3Cpath d='M8 42c12 0 12 12 24 12s12-12 24-12 12 12 24 12 12-12 24-12'/%3E%3C/g%3E%3C/svg%3E");
   --dot-step: clamp(0.42rem, 0.52vw, 0.58rem);
-  --dot-flow-duration: 4.6s;
-  --dot-shift-x: -1.35rem;
+  --dot-motion: sochi-dot-wave;
+  --dot-flow-duration: 8.2s;
+  --dot-flow-delay: -3.1s;
 }
 
 .coach-copy {
@@ -1285,8 +1345,10 @@ a {
   color: color-mix(in srgb, var(--solar-marker) 42%, transparent);
   --dot-motif-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 96'%3E%3Cg fill='none' stroke='black' stroke-linecap='round' stroke-linejoin='round' stroke-width='11'%3E%3Cpath d='M55 89c-3-24 0-48 9-68'/%3E%3Cpath d='M64 21C53 10 39 8 28 15M64 21C69 8 82 6 94 13M64 21c14-2 25 5 31 16M64 21c-7 9-18 13-31 13M64 21C61 10 51 4 40 4'/%3E%3C/g%3E%3C/svg%3E");
   --dot-step: clamp(0.42rem, 0.52vw, 0.58rem);
-  --dot-flow-duration: 5.2s;
-  --dot-shift-x: 1.1rem;
+  --dot-motion: sochi-dot-palm;
+  --dot-flow-duration: 11s;
+  --dot-flow-delay: -1.9s;
+  --dot-origin: 50% 100%;
 }
 
 .dot-motif--finish {
@@ -1298,8 +1360,10 @@ a {
   color: color-mix(in srgb, var(--solar-surface-tint) 32%, transparent);
   --dot-motif-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 108 72'%3E%3Cpath fill='none' stroke='black' stroke-linecap='round' stroke-width='9' d='M19 67V8'/%3E%3Cpath fill='black' d='M19 8h24v21H19zM67 8h24v21H67zM43 29h24v21H43zM19 50h24v17H19z'/%3E%3C/svg%3E");
   --dot-step: clamp(0.42rem, 0.52vw, 0.56rem);
-  --dot-flow-duration: 3.4s;
-  --dot-shift-x: 1.35rem;
+  --dot-motion: sochi-dot-finish;
+  --dot-flow-duration: 7.4s;
+  --dot-flow-delay: -0.4s;
+  --dot-origin: 18% 50%;
 }
 
 .closing-action > :not(.dot-motif) {
@@ -2214,6 +2278,7 @@ a {
     animation: none;
     opacity: 0.66;
     background-position: 0 0;
+    transform: none;
   }
 }
 
