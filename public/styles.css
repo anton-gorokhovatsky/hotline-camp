@@ -100,7 +100,8 @@
   --material-accent-shadow: 0 0.55rem 1.5rem rgba(44, 3, 12, 0.18);
   --service-island-height: 5.125rem;
   --service-island-gap: 0.25rem;
-  --sochi-dot-gap: 7.25;
+  --sochi-dot-field: radial-gradient(circle at center, currentColor 1px, transparent 1.25px);
+  --sochi-dot-step: clamp(0.56rem, 0.68vw, 0.72rem);
 }
 
 :root[data-theme="dark"] {
@@ -231,22 +232,29 @@ a {
 .dot-motif {
   position: absolute;
   z-index: 1;
-  overflow: visible;
-  color: var(--solar-marker); pointer-events: none;
+  display: block;
+  overflow: hidden;
+  background-image: var(--sochi-dot-field);
+  background-position: 0 0;
+  background-size: var(--dot-step, var(--sochi-dot-step)) var(--dot-step, var(--sochi-dot-step));
+  color: var(--solar-marker);
+  pointer-events: none;
+  -webkit-mask-image: var(--dot-motif-mask);
+  mask-image: var(--dot-motif-mask);
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  animation: sochi-dot-flow var(--dot-flow-duration, 5.8s) ease-in-out infinite alternate;
 }
 
-.dot-motif > * {
-  fill: none; stroke: currentColor;
-  stroke-width: 3; stroke-linecap: round; stroke-linejoin: round;
-  stroke-dasharray: 0.01 var(--sochi-dot-gap); vector-effect: non-scaling-stroke; animation: sochi-dot-flow var(--dot-flow-duration, 5.8s) linear infinite;
-}
-
-.dot-motif > :nth-child(2n) { animation-delay: -1.1s; }
+.dot-motif > * { display: none; }
 
 @keyframes sochi-dot-flow {
-  0% { stroke-dashoffset: 0; opacity: 0.64; }
-  48% { opacity: 0.96; }
-  100% { stroke-dashoffset: -29; opacity: 0.64; }
+  0% { background-position: 0 0; opacity: 0.64; }
+  100% { background-position: var(--dot-shift-x, 1.1rem) var(--dot-shift-y, -0.55rem); opacity: 0.96; }
 }
 
 .eyebrow {
@@ -272,8 +280,11 @@ a {
   z-index: 1;
   width: clamp(10rem, 16vw, 16rem);
   height: clamp(6.5rem, 10vw, 10rem);
-  color: color-mix(in srgb, var(--solar-marker) 62%, transparent);
+  color: color-mix(in srgb, var(--solar-marker) 38%, transparent);
+  --dot-motif-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 80'%3E%3Cg fill='none' stroke='black' stroke-linecap='round' stroke-linejoin='round' stroke-width='12'%3E%3Ccircle cx='27' cy='55' r='17'/%3E%3Ccircle cx='91' cy='55' r='17'/%3E%3Cpath d='M27 55 44 29h19L47 55h44L72 24M44 29l22 26M67 18h15M72 24l13-8h10'/%3E%3C/g%3E%3C/svg%3E");
+  --dot-step: clamp(0.42rem, 0.52vw, 0.56rem);
   --dot-flow-duration: 3.8s;
+  --dot-shift-x: 1.4rem;
 }
 
 .masthead {
@@ -714,7 +725,8 @@ a {
 
 .dot-motif--mountains {
   inset: clamp(2rem, 4vw, 4rem) calc(-1 * var(--space-page)) auto auto;
-  color: color-mix(in srgb, var(--solar-marker) 58%, transparent);
+  color: color-mix(in srgb, var(--solar-marker) 42%, transparent);
+  --dot-motif-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 72'%3E%3Cpath fill='black' d='M7 62 39 19l22 29 15-20 37 34H7Z'/%3E%3Ccircle fill='black' cx='91' cy='14' r='8'/%3E%3C/svg%3E");
   --dot-flow-duration: 7.2s;
 }
 
@@ -926,7 +938,8 @@ a {
 
 .dot-motif--crown {
   inset: clamp(6rem, 10vw, 8rem) var(--space-page) auto auto;
-  color: color-mix(in srgb, var(--solar-marker) 64%, transparent);
+  color: color-mix(in srgb, var(--solar-marker) 52%, transparent);
+  --dot-motif-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 72'%3E%3Cpath fill='black' d='M11 22 31 36 50 11l19 25 20-14-9 37Q50 50 20 59Z'/%3E%3Cpath fill='none' stroke='black' stroke-linecap='round' stroke-width='9' d='M24 66Q50 59 76 66'/%3E%3C/svg%3E");
   --dot-flow-duration: 6.4s;
 }
 
@@ -990,16 +1003,22 @@ a {
   inset: auto auto clamp(3rem, 5vw, 5rem) var(--space-page);
   width: clamp(10rem, 16vw, 16rem);
   height: clamp(8rem, 12vw, 12rem);
-  color: color-mix(in srgb, var(--solar-marker) 55%, transparent);
+  color: color-mix(in srgb, var(--solar-marker) 34%, transparent);
+  --dot-motif-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 104 84'%3E%3Ccircle fill='black' cx='66' cy='13' r='10'/%3E%3Cpath fill='none' stroke='black' stroke-linecap='round' stroke-linejoin='round' stroke-width='14' d='m55 27 15 13 18-2M55 27 39 39l-16-3M58 29 48 51m0 0 18 10 15 17M48 51 34 69 15 70'/%3E%3C/svg%3E");
+  --dot-step: clamp(0.48rem, 0.6vw, 0.64rem);
   --dot-flow-duration: 3.6s;
+  --dot-shift-x: 1.5rem;
 }
 
 .dot-motif--swimmer {
   inset: auto var(--space-page) clamp(3rem, 5vw, 5rem) auto;
   width: clamp(11rem, 17vw, 17rem);
   height: clamp(7rem, 11vw, 11rem);
-  color: color-mix(in srgb, var(--solar-marker) 58%, transparent);
+  color: color-mix(in srgb, var(--solar-marker) 40%, transparent);
+  --dot-motif-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' stroke='black' stroke-linecap='round' stroke-linejoin='round' stroke-width='4.25' d='M15 9a1 1 0 1 0 2 0 1 1 0 1 0-2 0m-9 2 4-2 3.5 3-1.5 2m-9 2.75A2.4 2.4 0 0 0 4 17a2.4 2.4 0 0 0 2-1 2.4 2.4 0 0 1 2-1 2.4 2.4 0 0 1 2 1 2.4 2.4 0 0 0 2 1 2.4 2.4 0 0 0 2-1 2.4 2.4 0 0 1 2-1 2.4 2.4 0 0 1 2 1 2.4 2.4 0 0 0 2 1 2.4 2.4 0 0 0 1-.25'/%3E%3C/svg%3E");
+  --dot-step: clamp(0.4rem, 0.5vw, 0.54rem);
   --dot-flow-duration: 4.2s;
+  --dot-shift-x: -1.2rem;
 }
 
 .coach-copy {
@@ -1245,8 +1264,11 @@ a {
   z-index: 0;
   width: clamp(8rem, 12vw, 12rem);
   height: clamp(5rem, 8vw, 8rem);
-  color: color-mix(in srgb, var(--solar-surface-tint) 44%, transparent);
+  color: color-mix(in srgb, var(--solar-surface-tint) 26%, transparent);
+  --dot-motif-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 108 72'%3E%3Cpath fill='none' stroke='black' stroke-linecap='round' stroke-width='9' d='M19 67V8'/%3E%3Cpath fill='black' d='M19 8h24v21H19zM67 8h24v21H67zM43 29h24v21H43zM19 50h24v17H19z'/%3E%3C/svg%3E");
+  --dot-step: clamp(0.42rem, 0.52vw, 0.56rem);
   --dot-flow-duration: 3.4s;
+  --dot-shift-x: 1.35rem;
 }
 
 .closing-action > :not(.dot-motif) {
@@ -2140,9 +2162,10 @@ a {
     scroll-snap-type: none;
   }
 
-  .dot-motif > * {
+  .dot-motif {
     animation: none;
     opacity: 0.66;
+    background-position: 0 0;
   }
 }
 
