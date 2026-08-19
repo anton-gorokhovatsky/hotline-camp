@@ -1804,8 +1804,10 @@ a {
     padding: 0.75rem var(--space-page) max(1.35rem, env(safe-area-inset-bottom));
     overflow-x: auto;
     overscroll-behavior-x: contain;
-    scroll-snap-type: x proximity;
-    scroll-padding-inline: var(--space-page);
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: calc(var(--space-page) + 0.45rem);
     scrollbar-width: none;
   }
 
@@ -1815,9 +1817,9 @@ a {
 
   .conditions-row {
     display: flex;
-    gap: 0;
+    gap: clamp(0.4rem, 2vw, 0.55rem);
     width: max-content;
-    padding: 0.3rem;
+    padding: 0.45rem;
     border: 1px solid var(--material-glass-stroke);
     border-radius: var(--radius-card);
     corner-shape: squircle;
@@ -1829,7 +1831,7 @@ a {
 
   .condition.material-glass {
     height: auto;
-    min-height: 4.35rem;
+    min-height: 4.75rem;
     border: 0;
     background: transparent;
     box-shadow: none;
@@ -1838,9 +1840,10 @@ a {
   }
 
   .condition {
-    padding: 0.58rem 0.65rem;
-    border-radius: calc(var(--radius-card) - 0.3rem);
+    padding: 0.7rem 0.9rem;
+    border-radius: calc(var(--radius-card) - 0.45rem);
     scroll-snap-align: start;
+    scroll-snap-stop: normal;
   }
 
   .condition small {
@@ -2139,6 +2142,10 @@ a {
   *::after {
     scroll-behavior: auto !important;
     transition-duration: 0.01ms !important;
+  }
+
+  .conditions {
+    scroll-snap-type: none;
   }
 }
 
