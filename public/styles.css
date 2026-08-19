@@ -249,14 +249,36 @@ a {
   mask-size: contain;
   opacity: 0.72;
   transform-origin: var(--dot-origin, 50% 50%);
-  animation-name: var(--dot-motion, sochi-dot-horizon);
-  animation-duration: var(--dot-flow-duration, 8s);
-  animation-timing-function: cubic-bezier(0.38, 0, 0.22, 1);
-  animation-delay: var(--dot-flow-delay, 0s);
-  animation-iteration-count: infinite;
+  animation: none;
 }
 
 .dot-motif > * { display: none; }
+
+.dot-motif::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: var(--sochi-dot-field);
+  background-position: 0 0;
+  background-size: var(--dot-step, var(--sochi-dot-step)) var(--dot-step, var(--sochi-dot-step));
+  filter: brightness(1.9) saturate(1.12);
+  -webkit-mask-image: radial-gradient(circle, transparent 42%, #000 48% 54%, transparent 60%);
+  mask-image: radial-gradient(circle, transparent 42%, #000 48% 54%, transparent 60%);
+  -webkit-mask-position: var(--dot-origin, 50% 50%);
+  mask-position: var(--dot-origin, 50% 50%);
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+  -webkit-mask-size: 18% 18%;
+  mask-size: 18% 18%;
+  opacity: 0;
+  animation: sochi-dot-pulse 8.4s cubic-bezier(0.38, 0, 0.18, 1) var(--dot-flow-delay, 0s) infinite;
+}
+
+@keyframes sochi-dot-pulse {
+  0%, 18%, 100% { -webkit-mask-size: 18% 18%; mask-size: 18% 18%; opacity: 0; }
+  27% { opacity: 0.96; }
+  68% { -webkit-mask-size: 240% 240%; mask-size: 240% 240%; opacity: 0.9; }
+  80% { -webkit-mask-size: 280% 280%; mask-size: 280% 280%; opacity: 0; }
+}
 
 @keyframes sochi-dot-bike {
   0%, 100% { background-position: 0 0; transform: translate3d(0, 0, 0); opacity: 0.68; }
@@ -329,7 +351,7 @@ a {
 
 .dot-motif--bike {
   position: absolute;
-  inset: auto clamp(1.5rem, 4vw, 4rem) clamp(8rem, 12vw, 11rem) auto;
+  inset: auto var(--space-page) calc(var(--service-island-height) + clamp(2rem, 4vw, 4rem)) auto;
   z-index: 1;
   width: clamp(12rem, 20vw, 20rem);
   height: clamp(8rem, 13vw, 13rem);
@@ -339,6 +361,7 @@ a {
   --dot-motion: sochi-dot-bike;
   --dot-flow-duration: 6.8s;
   --dot-flow-delay: -1.2s;
+  --dot-origin: 100% 100%;
 }
 
 .masthead {
@@ -785,12 +808,13 @@ a {
 }
 
 .dot-motif--mountains {
-  inset: clamp(2rem, 4vw, 4rem) calc(-0.55 * var(--space-page)) auto auto;
+  inset: var(--space-page) var(--space-page) auto auto;
   color: color-mix(in srgb, var(--solar-marker) 50%, transparent);
   --dot-motif-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 72'%3E%3Cpath fill='black' d='M7 62 39 19l22 29 15-20 37 34H7Z'/%3E%3Ccircle fill='black' cx='91' cy='14' r='8'/%3E%3C/svg%3E");
   --dot-motion: sochi-dot-horizon;
   --dot-flow-duration: 12s;
   --dot-flow-delay: -4.1s;
+  --dot-origin: 100% 0;
 }
 
 .program > :not(.dot-motif),
@@ -1010,11 +1034,11 @@ a {
   min-height: clamp(25rem, 48svh, 34rem);
   align-content: center;
   padding: clamp(4rem, 7vw, 6rem) var(--space-page);
-  background: color-mix(in oklab, var(--sochi-magnolia) 62%, var(--sochi-slate));
+  background: var(--sea-deep);
 }
 
 .dot-motif--crown {
-  inset: clamp(6rem, 10vw, 8rem) var(--space-page) auto auto;
+  inset: var(--space-page) var(--space-page) auto auto;
   width: clamp(22rem, 40vw, 42rem);
   height: clamp(11rem, 20vw, 20rem);
   color: color-mix(in srgb, var(--solar-marker) 60%, transparent);
@@ -1022,6 +1046,7 @@ a {
   --dot-motion: sochi-dot-crown;
   --dot-flow-duration: 10.4s;
   --dot-flow-delay: -2.7s;
+  --dot-origin: 100% 0;
 }
 
 .trainers-heading .eyebrow {
@@ -1081,19 +1106,20 @@ a {
 }
 
 .dot-motif--runner {
-  inset: auto auto clamp(3rem, 5vw, 5rem) var(--space-page);
+  inset: auto auto var(--space-page) var(--space-page);
   width: clamp(10rem, 16vw, 16rem);
   height: clamp(8rem, 12vw, 12rem);
   color: color-mix(in srgb, var(--solar-marker) 34%, transparent);
-  --dot-motif-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 104 84'%3E%3Ccircle fill='black' cx='66' cy='13' r='10'/%3E%3Cpath fill='none' stroke='black' stroke-linecap='round' stroke-linejoin='round' stroke-width='14' d='m55 27 15 13 18-2M55 27 39 39l-16-3M58 29 48 51m0 0 18 10 15 17M48 51 34 69 15 70'/%3E%3C/svg%3E");
+  --dot-motif-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath fill='black' d='m21.707 20.293-5-5a.996.996 0 0 0-1.414 0L2 28.586 3.414 30 16 17.414 19.586 21 14 26.586 15.414 28l2.292-2.292 4.001-4.001a.997.997 0 0 0 0-1.414'/%3E%3Cpath fill='black' d='M28.586 9 23 14.586l-6.001-6.002A2 2 0 0 0 15.577 8a2 2 0 0 0-1.407.584L8 14.76l1.414 1.414 6.17-6.175 6.71 6.708a.997.997 0 0 0 1.413 0L30 10.414z'/%3E%3Cpath fill='black' d='M22.5 9C20.57 9 19 7.43 19 5.5S20.57 2 22.5 2 26 3.57 26 5.5 24.43 9 22.5 9m0-5c-.827 0-1.5.673-1.5 1.5S21.673 7 22.5 7 24 6.327 24 5.5 23.327 4 22.5 4'/%3E%3C/svg%3E");
   --dot-step: clamp(0.48rem, 0.6vw, 0.64rem);
   --dot-motion: sochi-dot-runner;
   --dot-flow-duration: 5.6s;
   --dot-flow-delay: -0.8s;
+  --dot-origin: 0 100%;
 }
 
 .dot-motif--wave {
-  inset: auto var(--space-page) clamp(3rem, 5vw, 5rem) auto;
+  inset: auto var(--space-page) var(--space-page) auto;
   width: clamp(14rem, 22vw, 22rem);
   height: clamp(7rem, 10vw, 10rem);
   color: color-mix(in srgb, var(--solar-marker) 48%, transparent);
@@ -1102,6 +1128,7 @@ a {
   --dot-motion: sochi-dot-wave;
   --dot-flow-duration: 8.2s;
   --dot-flow-delay: -3.1s;
+  --dot-origin: 100% 100%;
 }
 
 .coach-copy {
@@ -1343,7 +1370,7 @@ a {
 
 .dot-motif--palm {
   position: absolute;
-  inset: auto 0 calc(-1 * clamp(3rem, 4vw, 4rem)) auto;
+  inset: auto 0 calc(-0.5 * var(--space-page)) auto;
   z-index: 0;
   width: clamp(12rem, 17vw, 18rem);
   height: clamp(8rem, 11vw, 12rem);
@@ -1353,12 +1380,12 @@ a {
   --dot-motion: sochi-dot-palm;
   --dot-flow-duration: 11s;
   --dot-flow-delay: -1.9s;
-  --dot-origin: 50% 100%;
+  --dot-origin: 100% 100%;
 }
 
 .dot-motif--finish {
   position: absolute;
-  inset: clamp(0.5rem, 1.5vw, 1.5rem) auto auto 47%;
+  inset: 0 0 auto auto;
   z-index: 0;
   width: clamp(15rem, 22vw, 21rem);
   height: clamp(10rem, 14vw, 14rem);
@@ -1368,7 +1395,13 @@ a {
   --dot-motion: sochi-dot-finish;
   --dot-flow-duration: 7.4s;
   --dot-flow-delay: -0.4s;
-  --dot-origin: 18% 50%;
+  --dot-origin: 100% 0;
+}
+
+.dot-motif:is(.dot-motif--bike, .dot-motif--mountains, .dot-motif--crown, .dot-motif--runner, .dot-motif--wave, .dot-motif--palm, .dot-motif--finish) {
+  width: clamp(16rem, 20vw, 22rem);
+  height: auto;
+  aspect-ratio: 3 / 2;
 }
 
 .closing-action > :not(.dot-motif) {
@@ -2311,29 +2344,31 @@ a {
     background-position: 0 0;
     transform: none;
   }
+
+  .dot-motif::after { animation: none; opacity: 0; }
 }
 
 /* Trainer chapters: the evidence is grouped as a competitive biography. */
 .coach-story {
   grid-template-columns: repeat(12, minmax(0, 1fr));
-  grid-template-rows: repeat(4, auto);
-  row-gap: clamp(3rem, 5vw, 6rem);
+  grid-template-rows: auto auto;
+  row-gap: clamp(2.25rem, 3.5vw, 4rem);
   padding-block: clamp(4rem, 6vw, 6.5rem);
 }
 
 .coach-story::before {
-  position: absolute;
-  inset: clamp(1.5rem, 2vw, 2rem) auto auto var(--space-page);
+  position: relative;
+  inset: auto;
   z-index: 0;
-  color: var(--oleander);
-  font-size: var(--type-label);
-  font-weight: 720;
-  letter-spacing: var(--tracking-label);
-  line-height: 1;
+  grid-column: 1 / 5;
+  grid-row: 1;
+  align-self: end;
+  justify-self: end;
+  font-size: clamp(10rem, 15vw, 15rem);
 }
 
 .coach-story-maksim::before {
-  inset: clamp(1.5rem, 2vw, 2rem) var(--space-page) auto auto;
+  grid-column: 9 / 13;
 }
 
 .coach-copy,
@@ -2357,7 +2392,7 @@ a {
 
 .coach-copy h3 {
   max-width: none;
-  font-size: clamp(3.5rem, 5.6vw, 7.5rem);
+  font-size: clamp(4.5rem, 6.7vw, 10rem);
 }
 
 .coach-story-maksim .coach-copy h3 {
@@ -2371,56 +2406,54 @@ a {
 
 .coach-finish,
 .coach-story-maksim .coach-finish {
-  grid-column: 5 / 13;
+  grid-column: 5 / 10;
   grid-row: 1;
   align-self: center;
 }
 
 .coach-story-maksim .coach-finish {
-  grid-column: 1 / 9;
+  grid-column: 4 / 9;
 }
 
 .coach-credentials,
 .coach-story-maksim .coach-credentials {
-  grid-column: 2 / 12;
+  grid-column: 1 / 10;
   grid-row: 2;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 5fr) minmax(0, 4fr);
   align-self: start;
   gap: clamp(1.5rem, 3vw, 3.5rem);
 }
 
 .coach-story-maksim .coach-credentials {
-  grid-column: 2 / 12;
+  grid-column: 4 / 13;
 }
 
 .coach-context,
 .coach-motion,
 .coach-story-maksim .coach-context,
 .coach-story-maksim .coach-motion {
+  grid-row: auto;
   width: auto;
   justify-self: stretch;
 }
 
 .coach-context,
 .coach-story-maksim .coach-context {
-  grid-column: 2 / 6;
-  grid-row: 3;
+  grid-column: 10 / 13;
+  grid-row: 1;
   align-self: center;
 }
 
 .coach-motion,
 .coach-story-maksim .coach-motion {
-  grid-column: 8 / 12;
-  grid-row: 4;
+  grid-column: 10 / 13;
+  grid-row: 2;
   align-self: start;
 }
 
-.coach-story-maksim .coach-context {
-  grid-column: 8 / 12;
-}
-
+.coach-story-maksim .coach-context,
 .coach-story-maksim .coach-motion {
-  grid-column: 2 / 6;
+  grid-column: 1 / 4;
 }
 
 .coach-credential-group h4 {
@@ -2455,9 +2488,13 @@ a {
 
   .coach-story::before,
   .coach-story-maksim::before {
-    inset: 1.5rem var(--space-page) auto auto;
-    font-size: var(--type-label);
-    line-height: 1;
+    inset: auto;
+    grid-column: 1;
+    grid-row: 1;
+    align-self: start;
+    justify-self: end;
+    font-size: clamp(6.4rem, 32vw, 9rem);
+    line-height: 0.74;
   }
 
   .coach-copy,
@@ -2465,7 +2502,7 @@ a {
     grid-column: 1;
     grid-row: 1;
     order: initial;
-    padding: 0;
+    padding: 0 clamp(6.25rem, 32vw, 8rem) 0 0;
     text-align: left;
   }
 
@@ -2505,6 +2542,13 @@ a {
     grid-row: 5;
     width: 100%;
   }
+
+  .dot-motif:is(.dot-motif--bike, .dot-motif--mountains, .dot-motif--crown, .dot-motif--runner, .dot-motif--wave, .dot-motif--palm, .dot-motif--finish) { width: 10.5rem; height: auto; }
+  .dot-motif--mountains, .dot-motif--crown, .dot-motif--finish { inset: var(--space-page) var(--space-page) auto auto; }
+  .dot-motif--bike { inset: auto var(--space-page) calc(var(--service-island-height) + 1.5rem) auto; }
+  .dot-motif--runner { inset: auto auto var(--space-page) var(--space-page); }
+  .dot-motif--wave { inset: auto var(--space-page) var(--space-page) auto; }
+  .dot-motif--palm { inset: auto 0 calc(-0.5 * var(--space-page)) auto; }
 }
 
 @media (forced-colors: active) {
