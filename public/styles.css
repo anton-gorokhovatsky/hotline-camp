@@ -495,12 +495,23 @@ a {
 }
 
 .hero-lead {
+  display: grid;
+  gap: clamp(0.25rem, 0.42vw, 0.42rem);
   max-width: 35rem;
   margin-top: clamp(0.95rem, 1.35vw, 1.3rem);
   color: rgba(16, 20, 16, 0.78);
   font-size: var(--type-body-small);
-  font-weight: 500;
   line-height: 1.45;
+}
+
+.hero-lead-principle {
+  font-weight: 620;
+}
+
+.hero-lead-outcome {
+  font-size: var(--type-nav);
+  font-weight: 500;
+  opacity: 0.82;
 }
 
 :root[data-theme="dark"] .hero {
@@ -1856,7 +1867,6 @@ a {
 
   .hero-lead {
     margin-top: 1.25rem;
-    font-weight: 400;
   }
 
   .hero-copy .camp-cta {
