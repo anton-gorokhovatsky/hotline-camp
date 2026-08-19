@@ -1838,20 +1838,16 @@ a {
 
   .condition small {
     overflow: visible;
-    hyphens: auto;
+    hyphens: none;
     text-overflow: clip;
-    white-space: normal;
+    white-space: nowrap;
   }
 
   .condition-air,
-  .condition-sea {
-    width: clamp(6.8rem, 29.5vw, 7.25rem);
-    min-width: clamp(6.8rem, 29.5vw, 7.25rem);
-  }
-
+  .condition-sea,
   .condition-daylight {
-    width: clamp(7.5rem, 33vw, 8rem);
-    min-width: clamp(7.5rem, 33vw, 8rem);
+    width: max-content;
+    min-width: max-content;
   }
 
   .condition-forecast {
