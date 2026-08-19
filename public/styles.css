@@ -1589,6 +1589,13 @@ a {
     color: var(--material-glass-text);
   }
 
+  html.menu-open .masthead .brand {
+    visibility: visible;
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
   .section-nav {
     display: none;
   }
