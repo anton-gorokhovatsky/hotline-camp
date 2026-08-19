@@ -2118,6 +2118,153 @@ a {
   }
 }
 
+/* Trainer chapters: one portrait, one proof list, then two supporting frames. */
+.coach-story {
+  grid-template-rows: auto auto auto;
+  row-gap: clamp(2rem, 3.5vw, 4rem);
+  padding-block: clamp(4rem, 6vw, 6.5rem);
+}
+
+.coach-story::before {
+  inset: clamp(4.25rem, 6vw, 6.5rem) auto auto var(--space-page);
+  z-index: 1;
+  color: var(--oleander);
+  font-size: var(--type-label);
+  font-weight: 700;
+  letter-spacing: var(--tracking-label);
+  line-height: 1;
+}
+
+.coach-copy,
+.coach-story-maksim .coach-copy {
+  grid-column: 1 / 13;
+  grid-row: 1;
+  padding: 0 0 0 clamp(3rem, 5vw, 5rem);
+}
+
+.coach-story-maksim .coach-copy {
+  padding-right: clamp(3rem, 5vw, 5rem);
+  padding-left: 0;
+  text-align: right;
+}
+
+.coach-story-maksim .coach-affiliation {
+  justify-content: flex-end;
+}
+
+.coach-copy h3 {
+  max-width: none;
+  font-size: clamp(4.5rem, 8vw, 9.25rem);
+}
+
+.coach-story-maksim .coach-copy h3 {
+  margin-left: auto;
+}
+
+.coach-images,
+.coach-story-maksim .coach-images {
+  display: contents;
+}
+
+.coach-finish,
+.coach-story-maksim .coach-finish {
+  grid-column: 1 / 8;
+  grid-row: 2;
+  align-self: start;
+}
+
+.coach-story-maksim .coach-finish {
+  grid-column: 6 / 13;
+}
+
+.coach-credentials,
+.coach-story-maksim .coach-credentials {
+  grid-column: 8 / 13;
+  grid-row: 2;
+  align-self: center;
+}
+
+.coach-story-maksim .coach-credentials {
+  grid-column: 1 / 6;
+}
+
+.coach-context,
+.coach-motion,
+.coach-story-maksim .coach-context,
+.coach-story-maksim .coach-motion {
+  grid-row: 3;
+  width: auto;
+  justify-self: stretch;
+}
+
+.coach-context,
+.coach-story-maksim .coach-context {
+  grid-column: 2 / 6;
+}
+
+.coach-motion,
+.coach-story-maksim .coach-motion {
+  grid-column: 7 / 11;
+}
+
+@media (max-width: 46rem) {
+  .coach-story {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: repeat(5, auto);
+    gap: clamp(1.75rem, 7vw, 2.75rem);
+    padding-block: 4rem 5rem;
+  }
+
+  .coach-story::before {
+    inset: 4rem auto auto var(--space-page);
+  }
+
+  .coach-copy,
+  .coach-story-maksim .coach-copy {
+    grid-column: 1;
+    grid-row: 1;
+    order: initial;
+    padding: 0 0 0 2.75rem;
+    text-align: left;
+  }
+
+  .coach-story-maksim .coach-affiliation {
+    justify-content: flex-start;
+  }
+
+  .coach-copy h3 {
+    font-size: clamp(3.6rem, 16vw, 5rem);
+  }
+
+  .coach-finish,
+  .coach-story-maksim .coach-finish {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .coach-credentials,
+  .coach-story-maksim .coach-credentials {
+    grid-column: 1;
+    grid-row: 3;
+    order: initial;
+  }
+
+  .coach-context,
+  .coach-story-maksim .coach-context {
+    grid-column: 1;
+    grid-row: 4;
+    width: 100%;
+  }
+
+  .coach-motion,
+  .coach-story-maksim .coach-motion {
+    grid-column: 1;
+    grid-row: 5;
+    width: 100%;
+  }
+}
+
 @media (forced-colors: active) {
   .hero,
   .hero-stage,
