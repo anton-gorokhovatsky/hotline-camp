@@ -2128,22 +2128,24 @@ a {
   }
 }
 
-/* Trainer chapters: one portrait, one proof list, then two supporting frames. */
+/* Trainer chapters: the evidence is grouped as a competitive biography. */
 .coach-story {
-  grid-template-rows: repeat(4, auto);
-  row-gap: clamp(2.25rem, 4vw, 4.5rem);
+  grid-template-rows: auto auto;
+  row-gap: clamp(2.25rem, 3.5vw, 4rem);
   padding-block: clamp(4rem, 6vw, 6.5rem);
 }
 
 .coach-copy,
 .coach-story-maksim .coach-copy {
-  grid-column: 1 / 13;
+  grid-column: 1 / 5;
   grid-row: 1;
-  padding: 0 0 0 clamp(3rem, 5vw, 5rem);
+  align-self: center;
+  padding: 0 0 0 clamp(1rem, 2vw, 2rem);
 }
 
 .coach-story-maksim .coach-copy {
-  padding-right: clamp(3rem, 5vw, 5rem);
+  grid-column: 9 / 13;
+  padding-right: clamp(1rem, 2vw, 2rem);
   padding-left: 0;
   text-align: right;
 }
@@ -2154,7 +2156,7 @@ a {
 
 .coach-copy h3 {
   max-width: none;
-  font-size: clamp(4.5rem, 8vw, 9.25rem);
+  font-size: clamp(4.5rem, 6.7vw, 10rem);
 }
 
 .coach-story-maksim .coach-copy h3 {
@@ -2168,43 +2170,70 @@ a {
 
 .coach-finish,
 .coach-story-maksim .coach-finish {
-  grid-column: 1 / 9;
-  grid-row: 2;
-  align-self: start;
+  grid-column: 5 / 10;
+  grid-row: 1;
+  align-self: center;
 }
 
 .coach-story-maksim .coach-finish {
-  grid-column: 5 / 13;
+  grid-column: 4 / 9;
 }
 
 .coach-credentials,
 .coach-story-maksim .coach-credentials {
-  grid-column: 2 / 8;
-  grid-row: 3;
+  grid-column: 1 / 10;
+  grid-row: 2;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 4fr);
   align-self: start;
+  gap: clamp(1.5rem, 3vw, 3.5rem);
 }
 
 .coach-story-maksim .coach-credentials {
-  grid-column: 6 / 12;
+  grid-column: 4 / 13;
 }
 
 .coach-context,
 .coach-motion,
 .coach-story-maksim .coach-context,
 .coach-story-maksim .coach-motion {
-  grid-row: 4;
+  grid-row: auto;
   width: auto;
   justify-self: stretch;
 }
 
 .coach-context,
 .coach-story-maksim .coach-context {
-  grid-column: 2 / 6;
+  grid-column: 10 / 13;
+  grid-row: 1;
+  align-self: center;
 }
 
 .coach-motion,
 .coach-story-maksim .coach-motion {
-  grid-column: 7 / 11;
+  grid-column: 10 / 13;
+  grid-row: 2;
+  align-self: start;
+}
+
+.coach-story-maksim .coach-context,
+.coach-story-maksim .coach-motion {
+  grid-column: 1 / 4;
+}
+
+.coach-credential-group h4 {
+  margin-bottom: clamp(0.75rem, 1.2vw, 1.1rem);
+  color: var(--paper);
+  font-family: var(--font-display);
+  font-size: clamp(1.15rem, 1.55vw, 1.55rem);
+  font-weight: 700;
+  letter-spacing: var(--tracking-label);
+  line-height: 1.15;
+}
+
+.coach-credential-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
 @media (max-width: 46rem) {
@@ -2243,6 +2272,8 @@ a {
   .coach-story-maksim .coach-credentials {
     grid-column: 1;
     grid-row: 3;
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(1.75rem, 7vw, 2.5rem);
     order: initial;
   }
 
