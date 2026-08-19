@@ -58,11 +58,32 @@
   --space-copy: clamp(1.25rem, 2.1vw, 2.25rem);
   --grid-gap: clamp(1rem, 2vw, 2rem);
 
+  /* Единая текучая типографическая шкала: utility → copy → heading → display. */
+  --type-caption: clamp(0.7rem, 0.68rem + 0.08vw, 0.76rem);
   --type-label: clamp(0.78rem, 0.73rem + 0.18vw, 0.94rem);
+  --type-nav: clamp(0.88rem, 0.84rem + 0.15vw, 0.98rem);
+  --type-body-small: clamp(0.98rem, 0.92rem + 0.2vw, 1.12rem);
   --type-body: clamp(1.02rem, 0.93rem + 0.31vw, 1.3rem);
-  --type-body-large: clamp(1.18rem, 1rem + 0.63vw, 1.66rem);
-  --type-title: clamp(3.4rem, 4.7vw, 5.5rem);
-  --type-section: clamp(3.1rem, 6.1vw, 7rem);
+  --type-deck: clamp(1.08rem, 1.02rem + 0.33vw, 1.36rem);
+  --type-lead: clamp(1.18rem, 1rem + 0.63vw, 1.66rem);
+  --type-feature: clamp(1.35rem, 1.1rem + 1.01vw, 2.15rem);
+  --type-stat: clamp(1.45rem, 1.15rem + 0.95vw, 2.2rem);
+  --type-card-title: clamp(1.65rem, 1.36rem + 0.9vw, 2.35rem);
+  --type-section: clamp(2.55rem, 2.27rem + 1.28vw, 4.65rem);
+  --type-display: clamp(2.65rem, 2.06rem + 2.41vw, 5.5rem);
+  --type-menu: clamp(2.35rem, 1.86rem + 2vw, 3.35rem);
+  --type-editorial: clamp(4.25rem, 3.16rem + 5.45vw, 10rem);
+  --type-story-title: clamp(4rem, 3.18rem + 3.36vw, 7.4rem);
+  --type-closing: clamp(3.2rem, 2.42rem + 3.91vw, 8rem);
+
+  --leading-display: 0.98;
+  --leading-editorial: 0.82;
+
+  --tracking-label: 0.075em;
+  --tracking-tight: -0.02em;
+  --tracking-display: -0.026em;
+  --tracking-editorial: -0.018em;
+  --tracking-stat: -0.03em;
 
   --material-glass-fill: color-mix(in srgb, var(--sea-deep) 46%, transparent);
   --material-glass-fill-hover: color-mix(in srgb, var(--sea-deep) 58%, transparent);
@@ -210,7 +231,7 @@ a {
   color: currentColor;
   font-size: var(--type-label);
   font-weight: 700;
-  letter-spacing: 0.075em;
+  letter-spacing: var(--tracking-label);
   line-height: 1.35;
   text-transform: uppercase;
 }
@@ -262,14 +283,14 @@ a {
 }
 
 .brand strong {
-  font-size: clamp(0.96rem, 0.9rem + 0.22vw, 1.12rem);
+  font-size: var(--type-body-small);
   font-weight: 700;
-  letter-spacing: -0.02em;
+  letter-spacing: var(--tracking-tight);
 }
 
 .brand span {
   color: rgba(16, 20, 16, 0.76);
-  font-size: clamp(0.82rem, 0.78rem + 0.16vw, 0.92rem);
+  font-size: var(--type-label);
 }
 
 .masthead-actions {
@@ -290,7 +311,7 @@ a {
   min-height: 3rem;
   align-items: center;
   color: var(--ink);
-  font-size: clamp(0.88rem, 0.84rem + 0.15vw, 0.98rem);
+  font-size: var(--type-nav);
   font-weight: 560;
 }
 
@@ -361,7 +382,7 @@ a {
 }
 
 .theme-toggle-label {
-  font-size: clamp(0.74rem, 0.72rem + 0.08vw, 0.8rem);
+  font-size: var(--type-caption);
   font-weight: 520;
   letter-spacing: 0.01em;
   line-height: 1;
@@ -454,10 +475,10 @@ a {
   gap: clamp(0.55rem, 0.8vw, 0.8rem);
   max-width: none;
   margin-top: clamp(0.75rem, 1.3vw, 1.2rem);
-  font-size: var(--type-title);
+  font-size: var(--type-display);
   font-weight: 700;
-  letter-spacing: -0.028em;
-  line-height: 1;
+  letter-spacing: var(--tracking-display);
+  line-height: var(--leading-display);
 }
 
 .hero-title-main,
@@ -467,7 +488,7 @@ a {
 
 .hero-title-event {
   color: var(--oleander);
-  font-size: clamp(1.35rem, 1.04rem + 1.08vw, 2.15rem);
+  font-size: var(--type-feature);
   font-weight: 700;
   letter-spacing: 0.035em;
   line-height: 1.08;
@@ -477,7 +498,7 @@ a {
   max-width: 35rem;
   margin-top: clamp(0.95rem, 1.35vw, 1.3rem);
   color: rgba(16, 20, 16, 0.78);
-  font-size: clamp(0.98rem, 0.92rem + 0.2vw, 1.12rem);
+  font-size: var(--type-body-small);
   font-weight: 500;
   line-height: 1.45;
 }
@@ -534,9 +555,9 @@ a {
   corner-shape: squircle;
   background: var(--sea-deep);
   color: var(--paper);
-  font-size: clamp(1rem, 0.91rem + 0.25vw, 1.16rem);
+  font-size: var(--type-body-small);
   font-weight: 680;
-  letter-spacing: -0.02em;
+  letter-spacing: var(--tracking-tight);
   line-height: 1;
   transition: background-color 180ms ease, color 180ms ease, transform 180ms ease;
 }
@@ -604,16 +625,16 @@ a {
 
 .condition > span {
   color: var(--material-glass-text-soft);
-  font-size: clamp(0.72rem, 0.76vw, 0.8rem);
+  font-size: var(--type-caption);
   font-weight: 520;
   line-height: 1.25;
 }
 
 .condition strong {
   margin-top: 0.25rem;
-  font-size: clamp(0.92rem, 1.05vw, 1.08rem);
+  font-size: var(--type-nav);
   font-weight: 680;
-  letter-spacing: -0.018em;
+  letter-spacing: var(--tracking-editorial);
   line-height: 1.1;
   white-space: nowrap;
 }
@@ -622,7 +643,7 @@ a {
   margin-top: 0.2rem;
   overflow: hidden;
   color: var(--material-glass-text-soft);
-  font-size: clamp(0.7rem, 0.72vw, 0.76rem);
+  font-size: var(--type-caption);
   line-height: 1.25;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -699,9 +720,9 @@ a {
 .program-heading h2 {
   max-width: 10ch;
   margin-top: 0.8rem;
-  font-size: clamp(3rem, 3.8vw, 4.65rem);
+  font-size: var(--type-section);
   font-weight: 700;
-  letter-spacing: -0.025em;
+  letter-spacing: var(--tracking-display);
   line-height: 1.02;
 }
 
@@ -709,7 +730,7 @@ a {
   max-width: 45rem;
   margin-top: clamp(1.75rem, 2.4vw, 2.4rem);
   color: var(--text-muted);
-  font-size: clamp(1.08rem, 1rem + 0.35vw, 1.36rem);
+  font-size: var(--type-deck);
   line-height: 1.48;
 }
 
@@ -733,14 +754,14 @@ a {
 
 .camp-facts dt {
   color: var(--text-muted);
-  font-size: clamp(0.9rem, 0.84rem + 0.2vw, 1.04rem);
+  font-size: var(--type-nav);
 }
 
 .camp-facts dd {
   color: var(--text);
-  font-size: clamp(1.45rem, 1.15rem + 0.95vw, 2.2rem);
+  font-size: var(--type-stat);
   font-weight: 700;
-  letter-spacing: -0.035em;
+  letter-spacing: var(--tracking-stat);
   line-height: 1.05;
   white-space: nowrap;
 }
@@ -749,7 +770,7 @@ a {
   max-width: 38rem;
   margin-top: 1rem;
   color: var(--text-muted);
-  font-size: clamp(0.94rem, 0.89rem + 0.16vw, 1.04rem);
+  font-size: var(--type-body-small);
   font-weight: 520;
   line-height: 1.42;
 }
@@ -761,7 +782,7 @@ a {
   max-width: none;
   margin-top: clamp(1.35rem, 2vw, 2rem);
   color: var(--text-muted);
-  font-size: clamp(0.94rem, 0.89rem + 0.18vw, 1.06rem);
+  font-size: var(--type-body-small);
   line-height: 1.46;
   list-style: none;
 }
@@ -792,16 +813,16 @@ a {
   grid-row: 1 / 3;
   padding-top: 0.22rem;
   color: var(--oleander);
-  font-size: clamp(0.86rem, 0.8rem + 0.2vw, 1rem);
+  font-size: var(--type-label);
   font-variant-numeric: tabular-nums;
   font-weight: 680;
 }
 
 .program-notes h3 {
   margin-top: 0;
-  font-size: clamp(1.65rem, 1.36rem + 0.9vw, 2.35rem);
+  font-size: var(--type-card-title);
   font-weight: 700;
-  letter-spacing: -0.02em;
+  letter-spacing: var(--tracking-tight);
   line-height: 1.08;
 }
 
@@ -810,7 +831,7 @@ a {
   max-width: 24rem;
   margin-top: 0.72rem;
   color: var(--text-muted);
-  font-size: clamp(1rem, 0.92rem + 0.28vw, 1.2rem);
+  font-size: var(--type-body);
   line-height: 1.5;
 }
 
@@ -835,7 +856,7 @@ a {
 
 .race-targets strong {
   color: var(--text);
-  font-size: clamp(1.75rem, 2.15vw, 2.5rem);
+  font-size: var(--type-card-title);
   line-height: 1.05;
 }
 
@@ -851,7 +872,7 @@ a {
   flex-wrap: wrap;
   gap: 0.7rem 1.25rem;
   justify-content: flex-start;
-  font-size: clamp(1.08rem, 0.98rem + 0.35vw, 1.35rem);
+  font-size: var(--type-body);
   font-weight: 650;
 }
 
@@ -898,10 +919,10 @@ a {
   grid-column: 1 / 8;
   grid-row: 2;
   max-width: 8ch;
-  font-size: clamp(5.25rem, 9vw, 10rem);
+  font-size: var(--type-editorial);
   font-weight: 760;
-  letter-spacing: -0.018em;
-  line-height: 0.8;
+  letter-spacing: var(--tracking-editorial);
+  line-height: var(--leading-editorial);
 }
 
 .trainers-heading > p:last-child {
@@ -910,7 +931,7 @@ a {
   align-self: end;
   max-width: 31rem;
   color: rgba(238, 234, 225, 0.72);
-  font-size: var(--type-body-large);
+  font-size: var(--type-lead);
   line-height: 1.4;
 }
 
@@ -985,17 +1006,17 @@ a {
   color: var(--oleander);
   font-size: var(--type-label);
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: var(--tracking-label);
   text-transform: uppercase;
 }
 
 .coach-copy h3 {
   max-width: 100%;
   margin-top: clamp(1rem, 1.5vw, 1.4rem);
-  font-size: clamp(4.25rem, 6.4vw, 7.4rem);
+  font-size: var(--type-story-title);
   font-weight: 760;
-  letter-spacing: -0.018em;
-  line-height: 0.78;
+  letter-spacing: var(--tracking-editorial);
+  line-height: var(--leading-editorial);
 }
 
 .coach-credentials {
@@ -1019,7 +1040,7 @@ a {
   padding: clamp(0.42rem, 0.58vw, 0.62rem) 0;
   border-bottom: 0;
   color: color-mix(in oklab, var(--paper) 74%, var(--sea-muted));
-  font-size: clamp(0.98rem, 0.92rem + 0.2vw, 1.12rem);
+  font-size: var(--type-body-small);
   line-height: 1.42;
   counter-increment: achievement;
 }
@@ -1204,10 +1225,10 @@ a {
 
 .closing-action h2 {
   max-width: 10ch;
-  font-size: clamp(5rem, 6.6vw, 8rem);
+  font-size: var(--type-closing);
   font-weight: 760;
-  letter-spacing: -0.018em;
-  line-height: 0.8;
+  letter-spacing: var(--tracking-editorial);
+  line-height: var(--leading-editorial);
 }
 
 .closing-action-copy {
@@ -1584,7 +1605,7 @@ a {
     align-items: center;
     border-bottom: 0;
     font-family: var(--font-display);
-    font-size: clamp(2.35rem, 11vw, 3.35rem);
+    font-size: var(--type-menu);
     font-weight: 720;
     letter-spacing: -0.012em;
     line-height: 0.95;
@@ -1804,14 +1825,11 @@ a {
     max-width: none;
     gap: 0.75rem;
     margin-top: 1rem;
-    font-size: clamp(2.65rem, 10.8vw, 3.75rem);
-    line-height: 0.98;
   }
 
   .hero-lead {
     margin-top: 1.25rem;
     font-weight: 400;
-    line-height: 1.52;
   }
 
   .hero-copy .camp-cta {
@@ -1848,9 +1866,6 @@ a {
 
   .program-heading h2 {
     max-width: 9ch;
-    font-size: clamp(2.55rem, 10.6vw, 3.4rem);
-    letter-spacing: -0.035em;
-    line-height: 1;
   }
 
   .program-intro,
@@ -1861,7 +1876,6 @@ a {
   .program-intro {
     max-width: 31rem;
     padding-top: 0;
-    font-size: clamp(1.03rem, 4.5vw, 1.16rem);
   }
 
   .program-notes {
@@ -1929,8 +1943,6 @@ a {
 
   .trainers-heading h2 {
     margin-top: 0.8rem;
-    font-size: clamp(4.25rem, 21.5vw, 6.5rem);
-    line-height: 0.78;
   }
 
   .coach-story {
@@ -1976,8 +1988,6 @@ a {
 
   .coach-copy h3 {
     max-width: 100%;
-    font-size: clamp(4rem, 20vw, 6.25rem);
-    line-height: 0.78;
   }
 
   .coach-context {
@@ -2030,8 +2040,6 @@ a {
 
   .closing-action h2 {
     max-width: 11ch;
-    font-size: clamp(3.2rem, 16vw, 6rem);
-    line-height: 0.8;
   }
 
   .closing-action-copy {
