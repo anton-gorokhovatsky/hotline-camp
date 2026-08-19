@@ -1555,6 +1555,11 @@ a {
     transition: opacity 180ms ease, transform 180ms ease, visibility 180ms step-end;
   }
 
+  html.menu-open .masthead .brand,
+  html.menu-open .masthead .brand span {
+    color: var(--material-glass-text);
+  }
+
   .section-nav {
     display: none;
   }
@@ -2060,6 +2065,8 @@ a {
   .closing-scene {
     display: grid;
     grid-template-rows: auto auto;
+    min-height: calc(100svh - 3rem);
+    min-height: calc(100dvh - 3rem);
     overflow: visible;
     background: var(--final-red);
   }

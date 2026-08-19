@@ -131,6 +131,7 @@
     if (toggle.getAttribute("aria-expanded") !== "true") return;
 
     const previousScrollBehavior = root.style.scrollBehavior;
+    const destinationTop = destination instanceof HTMLElement ? destination.offsetTop : null;
     toggle.setAttribute("aria-expanded", "false");
     toggle.setAttribute("aria-label", "Открыть меню");
     root.classList.remove("menu-open");
@@ -147,14 +148,21 @@
 
     root.style.scrollBehavior = "auto";
     window.scrollTo(0, savedScroll);
-    if (destination instanceof HTMLElement) {
-      const destinationTop = destination.getBoundingClientRect().top + window.scrollY;
+    if (destinationTop !== null) {
       window.history.pushState(null, "", `#${destination.id}`);
-      window.scrollTo(0, destinationTop);
+      window.requestAnimationFrame(() => {
+        window.scrollTo(0, destinationTop);
+        window.requestAnimationFrame(() => {
+          root.style.scrollBehavior = previousScrollBehavior;
+          updateStickyState();
+          updateActiveSection();
+        });
+      });
+    } else {
+      root.style.scrollBehavior = previousScrollBehavior;
+      updateStickyState();
+      updateActiveSection();
     }
-    root.style.scrollBehavior = previousScrollBehavior;
-    updateStickyState();
-    updateActiveSection();
     if (restoreFocus) toggle.focus();
   };
 
@@ -178,9 +186,6 @@
     if (closeIcon instanceof SVGElement) closeIcon.hidden = false;
 
     body.style.overflow = "hidden";
-    body.style.position = "fixed";
-    body.style.top = `-${savedScroll}px`;
-    body.style.width = "100%";
   };
 
   toggle.addEventListener("click", () => {
