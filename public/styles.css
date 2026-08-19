@@ -1262,7 +1262,7 @@ a {
 
 .dot-motif--palm {
   position: absolute;
-  inset: clamp(1rem, 2vw, 2rem) auto auto 50%;
+  inset: clamp(1rem, 2vw, 2rem) clamp(1rem, 2vw, 2rem) auto auto;
   z-index: 0;
   width: clamp(14rem, 20vw, 20rem);
   height: clamp(10rem, 14vw, 14rem);
@@ -1271,6 +1271,19 @@ a {
   --dot-step: clamp(0.42rem, 0.52vw, 0.58rem);
   --dot-flow-duration: 5.2s;
   --dot-shift-x: 1.1rem;
+}
+
+.dot-motif--finish {
+  position: absolute;
+  inset: clamp(1rem, 2vw, 2rem) auto auto 52%;
+  z-index: 0;
+  width: clamp(8rem, 12vw, 12rem);
+  height: clamp(5rem, 8vw, 8rem);
+  color: color-mix(in srgb, var(--solar-surface-tint) 26%, transparent);
+  --dot-motif-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 108 72'%3E%3Cpath fill='none' stroke='black' stroke-linecap='round' stroke-width='9' d='M19 67V8'/%3E%3Cpath fill='black' d='M19 8h24v21H19zM67 8h24v21H67zM43 29h24v21H43zM19 50h24v17H19z'/%3E%3C/svg%3E");
+  --dot-step: clamp(0.42rem, 0.52vw, 0.56rem);
+  --dot-flow-duration: 3.4s;
+  --dot-shift-x: 1.35rem;
 }
 
 .closing-action > :not(.dot-motif) {
@@ -2006,6 +2019,12 @@ a {
     inset: 1rem 1rem auto auto;
     width: 10rem;
     height: 8rem;
+  }
+
+  .dot-motif--finish {
+    inset: 1rem auto auto 1rem;
+    width: 7rem;
+    height: 4rem;
   }
 
   .trainers-heading {
