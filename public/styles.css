@@ -1797,6 +1797,7 @@ a {
     padding: 0.75rem var(--space-page) max(1.35rem, env(safe-area-inset-bottom));
     overflow-x: auto;
     overscroll-behavior-x: contain;
+    scroll-snap-type: x proximity;
     scroll-padding-inline: var(--space-page);
     scrollbar-width: none;
   }
@@ -1830,19 +1831,27 @@ a {
   }
 
   .condition {
-    padding: 0.58rem 0.82rem;
+    padding: 0.58rem 0.65rem;
     border-radius: calc(var(--radius-card) - 0.3rem);
+    scroll-snap-align: start;
+  }
+
+  .condition small {
+    overflow: visible;
+    hyphens: auto;
+    text-overflow: clip;
+    white-space: normal;
   }
 
   .condition-air,
   .condition-sea {
-    width: 8.65rem;
-    min-width: 8.65rem;
+    width: clamp(6.8rem, 29.5vw, 7.25rem);
+    min-width: clamp(6.8rem, 29.5vw, 7.25rem);
   }
 
   .condition-daylight {
-    width: 10.5rem;
-    min-width: 10.5rem;
+    width: clamp(7.5rem, 33vw, 8rem);
+    min-width: clamp(7.5rem, 33vw, 8rem);
   }
 
   .condition-forecast {
