@@ -27,6 +27,7 @@
   --solar-deep: #0b2b1d;
   --solar-marker-soft: color-mix(in oklab, var(--sochi-eucalyptus) 58%, var(--solar-accent));
   --solar-marker: color-mix(in oklab, var(--sochi-eucalyptus) 34%, var(--solar-accent));
+  --coach-index: color-mix(in oklab, var(--solar-marker-soft) 72%, var(--paper));
 
   --ink: #111713;
   --ink-soft: #35443c;
@@ -966,7 +967,7 @@ a {
   position: absolute;
   inset: clamp(1rem, 2vw, 2rem) var(--space-page) auto auto;
   z-index: -1;
-  color: color-mix(in srgb, var(--solar-marker-soft) 20%, transparent);
+  color: color-mix(in srgb, var(--coach-index) 32%, transparent);
   font-family: var(--font-display);
   font-size: clamp(15rem, 34vw, 38rem);
   font-weight: 780;
@@ -2140,18 +2141,33 @@ a {
   padding-block: clamp(4rem, 6vw, 6.5rem);
 }
 
-.coach-copy,
-.coach-story-maksim .coach-copy {
+.coach-story::before {
+  position: relative;
+  inset: auto;
+  z-index: 0;
   grid-column: 1 / 5;
   grid-row: 1;
-  align-self: center;
-  padding: 0 0 0 clamp(1rem, 2vw, 2rem);
+  align-self: end;
+  justify-self: end;
+  font-size: clamp(10rem, 15vw, 15rem);
+}
+
+.coach-story-maksim::before {
+  grid-column: 9 / 13;
+}
+
+.coach-copy,
+.coach-story-maksim .coach-copy {
+  position: relative;
+  z-index: 1;
+  grid-column: 1 / 5;
+  grid-row: 1;
+  align-self: start;
+  padding: 0;
 }
 
 .coach-story-maksim .coach-copy {
   grid-column: 9 / 13;
-  padding-right: clamp(1rem, 2vw, 2rem);
-  padding-left: 0;
   text-align: right;
 }
 
@@ -2250,12 +2266,22 @@ a {
     padding-block: 4rem 5rem;
   }
 
+  .coach-story::before,
+  .coach-story-maksim::before {
+    grid-column: 1;
+    grid-row: 1;
+    align-self: start;
+    justify-self: end;
+    font-size: clamp(6.4rem, 32vw, 9rem);
+    line-height: 0.74;
+  }
+
   .coach-copy,
   .coach-story-maksim .coach-copy {
     grid-column: 1;
     grid-row: 1;
     order: initial;
-    padding: 0 0 0 2.75rem;
+    padding: 0 clamp(6.25rem, 32vw, 8rem) 0 0;
     text-align: left;
   }
 
@@ -2264,7 +2290,7 @@ a {
   }
 
   .coach-copy h3 {
-    font-size: clamp(3.6rem, 16vw, 5rem);
+    font-size: clamp(2.25rem, 11.2vw, 4rem);
   }
 
   .coach-finish,
