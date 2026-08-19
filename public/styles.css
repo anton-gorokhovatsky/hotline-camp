@@ -2130,8 +2130,8 @@ a {
 
 /* Trainer chapters: one portrait, one proof list, then two supporting frames. */
 .coach-story {
-  grid-template-rows: auto auto auto;
-  row-gap: clamp(2rem, 3.5vw, 4rem);
+  grid-template-rows: repeat(4, auto);
+  row-gap: clamp(2.25rem, 4vw, 4.5rem);
   padding-block: clamp(4rem, 6vw, 6.5rem);
 }
 
@@ -2168,31 +2168,31 @@ a {
 
 .coach-finish,
 .coach-story-maksim .coach-finish {
-  grid-column: 1 / 8;
+  grid-column: 1 / 9;
   grid-row: 2;
   align-self: start;
 }
 
 .coach-story-maksim .coach-finish {
-  grid-column: 6 / 13;
+  grid-column: 5 / 13;
 }
 
 .coach-credentials,
 .coach-story-maksim .coach-credentials {
-  grid-column: 8 / 13;
-  grid-row: 2;
-  align-self: center;
+  grid-column: 2 / 8;
+  grid-row: 3;
+  align-self: start;
 }
 
 .coach-story-maksim .coach-credentials {
-  grid-column: 1 / 6;
+  grid-column: 6 / 12;
 }
 
 .coach-context,
 .coach-motion,
 .coach-story-maksim .coach-context,
 .coach-story-maksim .coach-motion {
-  grid-row: 3;
+  grid-row: 4;
   width: auto;
   justify-self: stretch;
 }
