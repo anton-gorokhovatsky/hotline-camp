@@ -1650,6 +1650,7 @@ a {
     line-height: 0.95;
   }
 
+  .mobile-menu-links a[aria-current="location"],
   .mobile-menu-links a:focus-visible {
     outline: 0;
     text-decoration: underline;

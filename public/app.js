@@ -85,6 +85,8 @@
   const masthead = document.querySelector("#masthead");
   const toggle = document.querySelector("#menu-toggle");
   const panel = document.querySelector("#mobile-menu-panel");
+  const sectionLinks = [...document.querySelectorAll('.section-nav a[href^="#"], .mobile-menu-links a[href^="#"]')];
+  const sections = [...document.querySelectorAll("#program, #trainers, #registration")];
 
   if (!(masthead instanceof HTMLElement)
     || !(toggle instanceof HTMLButtonElement)
@@ -101,12 +103,31 @@
     masthead.classList.toggle("is-scrolled", window.scrollY > 12);
   };
 
+  const updateActiveSection = () => {
+    if (root.classList.contains("menu-open")) return;
+
+    const marker = window.scrollY + Math.min(window.innerHeight * 0.28, 240);
+    let activeId = "";
+
+    sections.forEach((section) => {
+      if (section instanceof HTMLElement && section.offsetTop <= marker) {
+        activeId = section.id;
+      }
+    });
+
+    sectionLinks.forEach((link) => {
+      const isCurrent = activeId && link.getAttribute("href") === `#${activeId}`;
+      if (isCurrent) link.setAttribute("aria-current", "location");
+      else link.removeAttribute("aria-current");
+    });
+  };
+
   const focusableItems = () => [
     toggle,
     ...panel.querySelectorAll("a[href], button:not([disabled])"),
   ].filter((item) => item instanceof HTMLElement && !item.hidden);
 
-  const closeMenu = ({ restoreFocus = true } = {}) => {
+  const closeMenu = ({ restoreFocus = true, destination = null } = {}) => {
     if (toggle.getAttribute("aria-expanded") !== "true") return;
 
     const previousScrollBehavior = root.style.scrollBehavior;
@@ -126,8 +147,14 @@
 
     root.style.scrollBehavior = "auto";
     window.scrollTo(0, savedScroll);
+    if (destination instanceof HTMLElement) {
+      const destinationTop = destination.getBoundingClientRect().top + window.scrollY;
+      window.history.pushState(null, "", `#${destination.id}`);
+      window.scrollTo(0, destinationTop);
+    }
     root.style.scrollBehavior = previousScrollBehavior;
     updateStickyState();
+    updateActiveSection();
     if (restoreFocus) toggle.focus();
   };
 
@@ -145,6 +172,7 @@
     toggle.setAttribute("aria-expanded", "true");
     toggle.setAttribute("aria-label", "Закрыть меню");
     panel.hidden = false;
+    updateActiveSection();
     root.classList.add("menu-open");
     if (openIcon instanceof SVGElement) openIcon.hidden = true;
     if (closeIcon instanceof SVGElement) closeIcon.hidden = false;
@@ -153,7 +181,6 @@
     body.style.position = "fixed";
     body.style.top = `-${savedScroll}px`;
     body.style.width = "100%";
-    panel.querySelector("a[href]")?.focus();
   };
 
   toggle.addEventListener("click", () => {
@@ -188,13 +215,8 @@
     link.addEventListener("click", (event) => {
       event.preventDefault();
       const selector = link.getAttribute("href");
-      closeMenu({ restoreFocus: false });
-
-      window.requestAnimationFrame(() => {
-        if (!selector) return;
-        window.history.pushState(null, "", selector);
-        document.querySelector(selector)?.scrollIntoView({ block: "start" });
-      });
+      const destination = selector ? document.querySelector(selector) : null;
+      closeMenu({ restoreFocus: false, destination });
     });
   });
 
@@ -208,11 +230,13 @@
     scheduled = true;
     window.requestAnimationFrame(() => {
       updateStickyState();
+      updateActiveSection();
       scheduled = false;
     });
   }, { passive: true });
 
   updateStickyState();
+  updateActiveSection();
 })();
 
 (() => {
