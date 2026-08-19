@@ -100,12 +100,14 @@ def main() -> int:
         "hero-time-trial.jpg",
         "coach-evgeny-finish.jpg",
         "week-swimmer.jpg",
+        "coach-evgeny-bike.jpg",
         "coach-maksim-finish.jpg",
         "maksim-pool.jpg",
+        "coach-maksim-water.jpg",
         "final-finish.jpg",
     }
     image_names = {Path(urlparse(image.get("src", "")).path).name for image in parser.images}
-    require(image_names == selected_photos, "only the six approved narrative photographs may be rendered")
+    require(image_names == selected_photos, "only the eight approved narrative photographs may be rendered")
     require(all(image.get("alt", "").strip() for image in parser.images), "every rendered photograph needs alt text")
     for image in parser.images:
         source = image.get("src", "")
