@@ -1144,12 +1144,13 @@ a {
   position: absolute;
   z-index: 1;
   inset: auto 0 0;
-  height: clamp(3.5rem, 7vw, 7rem);
+  height: clamp(8rem, 14vw, 14rem);
   background: linear-gradient(
     to bottom,
     transparent 0%,
-    color-mix(in srgb, var(--final-red) 34%, transparent) 45%,
-    color-mix(in srgb, var(--final-red) 76%, transparent) 76%,
+    color-mix(in srgb, var(--final-red) 12%, transparent) 28%,
+    color-mix(in srgb, var(--final-red) 38%, transparent) 54%,
+    color-mix(in srgb, var(--final-red) 76%, transparent) 79%,
     var(--final-red) 100%
   );
   pointer-events: none;
@@ -1161,25 +1162,25 @@ a {
   z-index: 2;
   inset: 0;
   display: block;
-  background: var(--final-red);
+  background: var(--material-accent-fill);
   -webkit-backdrop-filter: var(--material-accent-filter);
   backdrop-filter: var(--material-accent-filter);
   -webkit-mask-image: radial-gradient(
-    ellipse 96% 42% at 42% 118%,
+    ellipse 110% 54% at 42% 122%,
     #000 0%,
-    #000 44%,
-    rgba(0, 0, 0, 0.86) 58%,
-    rgba(0, 0, 0, 0.5) 73%,
-    rgba(0, 0, 0, 0.12) 87%,
+    #000 34%,
+    rgba(0, 0, 0, 0.82) 50%,
+    rgba(0, 0, 0, 0.46) 68%,
+    rgba(0, 0, 0, 0.1) 86%,
     transparent 100%
   );
   mask-image: radial-gradient(
-    ellipse 96% 42% at 42% 118%,
+    ellipse 110% 54% at 42% 122%,
     #000 0%,
-    #000 44%,
-    rgba(0, 0, 0, 0.86) 58%,
-    rgba(0, 0, 0, 0.5) 73%,
-    rgba(0, 0, 0, 0.12) 87%,
+    #000 34%,
+    rgba(0, 0, 0, 0.82) 50%,
+    rgba(0, 0, 0, 0.46) 68%,
+    rgba(0, 0, 0, 0.1) 86%,
     transparent 100%
   );
   pointer-events: none;
@@ -1199,8 +1200,15 @@ a {
   align-items: end;
   gap: var(--grid-gap);
   min-width: 0;
-  padding: clamp(3.5rem, 5vw, 5rem) var(--space-page) clamp(2.75rem, 4vw, 4rem);
-  background: var(--final-red);
+  margin-top: calc(-1 * clamp(4rem, 6vw, 6.5rem));
+  padding: clamp(4.5rem, 6vw, 6rem) var(--space-page) clamp(2rem, 3vw, 3rem);
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    color-mix(in srgb, var(--final-red) 42%, transparent) 15%,
+    var(--final-red) 32%,
+    var(--final-red) 100%
+  );
 }
 
 .closing-action::before {
@@ -1266,7 +1274,7 @@ a {
   width: 100%;
   min-height: 0;
   margin: 0;
-  padding: 0.5rem var(--space-page);
+  padding: 0 var(--space-page);
   border: 0;
   border-radius: 0;
   background: var(--final-red);
@@ -2033,9 +2041,9 @@ a {
   .closing-action {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
-    gap: clamp(1.5rem, 6vw, 2.25rem);
+    gap: clamp(1.25rem, 5vw, 1.75rem);
     width: auto;
-    padding: clamp(3rem, 12vw, 4.5rem) var(--space-page) clamp(3.5rem, 12vw, 5rem);
+    padding: clamp(4.5rem, 18vw, 5rem) var(--space-page) clamp(1rem, 5vw, 1.5rem);
   }
 
   .closing-action h2 {
