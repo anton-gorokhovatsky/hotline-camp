@@ -117,7 +117,7 @@ def main() -> int:
     require("4-кратный" not in html, "the technical numeral wording must be removed")
     require('<span class="hero-title-main">Финальная неделя перед стартами</span>' in html, "the hero heading must keep its primary line")
     require(html.count("IRONSTAR 2026") >= 2, "the event name must align across the hero and metadata")
-    require(html.count("Решающие дни перед гонкой определяют результат") == 1, "the hero promise must appear exactly once")
+    require(html.count("Переводим накопленную форму в&nbsp;готовность к&nbsp;конкретной гонке.") == 1, "the hero promise must appear exactly once")
     require("Абсолютный победитель Ironman 70.3 Oman 2025" in html, "the supplied trainer distinction must be preserved")
     require("Победитель VII Всероссийской летней спартакиады учащихся, 2015" in html, "the supplied Spartakiad title must be preserved")
     require("Встретимся в&nbsp;Сочи?" in html, "the registration section needs its own heading")
