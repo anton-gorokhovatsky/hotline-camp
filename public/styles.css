@@ -548,6 +548,11 @@ a {
   isolation: isolate;
 }
 
+.hero-action {
+  display: grid;
+  justify-items: start;
+}
+
 .hero-copy .eyebrow {
   color: rgba(16, 20, 16, 0.72);
 }
@@ -1449,6 +1454,32 @@ a {
   text-decoration: underline;
   text-decoration-thickness: 0.08em;
   text-underline-offset: 0.2em;
+}
+
+@media (min-width: 74.01rem) {
+  .hero-copy {
+    width: calc(100% - (2 * var(--space-page)));
+    margin-right: var(--space-page);
+  }
+
+  .hero-copy .eyebrow,
+  .hero-copy h1 {
+    width: min(44rem, 46vw);
+  }
+
+  .hero-action {
+    position: absolute;
+    inset: clamp(1.4rem, 3.8vh, 2.6rem) 0 auto auto;
+    width: clamp(18rem, 24vw, 23rem);
+  }
+
+  .hero-action .hero-lead {
+    margin-top: 0;
+  }
+
+  .hero-action .camp-cta {
+    width: 100%;
+  }
 }
 
 @media (max-width: 74rem) {
