@@ -945,6 +945,13 @@ a {
   border-bottom: 0;
 }
 
+:root[data-theme="dark"] .trainers-heading {
+  min-height: clamp(25rem, 48svh, 34rem);
+  align-content: center;
+  padding: clamp(4rem, 7vw, 6rem) var(--space-page);
+  background: color-mix(in oklab, var(--sochi-magnolia) 62%, var(--sochi-slate));
+}
+
 .dot-motif--crown {
   inset: clamp(6rem, 10vw, 8rem) var(--space-page) auto auto;
   width: clamp(22rem, 40vw, 42rem);
@@ -2212,24 +2219,25 @@ a {
 
 /* Trainer chapters: the evidence is grouped as a competitive biography. */
 .coach-story {
-  grid-template-rows: auto auto;
-  row-gap: clamp(2.25rem, 3.5vw, 4rem);
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  grid-template-rows: repeat(4, auto);
+  row-gap: clamp(3rem, 5vw, 6rem);
   padding-block: clamp(4rem, 6vw, 6.5rem);
 }
 
 .coach-story::before {
-  position: relative;
-  inset: auto;
+  position: absolute;
+  inset: clamp(1.5rem, 2vw, 2rem) auto auto var(--space-page);
   z-index: 0;
-  grid-column: 1 / 5;
-  grid-row: 1;
-  align-self: end;
-  justify-self: end;
-  font-size: clamp(10rem, 15vw, 15rem);
+  color: var(--oleander);
+  font-size: var(--type-label);
+  font-weight: 720;
+  letter-spacing: var(--tracking-label);
+  line-height: 1;
 }
 
 .coach-story-maksim::before {
-  grid-column: 9 / 13;
+  inset: clamp(1.5rem, 2vw, 2rem) var(--space-page) auto auto;
 }
 
 .coach-copy,
@@ -2253,7 +2261,7 @@ a {
 
 .coach-copy h3 {
   max-width: none;
-  font-size: clamp(4.5rem, 6.7vw, 10rem);
+  font-size: clamp(3.5rem, 5.6vw, 7.5rem);
 }
 
 .coach-story-maksim .coach-copy h3 {
@@ -2267,54 +2275,56 @@ a {
 
 .coach-finish,
 .coach-story-maksim .coach-finish {
-  grid-column: 5 / 10;
+  grid-column: 5 / 13;
   grid-row: 1;
   align-self: center;
 }
 
 .coach-story-maksim .coach-finish {
-  grid-column: 4 / 9;
+  grid-column: 1 / 9;
 }
 
 .coach-credentials,
 .coach-story-maksim .coach-credentials {
-  grid-column: 1 / 10;
+  grid-column: 2 / 12;
   grid-row: 2;
-  grid-template-columns: minmax(0, 5fr) minmax(0, 4fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   align-self: start;
   gap: clamp(1.5rem, 3vw, 3.5rem);
 }
 
 .coach-story-maksim .coach-credentials {
-  grid-column: 4 / 13;
+  grid-column: 2 / 12;
 }
 
 .coach-context,
 .coach-motion,
 .coach-story-maksim .coach-context,
 .coach-story-maksim .coach-motion {
-  grid-row: auto;
   width: auto;
   justify-self: stretch;
 }
 
 .coach-context,
 .coach-story-maksim .coach-context {
-  grid-column: 10 / 13;
-  grid-row: 1;
+  grid-column: 2 / 6;
+  grid-row: 3;
   align-self: center;
 }
 
 .coach-motion,
 .coach-story-maksim .coach-motion {
-  grid-column: 10 / 13;
-  grid-row: 2;
+  grid-column: 8 / 12;
+  grid-row: 4;
   align-self: start;
 }
 
-.coach-story-maksim .coach-context,
+.coach-story-maksim .coach-context {
+  grid-column: 8 / 12;
+}
+
 .coach-story-maksim .coach-motion {
-  grid-column: 1 / 4;
+  grid-column: 2 / 6;
 }
 
 .coach-credential-group h4 {
@@ -2334,6 +2344,11 @@ a {
 }
 
 @media (max-width: 46rem) {
+  :root[data-theme="dark"] .trainers-heading {
+    min-height: clamp(23rem, 48svh, 30rem);
+    padding-block: clamp(3.75rem, 14vw, 5rem);
+  }
+
   .coach-story {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
@@ -2344,12 +2359,9 @@ a {
 
   .coach-story::before,
   .coach-story-maksim::before {
-    grid-column: 1;
-    grid-row: 1;
-    align-self: start;
-    justify-self: end;
-    font-size: clamp(6.4rem, 32vw, 9rem);
-    line-height: 0.74;
+    inset: 1.5rem var(--space-page) auto auto;
+    font-size: var(--type-label);
+    line-height: 1;
   }
 
   .coach-copy,
@@ -2357,7 +2369,7 @@ a {
     grid-column: 1;
     grid-row: 1;
     order: initial;
-    padding: 0 clamp(6.25rem, 32vw, 8rem) 0 0;
+    padding: 0;
     text-align: left;
   }
 
