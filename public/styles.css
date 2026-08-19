@@ -2135,16 +2135,6 @@ a {
   padding-block: clamp(4rem, 6vw, 6.5rem);
 }
 
-.coach-story::before {
-  inset: clamp(4.25rem, 6vw, 6.5rem) auto auto var(--space-page);
-  z-index: 1;
-  color: var(--oleander);
-  font-size: var(--type-label);
-  font-weight: 700;
-  letter-spacing: var(--tracking-label);
-  line-height: 1;
-}
-
 .coach-copy,
 .coach-story-maksim .coach-copy {
   grid-column: 1 / 13;
@@ -2224,10 +2214,6 @@ a {
     grid-template-rows: repeat(5, auto);
     gap: clamp(1.75rem, 7vw, 2.75rem);
     padding-block: 4rem 5rem;
-  }
-
-  .coach-story::before {
-    inset: 4rem auto auto var(--space-page);
   }
 
   .coach-copy,
