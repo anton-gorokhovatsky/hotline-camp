@@ -978,7 +978,7 @@ a {
 }
 
 .coach-copy {
-  grid-column: 1 / 5;
+  grid-column: 1 / 6;
   grid-row: 1;
   padding-top: 0;
 }
@@ -1005,7 +1005,7 @@ a {
 
 .coach-credentials {
   display: grid;
-  grid-column: 1 / 5;
+  grid-column: 1 / 6;
   grid-row: 2;
   grid-template-columns: minmax(0, 1fr);
   align-self: start;
@@ -1040,7 +1040,7 @@ a {
 
 .coach-images {
   display: grid;
-  grid-column: 5 / 13;
+  grid-column: 6 / 13;
   grid-row: 1 / 3;
   grid-template-columns: minmax(0, 2.15fr) minmax(11rem, 1fr);
   align-items: end;
@@ -1075,15 +1075,15 @@ a {
 }
 
 .coach-story-maksim .coach-copy {
-  grid-column: 9 / 13;
+  grid-column: 8 / 13;
 }
 
 .coach-story-maksim .coach-credentials {
-  grid-column: 9 / 13;
+  grid-column: 8 / 13;
 }
 
 .coach-story-maksim .coach-images {
-  grid-column: 1 / 9;
+  grid-column: 1 / 8;
   grid-row: 1 / 3;
   grid-template-columns: minmax(11rem, 1fr) minmax(0, 2.15fr);
   padding: 0;
