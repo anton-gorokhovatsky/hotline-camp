@@ -870,6 +870,8 @@ a {
 }
 
 .race-targets {
+  position: relative;
+  isolation: isolate;
   display: grid;
   grid-template-columns: minmax(18rem, 5fr) minmax(24rem, 7fr);
   align-items: start;
@@ -877,6 +879,11 @@ a {
   row-gap: 1rem;
   max-width: none;
   margin-top: clamp(3rem, 4.5vw, 4.5rem);
+}
+
+.race-targets > :not(.dot-motif) {
+  position: relative;
+  z-index: 1;
 }
 
 .race-targets > p:first-child {
@@ -1262,11 +1269,11 @@ a {
 
 .dot-motif--palm {
   position: absolute;
-  inset: clamp(1rem, 2vw, 2rem) clamp(1rem, 2vw, 2rem) auto auto;
+  inset: auto 0 calc(-1 * clamp(3rem, 4vw, 4rem)) auto;
   z-index: 0;
-  width: clamp(14rem, 20vw, 20rem);
-  height: clamp(10rem, 14vw, 14rem);
-  color: color-mix(in srgb, var(--solar-surface-tint) 42%, transparent);
+  width: clamp(12rem, 17vw, 18rem);
+  height: clamp(8rem, 11vw, 12rem);
+  color: color-mix(in srgb, var(--solar-marker) 42%, transparent);
   --dot-motif-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 96'%3E%3Cg fill='none' stroke='black' stroke-linecap='round' stroke-linejoin='round' stroke-width='11'%3E%3Cpath d='M55 89c-3-24 0-48 9-68'/%3E%3Cpath d='M64 21C53 10 39 8 28 15M64 21C69 8 82 6 94 13M64 21c14-2 25 5 31 16M64 21c-7 9-18 13-31 13M64 21C61 10 51 4 40 4'/%3E%3C/g%3E%3C/svg%3E");
   --dot-step: clamp(0.42rem, 0.52vw, 0.58rem);
   --dot-flow-duration: 5.2s;
@@ -1275,11 +1282,11 @@ a {
 
 .dot-motif--finish {
   position: absolute;
-  inset: clamp(1rem, 2vw, 2rem) auto auto 52%;
+  inset: clamp(0.5rem, 1.5vw, 1.5rem) auto auto 47%;
   z-index: 0;
-  width: clamp(8rem, 12vw, 12rem);
-  height: clamp(5rem, 8vw, 8rem);
-  color: color-mix(in srgb, var(--solar-surface-tint) 26%, transparent);
+  width: clamp(15rem, 22vw, 21rem);
+  height: clamp(10rem, 14vw, 14rem);
+  color: color-mix(in srgb, var(--solar-surface-tint) 32%, transparent);
   --dot-motif-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 108 72'%3E%3Cpath fill='none' stroke='black' stroke-linecap='round' stroke-width='9' d='M19 67V8'/%3E%3Cpath fill='black' d='M19 8h24v21H19zM67 8h24v21H67zM43 29h24v21H43zM19 50h24v17H19z'/%3E%3C/svg%3E");
   --dot-step: clamp(0.42rem, 0.52vw, 0.56rem);
   --dot-flow-duration: 3.4s;
@@ -2023,15 +2030,15 @@ a {
   }
 
   .dot-motif--palm {
-    inset: 1rem 1rem auto auto;
-    width: 10rem;
-    height: 8rem;
+    inset: auto -1rem -3.25rem auto;
+    width: 9.5rem;
+    height: 7rem;
   }
 
   .dot-motif--finish {
-    inset: 1rem auto auto 1rem;
-    width: 7rem;
-    height: 4rem;
+    inset: 0.5rem 0.75rem auto auto;
+    width: 12rem;
+    height: 8rem;
   }
 
   .trainers-heading {
