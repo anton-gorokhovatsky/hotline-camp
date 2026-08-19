@@ -21,7 +21,8 @@
   --sochi-oleander: #df5673;
   --sochi-oleander-deep: #86172f;
 
-  /* Fallback сохраняется статичным; app.js уточняет эти три тона по солнцу в Сочи. */
+  /* Сочинская палитра: эвкалипт/розовый → известняк/бирюза → папоротник/олеандр → сланец/магнолия. */
+  /* Статичный fallback заменяется суточным состоянием по фактическим рассвету и закату Сочи. */
   --solar-surface-tint: #eee5d7;
   --solar-accent: #398f91;
   --solar-deep: #0b2b1d;
@@ -33,21 +34,21 @@
   --ink-soft: #35443c;
   --paper: #f2eee5;
   --paper-soft: #dce2df;
-  --sea-deep: color-mix(in oklab, var(--sochi-slate) 78%, var(--solar-deep));
-  --sea-muted: color-mix(in oklab, var(--sochi-eucalyptus) 64%, var(--solar-accent));
-  --sand-muted: color-mix(in oklab, #c7b49a 74%, var(--solar-surface-tint));
+  --sea-deep: color-mix(in oklab, var(--sochi-slate) 64%, var(--solar-deep));
+  --sea-muted: color-mix(in oklab, var(--sochi-eucalyptus) 52%, var(--solar-accent));
+  --sand-muted: color-mix(in oklab, #c7b49a 62%, var(--solar-surface-tint));
   --oleander: color-mix(in oklab, var(--sochi-oleander) 76%, var(--solar-accent));
   --oleander-ink: #18070c;
   --final-red: color-mix(in oklab, var(--sochi-oleander-deep) 84%, var(--solar-accent));
 
-  --page: color-mix(in oklab, var(--sochi-limestone-wet) 78%, var(--solar-surface-tint));
-  --surface: color-mix(in oklab, var(--sochi-limestone-sun) 86%, var(--solar-surface-tint));
+  --page: color-mix(in oklab, var(--sochi-limestone-wet) 58%, var(--solar-surface-tint));
+  --surface: color-mix(in oklab, var(--sochi-limestone-sun) 68%, var(--solar-surface-tint));
   --surface-muted: color-mix(in oklab, var(--sochi-limestone-wet) 84%, var(--sochi-eucalyptus));
-  --surface-sea: color-mix(in oklab, var(--sochi-eucalyptus) 64%, var(--solar-accent));
+  --surface-sea: color-mix(in oklab, var(--sochi-eucalyptus) 50%, var(--solar-accent));
   --text: var(--ink);
   --text-muted: color-mix(in oklab, var(--ink-soft) 82%, var(--sochi-eucalyptus));
   --line: color-mix(in oklab, var(--ink) 20%, transparent);
-  --photo-mat: color-mix(in oklab, var(--sochi-slate) 66%, var(--solar-deep));
+  --photo-mat: color-mix(in oklab, var(--sochi-slate) 58%, var(--solar-deep));
   --focus: color-mix(in oklab, var(--sochi-autumn-sea) 52%, var(--solar-accent));
 
   --radius-control: 0.78rem;
@@ -103,14 +104,14 @@
 }
 
 :root[data-theme="dark"] {
-  --page: color-mix(in oklab, #030807 90%, var(--solar-deep));
-  --surface: color-mix(in oklab, var(--sochi-slate) 84%, var(--solar-deep));
-  --surface-muted: color-mix(in oklab, #17231f 82%, var(--solar-deep));
-  --surface-sea: color-mix(in oklab, #263d37 62%, var(--solar-accent));
+  --page: color-mix(in oklab, #030807 72%, var(--solar-deep));
+  --surface: color-mix(in oklab, var(--sochi-slate) 64%, var(--solar-deep));
+  --surface-muted: color-mix(in oklab, #17231f 62%, var(--solar-deep));
+  --surface-sea: color-mix(in oklab, #263d37 48%, var(--solar-accent));
   --text: var(--paper);
   --text-muted: color-mix(in oklab, var(--paper-soft) 78%, var(--sochi-eucalyptus));
   --line: color-mix(in oklab, var(--solar-accent) 42%, transparent);
-  --photo-mat: color-mix(in oklab, #020605 72%, var(--solar-deep));
+  --photo-mat: color-mix(in oklab, #020605 62%, var(--solar-deep));
   --focus: color-mix(in oklab, #61d8c8 54%, var(--solar-accent));
 }
 
