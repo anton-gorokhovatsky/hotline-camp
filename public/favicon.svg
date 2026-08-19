@@ -1,36 +1,32 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
   <title>Hotline Camp</title>
   <style>
-    .pulse {
-      transform-box: fill-box;
-      transform-origin: center;
-      animation: neon-pulse 2.8s ease-out infinite;
-    }
+    .tile { fill: #f2ecdf; stroke: #789aa0; }
+    .rail { fill: #131c1a; }
+    .signal { fill: #86172f; }
 
-    @keyframes neon-pulse {
-      0% {
-        opacity: 0.62;
-        transform: scale(0.82);
-      }
-      70%, 100% {
-        opacity: 0;
-        transform: scale(1.28);
-      }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .pulse {
-        animation: none;
-        opacity: 0.24;
-        transform: none;
-      }
+    @media (prefers-color-scheme: dark) {
+      .tile { fill: #131c1a; stroke: #0b2b1d; }
+      .rail { fill: #f2ecdf; }
+      .signal { fill: #df5673; }
     }
   </style>
-  <defs>
-    <filter id="neon" x="-70%" y="-70%" width="240%" height="240%">
-      <feGaussianBlur stdDeviation="3.2" />
-    </filter>
-  </defs>
-  <circle class="pulse" cx="32" cy="32" r="20" fill="none" stroke="#ff5b78" stroke-width="6" filter="url(#neon)" />
-  <circle cx="32" cy="32" r="17" fill="none" stroke="#ff5b78" stroke-width="7" />
+  <rect class="tile" x="2" y="2" width="60" height="60" rx="14" stroke-width="2" />
+  <g class="rail">
+    <circle cx="17" cy="16" r="3.2" />
+    <circle cx="17" cy="24" r="3.2" />
+    <circle cx="17" cy="40" r="3.2" />
+    <circle cx="17" cy="48" r="3.2" />
+    <circle cx="47" cy="16" r="3.2" />
+    <circle cx="47" cy="24" r="3.2" />
+    <circle cx="47" cy="40" r="3.2" />
+    <circle cx="47" cy="48" r="3.2" />
+  </g>
+  <g class="signal">
+    <circle cx="17" cy="32" r="3.2" />
+    <circle cx="24.5" cy="32" r="3.2" />
+    <circle cx="32" cy="32" r="3.2" />
+    <circle cx="39.5" cy="32" r="3.2" />
+    <circle cx="47" cy="32" r="3.2" />
+  </g>
 </svg>
