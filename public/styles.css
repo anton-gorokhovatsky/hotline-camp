@@ -60,7 +60,7 @@
   --radius-panel: 1.7rem;
 
   --space-page: clamp(1rem, 3vw, 3.25rem);
-  --space-section: clamp(4.5rem, 9vw, 9rem);
+  --space-section: clamp(3.5rem, 5vw, 5rem);
   --space-copy: clamp(1.25rem, 2.1vw, 2.25rem);
   --grid-gap: clamp(1rem, 2vw, 2rem);
 
@@ -114,7 +114,7 @@
   --surface: color-mix(in oklab, var(--sochi-slate) 64%, var(--solar-deep));
   --surface-muted: color-mix(in oklab, #17231f 62%, var(--solar-deep));
   --surface-sea: color-mix(in oklab, #263d37 48%, var(--solar-accent));
-  --trainer-surface: color-mix(in oklab, var(--surface-sea) 48%, var(--sea-deep));
+  --trainer-surface: color-mix(in oklab, var(--sochi-slate) 82%, var(--sochi-eucalyptus));
   --trainer-eyebrow: color-mix(in oklab, var(--paper) 84%, var(--sochi-eucalyptus));
   --trainer-body: var(--trainer-eyebrow);
   --trainer-accent: color-mix(in oklab, var(--sochi-oleander) 16%, var(--paper));
@@ -815,7 +815,7 @@ a {
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  padding: clamp(4.5rem, 7vw, 7rem) var(--space-page);
+  padding: var(--space-section) var(--space-page);
   background: var(--surface);
   color: var(--text);
 }
@@ -1038,20 +1038,17 @@ a {
 .trainers-heading {
   position: relative;
   display: grid;
-  min-height: clamp(34rem, 68svh, 50rem);
+  min-height: 0;
   grid-template-columns: repeat(12, minmax(0, 1fr));
-  align-content: end;
+  align-content: start;
   align-items: end;
   column-gap: var(--grid-gap);
   row-gap: clamp(1rem, 1.5vw, 1.75rem);
-  padding: clamp(5rem, 9vw, 9rem) var(--space-page) clamp(4rem, 6vw, 6rem);
+  padding: var(--space-section) var(--space-page) clamp(4rem, 6vw, 6rem);
   border-bottom: 0;
 }
 
 :root[data-theme="dark"] .trainers-heading {
-  min-height: clamp(25rem, 48svh, 34rem);
-  align-content: center;
-  padding: clamp(4rem, 7vw, 6rem) var(--space-page);
   background: var(--trainer-surface);
 }
 
@@ -2139,8 +2136,8 @@ a {
   }
 
   .trainers-heading {
-    min-height: clamp(30rem, 72svh, 42rem);
-    padding-bottom: 3.5rem;
+    min-height: 0;
+    padding-block: var(--space-section) clamp(3.5rem, 10vw, 4.5rem);
   }
 
   .trainers-heading h2 {
@@ -2434,11 +2431,6 @@ a {
 }
 
 @media (max-width: 46rem) {
-  :root[data-theme="dark"] .trainers-heading {
-    min-height: clamp(23rem, 48svh, 30rem);
-    padding-block: clamp(3.75rem, 14vw, 5rem);
-  }
-
   .coach-story {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
