@@ -1821,10 +1821,11 @@ a {
 
   .mobile-menu-links {
     display: grid;
-    grid-template-rows: repeat(3, minmax(4.5rem, 1fr));
-    gap: 0;
-    align-items: center;
-    padding-block: clamp(0.35rem, 2vh, 1rem);
+    grid-template-rows: repeat(3, auto);
+    gap: clamp(0.35rem, 1.2vh, 0.65rem);
+    align-content: center;
+    align-items: stretch;
+    padding-block: clamp(0.8rem, 3vh, 1.4rem);
   }
 
   .mobile-menu-links a {
