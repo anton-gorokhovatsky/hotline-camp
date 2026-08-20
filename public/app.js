@@ -131,7 +131,8 @@
     if (toggle.getAttribute("aria-expanded") !== "true") return;
 
     const previousScrollBehavior = root.style.scrollBehavior;
-    const destinationTop = destination instanceof HTMLElement ? destination.offsetTop : null;
+    const shouldMove = destination instanceof HTMLElement;
+    const scrollBehavior = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth";
     toggle.setAttribute("aria-expanded", "false");
     toggle.setAttribute("aria-label", "Открыть меню");
     root.classList.remove("menu-open");
@@ -148,12 +149,12 @@
 
     root.style.scrollBehavior = "auto";
     window.scrollTo(0, savedScroll);
-    if (destinationTop !== null) {
+    if (shouldMove) {
       window.history.pushState(null, "", `#${destination.id}`);
       window.requestAnimationFrame(() => {
-        window.scrollTo(0, destinationTop);
+        root.style.scrollBehavior = previousScrollBehavior;
+        destination.scrollIntoView({ behavior: scrollBehavior, block: "start" });
         window.requestAnimationFrame(() => {
-          root.style.scrollBehavior = previousScrollBehavior;
           updateStickyState();
           updateActiveSection();
         });

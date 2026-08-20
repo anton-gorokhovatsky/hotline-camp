@@ -1738,6 +1738,13 @@ a {
     backdrop-filter: none;
   }
 
+  html.menu-open .masthead .mobile-menu {
+    background: transparent;
+    box-shadow: none;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+
   .menu-toggle {
     position: relative;
     z-index: 3;
@@ -1775,53 +1782,219 @@ a {
   }
 
   .mobile-menu-panel {
+    --mobile-menu-surface: color-mix(in oklab, var(--sochi-slate) 78%, var(--sochi-magnolia));
+    --mobile-menu-text: var(--paper);
+    --mobile-menu-text-soft: color-mix(in oklab, var(--paper) 68%, var(--sochi-eucalyptus));
+    --mobile-menu-safe-top: max(5.2rem, calc(env(safe-area-inset-top) + 4.5rem));
     position: fixed;
     inset: 0;
     z-index: 2;
-    display: grid;
+    display: block;
     height: 100vh;
     height: 100dvh;
     min-height: 100vh;
     min-height: 100dvh;
-    grid-template-rows: minmax(16.5rem, 1fr) auto auto;
-    gap: clamp(0.8rem, 2.6vh, 1.35rem);
-    padding: 5.2rem var(--space-page) max(1.25rem, env(safe-area-inset-bottom));
-    overflow-y: auto;
-    overscroll-behavior: contain;
+    padding: 0;
+    overflow: hidden;
     border: 0;
     border-radius: 0;
-    color: var(--material-glass-text);
+    background: var(--material-glass-fill);
+    color: var(--mobile-menu-text);
+    box-shadow: none;
+    -webkit-backdrop-filter: var(--material-glass-filter);
+    backdrop-filter: var(--material-glass-filter);
+  }
+
+  .mobile-menu-panel::before {
+    content: none;
+  }
+
+  .mobile-menu-scroll {
+    display: grid;
+    width: 100%;
+    height: 100%;
+    min-height: 100%;
+    grid-template-rows: auto auto minmax(min-content, 1fr);
+    gap: clamp(0.75rem, 2.2vh, 1.2rem);
+    padding: var(--mobile-menu-safe-top) var(--space-page) max(1.25rem, env(safe-area-inset-bottom));
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-color: color-mix(in srgb, var(--sochi-eucalyptus) 52%, transparent) transparent;
+    scrollbar-width: thin;
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent calc(var(--mobile-menu-safe-top) - 1.25rem),
+      #000 var(--mobile-menu-safe-top),
+      #000 100%
+    );
+    mask-image: linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent calc(var(--mobile-menu-safe-top) - 1.25rem),
+      #000 var(--mobile-menu-safe-top),
+      #000 100%
+    );
+  }
+
+  .mobile-menu-scroll::-webkit-scrollbar {
+    width: 0.35rem;
+  }
+
+  .mobile-menu-scroll::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .mobile-menu-scroll::-webkit-scrollbar-thumb {
+    border-radius: var(--radius-control);
+    background: color-mix(in srgb, var(--sochi-eucalyptus) 52%, transparent);
   }
 
   .mobile-menu-links {
     display: grid;
-    grid-template-rows: repeat(3, auto);
-    gap: clamp(0.35rem, 1.2vh, 0.65rem);
-    align-content: center;
-    align-items: stretch;
-    padding-block: clamp(0.8rem, 3vh, 1.4rem);
+    gap: clamp(2.25rem, 4.2vh, 2.5rem);
+    align-content: start;
+    padding-top: clamp(1rem, 2.8vh, 1.6rem);
+    padding-bottom: 0.9rem;
   }
 
-  .mobile-menu-links a {
-    display: flex;
+  .mobile-menu-route {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
     width: 100%;
-    min-height: 4.5rem;
-    align-items: center;
+    align-items: start;
+    padding: 0;
     border-bottom: 0;
+    background: transparent;
+    color: var(--mobile-menu-text);
     font-family: var(--font-display);
-    font-size: var(--type-menu);
-    font-weight: 720;
-    letter-spacing: -0.012em;
+  }
+
+  .mobile-menu-route-copy {
+    display: grid;
+    gap: 0.65rem;
+    min-width: 0;
+    color: var(--mobile-menu-text-soft);
+    font-size: clamp(0.78rem, 3.4vw, 0.92rem);
+    font-weight: 520;
+    line-height: 1.3;
+  }
+
+  .mobile-menu-route-copy strong {
+    color: var(--mobile-menu-text);
+    font-size: clamp(2.2rem, 10.5vw, 3.05rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
     line-height: 0.95;
   }
 
-  .mobile-menu-links a[aria-current="location"],
-  .mobile-menu-links a:focus-visible {
+  .mobile-menu-route--program .mobile-menu-route-copy {
+    gap: 0.9rem;
+  }
+
+  .mobile-menu-program-items {
+    counter-reset: menu-program;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0;
+    overflow: hidden;
+    border-radius: var(--radius-control);
+    background: transparent;
+    corner-shape: squircle;
+  }
+
+  .mobile-menu-program-items span {
+    counter-increment: menu-program;
+    display: grid;
+    min-height: 2.15rem;
+    grid-template-columns: 1.35rem minmax(0, 1fr);
+    align-items: center;
+    padding: 0.35rem 0.5rem;
+    background: transparent;
+    color: var(--mobile-menu-text);
+    font-size: clamp(0.7rem, 3vw, 0.82rem);
+    font-weight: 610;
+    letter-spacing: 0.025em;
+    line-height: 1;
+  }
+
+  .mobile-menu-program-items span:nth-child(even) {
+    border-inline-start: 1px solid color-mix(in srgb, var(--mobile-menu-text) 18%, transparent);
+  }
+
+  .mobile-menu-program-items span:nth-child(n + 3) {
+    border-block-start: 1px solid color-mix(in srgb, var(--mobile-menu-text) 18%, transparent);
+  }
+
+  .mobile-menu-program-items span::before {
+    content: "0" counter(menu-program);
+    color: var(--oleander);
+    font-size: 0.62rem;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.04em;
+  }
+
+  .mobile-menu-portraits {
+    position: relative;
+    display: grid;
+    height: clamp(11.5rem, 30vh, 16rem);
+    grid-column: 1 / -1;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    overflow: hidden;
+    margin-top: 0.75rem;
+    border-radius: var(--radius-card);
+    background: var(--mobile-menu-surface);
+    corner-shape: squircle;
+  }
+
+  .mobile-menu-portraits::after {
+    content: none;
+  }
+
+  .mobile-menu-portrait {
+    position: relative;
+    display: grid;
+    min-width: 0;
+    grid-template-rows: minmax(0, 1fr);
+  }
+
+  .mobile-menu-portrait-photo {
+    grid-row: 1 / -1;
+    grid-column: 1;
+    min-height: 0;
+    background-position: 50% 20%;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+
+  .mobile-menu-portrait-name {
+    display: none;
+  }
+
+  .mobile-menu-portrait--evgeny .mobile-menu-portrait-photo {
+    background-image: url("./media/menu-evgeny.jpg");
+    background-position: right top;
+    background-size: auto 145%;
+  }
+
+  .mobile-menu-portrait--maksim .mobile-menu-portrait-photo {
+    background-image: url("./media/menu-maksim-close-v2.jpg");
+    background-position: right top;
+    background-size: cover;
+  }
+
+  .mobile-menu-route[aria-current="location"] .mobile-menu-route-copy strong,
+  .mobile-menu-route:focus-visible .mobile-menu-route-copy strong {
     outline: 0;
     text-decoration: underline;
-    text-decoration-color: var(--focus);
-    text-decoration-thickness: 0.08em;
+    text-decoration-color: var(--oleander);
+    text-decoration-thickness: 0.09em;
     text-underline-offset: 0.12em;
+  }
+
+  .mobile-menu-route:focus-visible {
+    outline: 0;
   }
 
   .mobile-menu-theme {
@@ -1831,20 +2004,20 @@ a {
 
   .mobile-menu-details {
     display: grid;
-    gap: 0.9rem;
+    gap: 1.35rem;
     margin-top: 0;
   }
 
   .mobile-menu-dates {
     display: grid;
-    gap: 0.18rem;
-    color: var(--material-glass-text-soft);
+    gap: 0.45rem;
+    color: var(--mobile-menu-text-soft);
     font-size: var(--type-label);
     line-height: 1.35;
   }
 
   .mobile-menu-dates strong {
-    color: var(--material-glass-text);
+    color: var(--mobile-menu-text);
     font-size: clamp(1.05rem, 4.8vw, 1.2rem);
     font-weight: 650;
     letter-spacing: -0.015em;
@@ -1862,7 +2035,7 @@ a {
   }
 
   .mobile-menu-panel .theme-toggle {
-    color: var(--material-glass-text);
+    color: var(--mobile-menu-text);
   }
 
   .hero-stage {
