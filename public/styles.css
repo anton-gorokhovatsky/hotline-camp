@@ -1023,16 +1023,56 @@ a {
 }
 
 .race-targets nav {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.7rem 1.25rem;
-  justify-content: flex-start;
-  font-size: var(--type-body);
-  font-weight: 650;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1rem, 2vw, 2rem);
+}
+
+.race-targets nav a {
+  display: grid;
+  min-width: 0;
+  min-height: 3rem;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-content: start;
+  align-items: start;
+  column-gap: clamp(0.35rem, 0.7vw, 0.75rem);
+  color: var(--text);
+  font-size: clamp(2rem, 2.75vw, 3.8rem);
+  font-weight: 700;
+  letter-spacing: var(--tracking-stat);
+  line-height: 0.96;
+  text-wrap: balance;
+}
+
+.race-targets nav a::after {
+  content: "";
+  grid-column: 1 / -1;
+  width: clamp(2.6rem, 3.2vw, 4.25rem);
+  height: 0.18rem;
+  margin-top: clamp(0.7rem, 1vw, 1rem);
+  background: var(--oleander);
+}
+
+.race-target-arrow {
+  padding-top: 0.12em;
+  color: var(--oleander);
+  font-size: 0.44em;
+  letter-spacing: 0;
+  line-height: 1;
 }
 
 .race-targets a:hover,
 .race-targets a:focus-visible {
+  color: var(--text);
+}
+
+.race-targets a:hover::after,
+.race-targets a:focus-visible::after {
+  background: var(--solar-accent);
+}
+
+.race-targets a:hover .race-target-arrow,
+.race-targets a:focus-visible .race-target-arrow {
   color: var(--solar-accent);
 }
 
@@ -2344,7 +2384,22 @@ a {
   }
 
   .race-targets nav {
-    justify-content: flex-start;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+
+  .race-targets nav a {
+    min-height: 3.25rem;
+    padding-block: clamp(0.85rem, 4vw, 1.05rem);
+    font-size: clamp(1.85rem, 8.5vw, 2.5rem);
+  }
+
+  .race-targets nav a:not(:last-child) {
+    border-bottom: 1px solid var(--line);
+  }
+
+  .race-targets nav a::after {
+    display: none;
   }
 
   .dot-motif--bike {
