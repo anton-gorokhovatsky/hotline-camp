@@ -489,6 +489,7 @@ a {
 .theme-toggle--menu {
   width: 100%;
   gap: 0.75rem;
+  align-items: center;
   color: var(--text);
 }
 
@@ -530,6 +531,18 @@ a {
 .mobile-menu,
 .menu-toggle {
   display: none;
+}
+
+.menu-icon-close {
+  display: none;
+}
+
+.menu-toggle[aria-expanded="true"] .menu-icon-open {
+  display: none;
+}
+
+.menu-toggle[aria-expanded="true"] .menu-icon-close {
+  display: inline;
 }
 
 .hero-stage {
@@ -1893,7 +1906,7 @@ a {
   .mobile-menu-details { display: contents; }
   .camp-cta-menu { width: min(100%, 26rem); margin-top: clamp(1.75rem, 3vh, 2.25rem); background: var(--oleander); color: var(--oleander-ink); }
   .mobile-menu-theme { display: flex; grid-column: 11 / 13; grid-row: 2; align-self: end; justify-self: end; }
-  .mobile-menu-theme .theme-toggle--menu { align-items: flex-end; }
+  .mobile-menu-theme .theme-toggle--menu { align-items: center; }
   .mobile-menu-panel .theme-toggle { color: var(--mobile-menu-text); }
 
   .mobile-menu-route:focus-visible { outline: 0; }
