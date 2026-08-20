@@ -100,8 +100,9 @@
   --material-accent-shadow: 0 0.55rem 1.5rem rgba(44, 3, 12, 0.18);
   --service-island-height: 5.125rem;
   --service-island-gap: 0.25rem;
-  --sochi-dot-field: radial-gradient(circle at center, currentColor 1px, transparent 1.25px);
-  --sochi-dot-step: clamp(0.56rem, 0.68vw, 0.72rem);
+  --sochi-dot-field: radial-gradient(circle at center, color-mix(in srgb, currentColor 24%, transparent) 1.2px, transparent 1.7px);
+  --sochi-dot-active-field: radial-gradient(circle at center, currentColor 1.55px, transparent 2px);
+  --sochi-dot-step: clamp(0.62rem, 0.74vw, 0.82rem);
 }
 
 :root[data-theme="dark"] {
@@ -247,37 +248,62 @@ a {
   mask-repeat: no-repeat;
   -webkit-mask-size: contain;
   mask-size: contain;
-  opacity: 0.72;
-  transform-origin: var(--dot-origin, 50% 50%);
+  isolation: isolate;
+  opacity: 1;
   animation: none;
 }
 
 .dot-motif > * { display: none; }
 
+.dot-motif::before,
 .dot-motif::after {
   content: "";
   position: absolute;
   inset: 0;
-  background-image: var(--sochi-dot-field);
+  background-image: var(--sochi-dot-active-field);
   background-position: 0 0;
   background-size: var(--dot-step, var(--sochi-dot-step)) var(--dot-step, var(--sochi-dot-step));
-  filter: brightness(1.9) saturate(1.12);
-  -webkit-mask-image: radial-gradient(circle, transparent 42%, #000 48% 54%, transparent 60%);
-  mask-image: radial-gradient(circle, transparent 42%, #000 48% 54%, transparent 60%);
+  filter: brightness(1.32) saturate(1.08);
   -webkit-mask-position: var(--dot-origin, 50% 50%);
   mask-position: var(--dot-origin, 50% 50%);
-  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
-  -webkit-mask-size: 18% 18%;
-  mask-size: 18% 18%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  will-change: opacity, -webkit-mask-position, -webkit-mask-size, mask-position, mask-size;
   opacity: 0;
-  animation: sochi-dot-pulse 8.4s cubic-bezier(0.38, 0, 0.18, 1) var(--dot-flow-delay, 0s) infinite;
 }
 
-@keyframes sochi-dot-pulse {
-  0%, 18%, 100% { -webkit-mask-size: 18% 18%; mask-size: 18% 18%; opacity: 0; }
-  27% { opacity: 0.96; }
-  68% { -webkit-mask-size: 240% 240%; mask-size: 240% 240%; opacity: 0.9; }
-  80% { -webkit-mask-size: 280% 280%; mask-size: 280% 280%; opacity: 0; }
+.dot-motif::before {
+  -webkit-mask-image: radial-gradient(circle, #000 0 22%, rgba(0, 0, 0, 0.72) 40%, transparent 72%);
+  mask-image: radial-gradient(circle, #000 0 22%, rgba(0, 0, 0, 0.72) 40%, transparent 72%);
+  -webkit-mask-size: 18% 18%;
+  mask-size: 18% 18%;
+  animation: sochi-dot-generation var(--dot-flow-duration, 13.6s) steps(9, end) var(--dot-flow-delay, 0s) infinite;
+}
+
+.dot-motif::after {
+  -webkit-mask-image: radial-gradient(ellipse at center, #000 0 18%, rgba(0, 0, 0, 0.68) 44%, transparent 74%);
+  mask-image: radial-gradient(ellipse at center, #000 0 18%, rgba(0, 0, 0, 0.68) 44%, transparent 74%);
+  -webkit-mask-size: 24% 10%;
+  mask-size: 24% 10%;
+  animation: sochi-dot-bridge var(--dot-flow-duration, 13.6s) steps(9, end) calc(var(--dot-flow-delay, 0s) + 1.2s) infinite;
+}
+
+@keyframes sochi-dot-generation {
+  0%, 14%, 100% { -webkit-mask-position: var(--dot-origin); mask-position: var(--dot-origin); -webkit-mask-size: 18% 18%; mask-size: 18% 18%; opacity: 0; }
+  25% { -webkit-mask-position: var(--dot-origin); mask-position: var(--dot-origin); -webkit-mask-size: 34% 34%; mask-size: 34% 34%; opacity: 0.88; }
+  43% { -webkit-mask-position: 50% 50%; mask-position: 50% 50%; -webkit-mask-size: 58% 58%; mask-size: 58% 58%; opacity: 0.46; }
+  57% { -webkit-mask-position: 50% 50%; mask-position: 50% 50%; -webkit-mask-size: 76% 76%; mask-size: 76% 76%; opacity: 0.92; }
+  73% { -webkit-mask-position: var(--dot-destination); mask-position: var(--dot-destination); -webkit-mask-size: 42% 42%; mask-size: 42% 42%; opacity: 0.62; }
+  86% { -webkit-mask-position: var(--dot-destination); mask-position: var(--dot-destination); -webkit-mask-size: 20% 20%; mask-size: 20% 20%; opacity: 0; }
+}
+
+@keyframes sochi-dot-bridge {
+  0%, 26%, 100% { -webkit-mask-position: var(--dot-origin); mask-position: var(--dot-origin); -webkit-mask-size: 24% 10%; mask-size: 24% 10%; opacity: 0; }
+  38% { -webkit-mask-position: var(--dot-origin); mask-position: var(--dot-origin); -webkit-mask-size: 40% 14%; mask-size: 40% 14%; opacity: 0.34; }
+  52% { -webkit-mask-position: 50% 50%; mask-position: 50% 50%; -webkit-mask-size: 86% 20%; mask-size: 86% 20%; opacity: 0.78; }
+  65% { -webkit-mask-position: 50% 50%; mask-position: 50% 50%; -webkit-mask-size: 112% 30%; mask-size: 112% 30%; opacity: 0.42; }
+  77% { -webkit-mask-position: var(--dot-destination); mask-position: var(--dot-destination); -webkit-mask-size: 48% 16%; mask-size: 48% 16%; opacity: 0.7; }
+  89% { -webkit-mask-position: var(--dot-destination); mask-position: var(--dot-destination); -webkit-mask-size: 24% 10%; mask-size: 24% 10%; opacity: 0; }
 }
 
 @keyframes sochi-dot-bike {
@@ -300,14 +326,6 @@ a {
   49% { background-position: 0.84rem -0.28rem; transform: scale(1.004); opacity: 0.91; }
   64% { background-position: 0.56rem -0.16rem; transform: scale(1.002); opacity: 0.76; }
   84% { background-position: 0.18rem 0.04rem; transform: scale(1); opacity: 0.7; }
-}
-
-@keyframes sochi-dot-runner {
-  0%, 100% { background-position: 0 0; transform: translate3d(0, 0, 0); opacity: 0.66; }
-  17% { background-position: 0.24rem -0.04rem; transform: translate3d(0.04rem, 0.03rem, 0); opacity: 0.74; }
-  41% { background-position: 0.96rem -0.32rem; transform: translate3d(0.22rem, -0.08rem, 0); opacity: 0.92; }
-  61% { background-position: 1.28rem -0.18rem; transform: translate3d(0.28rem, -0.01rem, 0); opacity: 0.84; }
-  82% { background-position: 0.46rem -0.06rem; transform: translate3d(0.08rem, 0.04rem, 0); opacity: 0.72; }
 }
 
 @keyframes sochi-dot-wave {
@@ -355,13 +373,11 @@ a {
   z-index: 1;
   width: clamp(12rem, 20vw, 20rem);
   height: clamp(8rem, 13vw, 13rem);
-  color: color-mix(in srgb, var(--solar-marker) 48%, transparent);
+  color: var(--solar-marker);
   --dot-motif-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 80'%3E%3Cg fill='none' stroke='black' stroke-linecap='round' stroke-linejoin='round' stroke-width='12'%3E%3Ccircle cx='27' cy='55' r='17'/%3E%3Ccircle cx='91' cy='55' r='17'/%3E%3Cpath d='M27 55 44 29h19L47 55h44L72 24M44 29l22 26M67 18h15M72 24l13-8h10'/%3E%3C/g%3E%3C/svg%3E");
-  --dot-step: clamp(0.42rem, 0.52vw, 0.56rem);
-  --dot-motion: sochi-dot-bike;
-  --dot-flow-duration: 6.8s;
   --dot-flow-delay: -1.2s;
-  --dot-origin: 100% 100%;
+  --dot-origin: 0% 66%;
+  --dot-destination: 100% 34%;
 }
 
 .masthead {
@@ -809,12 +825,11 @@ a {
 
 .dot-motif--mountains {
   inset: var(--space-page) var(--space-page) auto auto;
-  color: color-mix(in srgb, var(--solar-marker) 50%, transparent);
+  color: var(--solar-marker);
   --dot-motif-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 72'%3E%3Cpath fill='black' d='M7 62 39 19l22 29 15-20 37 34H7Z'/%3E%3Ccircle fill='black' cx='91' cy='14' r='8'/%3E%3C/svg%3E");
-  --dot-motion: sochi-dot-horizon;
-  --dot-flow-duration: 12s;
   --dot-flow-delay: -4.1s;
-  --dot-origin: 100% 0;
+  --dot-origin: 0% 100%;
+  --dot-destination: 100% 0%;
 }
 
 .program > :not(.dot-motif),
@@ -1041,12 +1056,11 @@ a {
   inset: var(--space-page) var(--space-page) auto auto;
   width: clamp(22rem, 40vw, 42rem);
   height: clamp(11rem, 20vw, 20rem);
-  color: color-mix(in srgb, var(--solar-marker) 60%, transparent);
+  color: var(--solar-marker);
   --dot-motif-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 72'%3E%3Cpath fill='black' d='M11 22 31 36 50 11l19 25 20-14-9 37Q50 50 20 59Z'/%3E%3Cpath fill='none' stroke='black' stroke-linecap='round' stroke-width='9' d='M24 66Q50 59 76 66'/%3E%3C/svg%3E");
-  --dot-motion: sochi-dot-crown;
-  --dot-flow-duration: 10.4s;
   --dot-flow-delay: -2.7s;
-  --dot-origin: 100% 0;
+  --dot-origin: 50% 100%;
+  --dot-destination: 50% 0%;
 }
 
 .trainers-heading .eyebrow {
@@ -1105,30 +1119,15 @@ a {
   user-select: none;
 }
 
-.dot-motif--runner {
-  inset: auto auto var(--space-page) var(--space-page);
-  width: clamp(10rem, 16vw, 16rem);
-  height: clamp(8rem, 12vw, 12rem);
-  color: color-mix(in srgb, var(--solar-marker) 34%, transparent);
-  --dot-motif-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath fill='black' d='m21.707 20.293-5-5a.996.996 0 0 0-1.414 0L2 28.586 3.414 30 16 17.414 19.586 21 14 26.586 15.414 28l2.292-2.292 4.001-4.001a.997.997 0 0 0 0-1.414'/%3E%3Cpath fill='black' d='M28.586 9 23 14.586l-6.001-6.002A2 2 0 0 0 15.577 8a2 2 0 0 0-1.407.584L8 14.76l1.414 1.414 6.17-6.175 6.71 6.708a.997.997 0 0 0 1.413 0L30 10.414z'/%3E%3Cpath fill='black' d='M22.5 9C20.57 9 19 7.43 19 5.5S20.57 2 22.5 2 26 3.57 26 5.5 24.43 9 22.5 9m0-5c-.827 0-1.5.673-1.5 1.5S21.673 7 22.5 7 24 6.327 24 5.5 23.327 4 22.5 4'/%3E%3C/svg%3E");
-  --dot-step: clamp(0.48rem, 0.6vw, 0.64rem);
-  --dot-motion: sochi-dot-runner;
-  --dot-flow-duration: 5.6s;
-  --dot-flow-delay: -0.8s;
-  --dot-origin: 0 100%;
-}
-
 .dot-motif--wave {
   inset: auto var(--space-page) var(--space-page) auto;
   width: clamp(14rem, 22vw, 22rem);
   height: clamp(7rem, 10vw, 10rem);
-  color: color-mix(in srgb, var(--solar-marker) 48%, transparent);
+  color: var(--solar-marker);
   --dot-motif-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 72'%3E%3Cg fill='none' stroke='black' stroke-linecap='round' stroke-width='10'%3E%3Cpath d='M8 18c12 0 12 12 24 12s12-12 24-12 12 12 24 12 12-12 24-12'/%3E%3Cpath d='M8 42c12 0 12 12 24 12s12-12 24-12 12 12 24 12 12-12 24-12'/%3E%3C/g%3E%3C/svg%3E");
-  --dot-step: clamp(0.42rem, 0.52vw, 0.58rem);
-  --dot-motion: sochi-dot-wave;
-  --dot-flow-duration: 8.2s;
   --dot-flow-delay: -3.1s;
-  --dot-origin: 100% 100%;
+  --dot-origin: 0% 50%;
+  --dot-destination: 100% 50%;
 }
 
 .coach-copy {
@@ -1374,13 +1373,11 @@ a {
   z-index: 0;
   width: clamp(12rem, 17vw, 18rem);
   height: clamp(8rem, 11vw, 12rem);
-  color: color-mix(in srgb, var(--solar-marker) 42%, transparent);
+  color: var(--solar-marker);
   --dot-motif-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 96'%3E%3Cg fill='none' stroke='black' stroke-linecap='round' stroke-linejoin='round' stroke-width='11'%3E%3Cpath d='M55 89c-3-24 0-48 9-68'/%3E%3Cpath d='M64 21C53 10 39 8 28 15M64 21C69 8 82 6 94 13M64 21c14-2 25 5 31 16M64 21c-7 9-18 13-31 13M64 21C61 10 51 4 40 4'/%3E%3C/g%3E%3C/svg%3E");
-  --dot-step: clamp(0.42rem, 0.52vw, 0.58rem);
-  --dot-motion: sochi-dot-palm;
-  --dot-flow-duration: 11s;
   --dot-flow-delay: -1.9s;
-  --dot-origin: 100% 100%;
+  --dot-origin: 50% 100%;
+  --dot-destination: 64% 0%;
 }
 
 .dot-motif--finish {
@@ -1389,19 +1386,18 @@ a {
   z-index: 0;
   width: clamp(15rem, 22vw, 21rem);
   height: clamp(10rem, 14vw, 14rem);
-  color: color-mix(in srgb, var(--solar-surface-tint) 32%, transparent);
+  color: var(--solar-surface-tint);
   --dot-motif-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 108 72'%3E%3Cpath fill='none' stroke='black' stroke-linecap='round' stroke-width='9' d='M19 67V8'/%3E%3Cpath fill='black' d='M19 8h24v21H19zM67 8h24v21H67zM43 29h24v21H43zM19 50h24v17H19z'/%3E%3C/svg%3E");
-  --dot-step: clamp(0.42rem, 0.52vw, 0.56rem);
-  --dot-motion: sochi-dot-finish;
-  --dot-flow-duration: 7.4s;
   --dot-flow-delay: -0.4s;
-  --dot-origin: 100% 0;
+  --dot-origin: 0% 50%;
+  --dot-destination: 100% 50%;
 }
 
-.dot-motif:is(.dot-motif--bike, .dot-motif--mountains, .dot-motif--crown, .dot-motif--runner, .dot-motif--wave, .dot-motif--palm, .dot-motif--finish) {
-  width: clamp(16rem, 20vw, 22rem);
+.dot-motif:is(.dot-motif--bike, .dot-motif--mountains, .dot-motif--crown, .dot-motif--wave, .dot-motif--palm, .dot-motif--finish) {
+  width: clamp(26rem, 38vw, 42rem);
   height: auto;
-  aspect-ratio: 3 / 2;
+  aspect-ratio: 1;
+  --dot-flow-duration: 13.6s;
 }
 
 .closing-action > :not(.dot-motif) {
@@ -2148,44 +2144,20 @@ a {
     justify-content: flex-start;
   }
 
-  .dot-motif--mountains {
-    width: 16rem;
-    height: 8rem;
-  }
-
-  .dot-motif--crown {
-    width: 17rem;
-    height: 12rem;
-  }
-
   .dot-motif--bike {
     inset: auto 1rem 9.5rem auto;
-    width: 10.5rem;
-    height: 7rem;
-  }
-
-  .dot-motif--runner {
-    inset: auto -1rem 2.5rem auto;
-    width: 8rem;
-    height: 6rem;
   }
 
   .dot-motif--wave {
     inset: auto auto 2.75rem 1rem;
-    width: 11rem;
-    height: 5.5rem;
   }
 
   .dot-motif--palm {
     inset: auto -1rem -3.25rem auto;
-    width: 9.5rem;
-    height: 7rem;
   }
 
   .dot-motif--finish {
     inset: 0.5rem 0.75rem auto auto;
-    width: 12rem;
-    height: 8rem;
   }
 
   .trainers-heading {
@@ -2350,11 +2322,12 @@ a {
 
   .dot-motif {
     animation: none;
-    opacity: 0.66;
+    opacity: 1;
     background-position: 0 0;
     transform: none;
   }
 
+  .dot-motif::before,
   .dot-motif::after { animation: none; opacity: 0; }
 }
 
@@ -2553,10 +2526,9 @@ a {
     width: 100%;
   }
 
-  .dot-motif:is(.dot-motif--bike, .dot-motif--mountains, .dot-motif--crown, .dot-motif--runner, .dot-motif--wave, .dot-motif--palm, .dot-motif--finish) { width: 10.5rem; height: auto; }
+  .dot-motif:is(.dot-motif--bike, .dot-motif--mountains, .dot-motif--crown, .dot-motif--wave, .dot-motif--palm, .dot-motif--finish) { width: clamp(17rem, 74vw, 22rem); height: auto; aspect-ratio: 1; }
   .dot-motif--mountains, .dot-motif--crown, .dot-motif--finish { inset: var(--space-page) var(--space-page) auto auto; }
   .dot-motif--bike { inset: auto var(--space-page) calc(var(--service-island-height) + 1.5rem) auto; }
-  .dot-motif--runner { inset: auto auto var(--space-page) var(--space-page); }
   .dot-motif--wave { inset: auto var(--space-page) var(--space-page) auto; }
   .dot-motif--palm { inset: auto 0 calc(-0.5 * var(--space-page)) auto; }
 }
