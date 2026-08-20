@@ -8,7 +8,82 @@
     <title>Предстартовый кэмп IRONSTAR 2026 в Сириусе</title>
     <meta name="description" content="Финальная неделя подготовки к стартам IRONSTAR 2026 в Сириусе: трасса, открытая вода, транзитные зоны и питание. 27 сентября — 4 октября.">
     <link rel="canonical" href="https://anton-gorokhovatsky.github.io/hotline-camp/">
-    <link rel="icon" href="./favicon.svg?v=20260819-1" type="image/svg+xml">
+    <link rel="icon" href="./favicon.svg?v=20260820-2" type="image/svg+xml">
+    <script>
+      (() => {
+        const favicon = document.querySelector('link[rel="icon"]');
+        const canvas = document.createElement("canvas");
+        const context = canvas.getContext("2d");
+        const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+        let timer = null;
+
+        if (!(favicon instanceof HTMLLinkElement) || !context) return;
+
+        canvas.width = 32;
+        canvas.height = 32;
+
+        const traceCourse = () => {
+          context.beginPath();
+          context.moveTo(10.5, 27.5);
+          context.bezierCurveTo(13.5, 22.5, 11, 19, 11, 16);
+          context.bezierCurveTo(11, 11.5, 13, 9, 16.5, 9);
+          context.bezierCurveTo(20, 9, 21.5, 11, 23, 13.5);
+          context.lineTo(24.5, 16);
+          context.bezierCurveTo(25.5, 17.5, 27, 17, 29, 16);
+        };
+
+        const drawMark = (time) => {
+          const phase = reducedMotion.matches ? 0.5 : (time % 4000) / 4000;
+          const traceProgress = phase < 0.38
+            ? 1 - Math.pow(1 - phase / 0.38, 3)
+            : 1;
+          const traceOpacity = phase < 0.72
+            ? 1
+            : Math.max(0, 1 - (phase - 0.72) / 0.2);
+
+          context.clearRect(0, 0, 32, 32);
+          context.save();
+          context.translate(16, 16);
+          context.scale(1.16, 1.16);
+          context.translate(-16, -16);
+          context.beginPath();
+          context.arc(16, 16, 11, 0, Math.PI * 2);
+          context.fillStyle = "#df5673";
+          context.fill();
+          context.clip();
+          context.strokeStyle = "#18070c";
+          context.lineCap = "round";
+          context.lineJoin = "round";
+          context.lineWidth = 2.5;
+
+          traceCourse();
+          context.globalAlpha = 0.28;
+          context.setLineDash([]);
+          context.stroke();
+
+          traceCourse();
+          context.globalAlpha = traceOpacity;
+          context.setLineDash([40, 40]);
+          context.lineDashOffset = 40 * (1 - traceProgress);
+          context.stroke();
+          context.restore();
+
+          favicon.type = "image/png";
+          favicon.href = canvas.toDataURL("image/png");
+        };
+
+        const updateMotion = () => {
+          if (timer) window.clearInterval(timer);
+          drawMark(performance.now());
+          timer = reducedMotion.matches
+            ? null
+            : window.setInterval(() => drawMark(performance.now()), 1000 / 12);
+        };
+
+        reducedMotion.addEventListener("change", updateMotion);
+        updateMotion();
+      })();
+    </script>
 
     <meta property="og:type" content="website">
     <meta property="og:locale" content="ru_RU">

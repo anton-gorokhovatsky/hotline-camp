@@ -1,32 +1,49 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
   <title>Hotline Camp</title>
   <style>
-    .tile { fill: #f2ecdf; stroke: #789aa0; }
-    .rail { fill: #131c1a; }
-    .signal { fill: #86172f; }
+    .course-base {
+      opacity: 0.28;
+    }
 
-    @media (prefers-color-scheme: dark) {
-      .tile { fill: #131c1a; stroke: #0b2b1d; }
-      .rail { fill: #f2ecdf; }
-      .signal { fill: #df5673; }
+    .course-motion {
+      animation: plot-course 4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+      stroke-dasharray: 1;
+      stroke-dashoffset: 1;
+    }
+
+    @keyframes plot-course {
+      38%,
+      72% {
+        stroke-dashoffset: 0;
+        opacity: 1;
+      }
+      92%,
+      100% {
+        stroke-dashoffset: 0;
+        opacity: 0;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .course-base {
+        opacity: 0;
+      }
+
+      .course-motion {
+        animation: none;
+        opacity: 1;
+        stroke-dashoffset: 0;
+      }
     }
   </style>
-  <rect class="tile" x="2" y="2" width="60" height="60" rx="14" stroke-width="2" />
-  <g class="rail">
-    <circle cx="17" cy="16" r="3.2" />
-    <circle cx="17" cy="24" r="3.2" />
-    <circle cx="17" cy="40" r="3.2" />
-    <circle cx="17" cy="48" r="3.2" />
-    <circle cx="47" cy="16" r="3.2" />
-    <circle cx="47" cy="24" r="3.2" />
-    <circle cx="47" cy="40" r="3.2" />
-    <circle cx="47" cy="48" r="3.2" />
-  </g>
-  <g class="signal">
-    <circle cx="17" cy="32" r="3.2" />
-    <circle cx="24.5" cy="32" r="3.2" />
-    <circle cx="32" cy="32" r="3.2" />
-    <circle cx="39.5" cy="32" r="3.2" />
-    <circle cx="47" cy="32" r="3.2" />
+  <defs>
+    <clipPath id="mark-clip">
+      <circle cx="32" cy="32" r="22" />
+    </clipPath>
+  </defs>
+  <g transform="translate(32 32) scale(1.16) translate(-32 -32)">
+    <circle cx="32" cy="32" r="22" fill="#df5673" />
+    <path class="course-base" d="M21 55c6-10 1-17 1-23 0-9 4-14 11-14 7 0 10 4 13 9l3 5c2 3 5 2 9 0" fill="none" stroke="#18070c" stroke-linecap="round" stroke-linejoin="round" stroke-width="5" clip-path="url(#mark-clip)" />
+    <path class="course-motion" d="M21 55c6-10 1-17 1-23 0-9 4-14 11-14 7 0 10 4 13 9l3 5c2 3 5 2 9 0" pathLength="1" fill="none" stroke="#18070c" stroke-linecap="round" stroke-linejoin="round" stroke-width="5" clip-path="url(#mark-clip)" />
   </g>
 </svg>
