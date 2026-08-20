@@ -370,7 +370,6 @@ a {
 /* Первый экран: одна фотография, одно решение и вторичный сервисный слой. */
 .hero {
   position: relative;
-  isolation: isolate;
   background: var(--surface-muted);
   color: var(--ink);
 }
@@ -391,7 +390,7 @@ a {
 .masthead {
   position: absolute;
   inset: 0 0 auto;
-  z-index: 6;
+  z-index: 50;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -399,6 +398,7 @@ a {
   padding: clamp(0.58rem, 0.75vw, 0.72rem) var(--space-page);
   background: transparent;
   color: var(--ink);
+  transition: color 180ms ease;
 }
 
 .brand {
@@ -409,6 +409,7 @@ a {
   max-width: 20rem;
   color: var(--ink);
   line-height: 1.08;
+  pointer-events: auto;
 }
 
 .brand strong {
@@ -1762,24 +1763,25 @@ a {
 }
 
 @media (min-width: 46.01rem) {
-  html.menu-open .hero { z-index: 10; }
-
-  .masthead { position: fixed; }
-  .brand,
-  .masthead-actions { position: relative; z-index: 3; }
+  .masthead { pointer-events: none; }
+  .brand { position: relative; z-index: 3; }
+  .masthead-actions {
+    position: fixed;
+    inset: clamp(0.58rem, 0.75vw, 0.72rem) var(--space-page) auto auto;
+    z-index: 51;
+    pointer-events: auto;
+  }
   .section-nav,
   .masthead-actions > .theme-toggle--icon { display: none; }
-
-  html:not(.menu-open) .masthead.is-scrolled .brand {
-    visibility: hidden;
-    opacity: 0;
-    transform: translateY(-0.5rem);
-    pointer-events: none;
-  }
 
   .brand { transition: opacity 180ms ease, transform 180ms ease, visibility 180ms step-end; }
   html.menu-open .brand,
   html.menu-open .brand span { color: var(--material-glass-text); }
+
+  html.menu-open .masthead {
+    position: fixed;
+    pointer-events: auto;
+  }
 
   .mobile-menu {
     display: flex;
@@ -1906,13 +1908,8 @@ a {
     scroll-margin-top: 0;
   }
 
-  .hero,
-  html.menu-open .hero {
-    z-index: 10;
-  }
-
   .masthead {
-    position: fixed;
+    position: absolute;
     inset: 0 0 auto;
     align-items: center;
     gap: 0.75rem;
@@ -1920,14 +1917,18 @@ a {
     padding-bottom: 0.62rem;
     background: transparent;
     transition: color 180ms ease;
-  }
-
-  .masthead.is-scrolled {
     pointer-events: none;
   }
 
-  .masthead.is-scrolled .masthead-actions,
+  .masthead-actions {
+    position: fixed;
+    inset: max(0.62rem, env(safe-area-inset-top)) var(--space-page) auto auto;
+    z-index: 51;
+    pointer-events: auto;
+  }
+
   html.menu-open .masthead {
+    position: fixed;
     pointer-events: auto;
   }
 
@@ -1942,13 +1943,6 @@ a {
   .masthead.is-scrolled .menu-toggle,
   html.menu-open .masthead .menu-toggle {
     color: var(--material-glass-text) !important;
-  }
-
-  html:not(.menu-open) .masthead.is-scrolled .brand {
-    visibility: hidden;
-    opacity: 0;
-    transform: translateY(-0.5rem);
-    pointer-events: none;
   }
 
   .brand {
@@ -2511,7 +2505,7 @@ a {
     column-gap: 1rem;
     margin-top: 0.15rem;
     padding-block: clamp(1rem, 4vw, 1.2rem);
-    border-block: 1px solid var(--line);
+    border-block-end: 1px solid var(--line);
   }
 
   .camp-facts div:last-child dd {
