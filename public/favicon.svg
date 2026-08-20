@@ -1,10 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
   <title>Hotline Camp</title>
   <style>
-    .course-base {
-      opacity: 0.28;
-    }
-
     .course-motion {
       animation: plot-course 4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
       stroke-dasharray: 1;
@@ -25,10 +21,6 @@
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .course-base {
-        opacity: 0;
-      }
-
       .course-motion {
         animation: none;
         opacity: 1;
@@ -43,7 +35,6 @@
   </defs>
   <g transform="translate(32 32) scale(1.16) translate(-32 -32)">
     <circle cx="32" cy="32" r="22" fill="#df5673" />
-    <path class="course-base" d="M21 55c6-10 1-17 1-23 0-9 4-14 11-14 7 0 10 4 13 9l3 5c2 3 5 2 9 0" fill="none" stroke="#18070c" stroke-linecap="round" stroke-linejoin="round" stroke-width="5" clip-path="url(#mark-clip)" />
     <path class="course-motion" d="M21 55c6-10 1-17 1-23 0-9 4-14 11-14 7 0 10 4 13 9l3 5c2 3 5 2 9 0" pathLength="1" fill="none" stroke="#18070c" stroke-linecap="round" stroke-linejoin="round" stroke-width="5" clip-path="url(#mark-clip)" />
   </g>
 </svg>
