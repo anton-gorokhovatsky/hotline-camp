@@ -40,8 +40,8 @@
 
       const moon = toggle.querySelector(".theme-toggle-icon--moon");
       const sun = toggle.querySelector(".theme-toggle-icon--sun");
-      if (moon) moon.hidden = nextTheme !== "dark";
-      if (sun) sun.hidden = nextTheme !== "light";
+      if (moon) moon.toggleAttribute("hidden", nextTheme !== "dark");
+      if (sun) sun.toggleAttribute("hidden", nextTheme !== "light");
     });
   };
 
