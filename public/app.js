@@ -80,6 +80,64 @@
 (() => {
   "use strict";
 
+  const countdowns = [...document.querySelectorAll("[data-camp-countdown]")];
+  if (!countdowns.length) return;
+
+  const SOCHI_TIME_ZONE = "Europe/Moscow";
+  const CAMP_START_DAY = Date.UTC(2026, 8, 27);
+  const CAMP_END_DAY = Date.UTC(2026, 9, 4);
+  const DAY_MS = 86_400_000;
+
+  const sochiCalendarDay = () => {
+    const parts = new Intl.DateTimeFormat("en-CA", {
+      timeZone: SOCHI_TIME_ZONE,
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    }).formatToParts(new Date());
+    const year = Number(parts.find((part) => part.type === "year")?.value);
+    const month = Number(parts.find((part) => part.type === "month")?.value);
+    const day = Number(parts.find((part) => part.type === "day")?.value);
+    return Date.UTC(year, month - 1, day);
+  };
+
+  const dayWord = (days) => {
+    const mod100 = days % 100;
+    const mod10 = days % 10;
+    if (mod100 >= 11 && mod100 <= 14) return "дней";
+    if (mod10 === 1) return "день";
+    if (mod10 >= 2 && mod10 <= 4) return "дня";
+    return "дней";
+  };
+
+  const getCountdown = () => {
+    const today = sochiCalendarDay();
+    if (today < CAMP_START_DAY) {
+      const days = Math.round((CAMP_START_DAY - today) / DAY_MS);
+      return { value: `${days} ${dayWord(days)}`, label: "до старта кэмпа" };
+    }
+    if (today === CAMP_START_DAY) return { value: "Сегодня", label: "стартует кэмп" };
+    if (today <= CAMP_END_DAY) return { value: "Кэмп идёт", label: "до 4 октября" };
+    return { value: "Кэмп завершён", label: "27 сентября — 4 октября" };
+  };
+
+  const updateCountdowns = () => {
+    const countdown = getCountdown();
+    countdowns.forEach((element) => {
+      const value = element.querySelector("[data-camp-countdown-value]");
+      const label = element.querySelector("[data-camp-countdown-label]");
+      if (value) value.textContent = countdown.value;
+      if (label) label.textContent = countdown.label;
+    });
+  };
+
+  updateCountdowns();
+  window.setInterval(updateCountdowns, 60 * 60 * 1000);
+})();
+
+(() => {
+  "use strict";
+
   const root = document.documentElement;
   const body = document.body;
   const masthead = document.querySelector("#masthead");
@@ -258,10 +316,10 @@
   let solarTimes = null;
   let solarTimer = null;
 
-  const field = (name) => panel.querySelector(`[data-condition="${name}"]`);
   const setField = (name, value) => {
-    const element = field(name);
-    if (element) element.textContent = value;
+    document.querySelectorAll(`[data-condition="${name}"]`).forEach((element) => {
+      element.textContent = value;
+    });
   };
 
   const isNumber = (value) => typeof value === "number" && Number.isFinite(value);
