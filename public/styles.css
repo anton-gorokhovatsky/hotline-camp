@@ -45,6 +45,10 @@
   --surface: color-mix(in oklab, var(--sochi-limestone-sun) 68%, var(--solar-surface-tint));
   --surface-muted: color-mix(in oklab, var(--sochi-limestone-wet) 84%, var(--sochi-eucalyptus));
   --surface-sea: color-mix(in oklab, var(--sochi-eucalyptus) 50%, var(--solar-accent));
+  --trainer-surface: var(--sea-deep);
+  --trainer-eyebrow: var(--sea-muted);
+  --trainer-body: color-mix(in oklab, var(--paper) 74%, var(--sea-muted));
+  --trainer-accent: var(--oleander);
   --text: var(--ink);
   --text-muted: color-mix(in oklab, var(--ink-soft) 82%, var(--sochi-eucalyptus));
   --line: color-mix(in oklab, var(--ink) 20%, transparent);
@@ -110,6 +114,10 @@
   --surface: color-mix(in oklab, var(--sochi-slate) 64%, var(--solar-deep));
   --surface-muted: color-mix(in oklab, #17231f 62%, var(--solar-deep));
   --surface-sea: color-mix(in oklab, #263d37 48%, var(--solar-accent));
+  --trainer-surface: color-mix(in oklab, var(--surface-sea) 48%, var(--sea-deep));
+  --trainer-eyebrow: color-mix(in oklab, var(--paper) 84%, var(--sochi-eucalyptus));
+  --trainer-body: var(--trainer-eyebrow);
+  --trainer-accent: color-mix(in oklab, var(--sochi-oleander) 16%, var(--paper));
   --text: var(--paper);
   --text-muted: color-mix(in oklab, var(--paper-soft) 78%, var(--sochi-eucalyptus));
   --line: color-mix(in oklab, var(--solar-accent) 42%, transparent);
@@ -1023,7 +1031,7 @@ a {
 .trainers {
   overflow: hidden;
   padding-top: 0;
-  background: var(--sea-deep);
+  background: var(--trainer-surface);
   color: var(--paper);
 }
 
@@ -1044,7 +1052,7 @@ a {
   min-height: clamp(25rem, 48svh, 34rem);
   align-content: center;
   padding: clamp(4rem, 7vw, 6rem) var(--space-page);
-  background: var(--sea-deep);
+  background: var(--trainer-surface);
 }
 
 .dot-motif--crown {
@@ -1061,7 +1069,7 @@ a {
 .trainers-heading .eyebrow {
   grid-column: 1 / 13;
   grid-row: 1;
-  color: var(--sea-muted);
+  color: var(--trainer-eyebrow);
 }
 
 .trainers-heading h2 {
@@ -1135,7 +1143,7 @@ a {
   display: flex;
   align-items: center;
   gap: 0.8rem;
-  color: var(--oleander);
+  color: var(--trainer-accent);
   font-size: var(--type-label);
   font-weight: 700;
   letter-spacing: var(--tracking-label);
@@ -1171,7 +1179,7 @@ a {
   max-width: none;
   padding: clamp(0.42rem, 0.58vw, 0.62rem) 0;
   border-bottom: 0;
-  color: color-mix(in oklab, var(--paper) 74%, var(--sea-muted));
+  color: var(--trainer-body);
   font-size: var(--type-body-small);
   line-height: 1.42;
   counter-increment: achievement;
@@ -1179,7 +1187,7 @@ a {
 
 .coach-credentials li::before {
   content: "0" counter(achievement);
-  color: var(--oleander);
+  color: var(--trainer-accent);
   font-family: var(--font-display);
   font-size: 1.05em;
   font-variant-numeric: tabular-nums;
