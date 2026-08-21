@@ -1093,15 +1093,16 @@ a {
 
 .race-targets nav {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: clamp(1rem, 2vw, 2rem);
+  grid-template-columns: repeat(3, max-content);
+  justify-content: space-between;
+  gap: var(--program-space-content);
 }
 
 .race-targets nav a {
   display: grid;
   min-width: 0;
   min-height: 3rem;
-  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-columns: max-content auto;
   align-content: start;
   align-items: start;
   column-gap: clamp(0.35rem, 0.7vw, 0.75rem);
@@ -1111,17 +1112,15 @@ a {
   letter-spacing: var(--tracking-stat);
   line-height: 0.96;
   text-wrap: balance;
-  transition: color 180ms ease;
 }
 
-.race-targets nav a::after {
-  content: "";
-  grid-column: 1 / -1;
-  width: clamp(2.6rem, 3.2vw, 4.25rem);
-  height: 0.18rem;
-  margin-top: clamp(0.7rem, 1vw, 1rem);
-  background: var(--oleander);
-  transition: width 180ms ease, background-color 180ms ease;
+.race-targets nav a > span:first-child {
+  text-decoration-color: transparent;
+  text-decoration-line: underline;
+  text-decoration-skip-ink: auto;
+  text-decoration-thickness: clamp(2px, 0.045em, 4px);
+  text-underline-offset: 0.12em;
+  transition: text-decoration-color 180ms ease;
 }
 
 .race-target-arrow {
@@ -1133,21 +1132,14 @@ a {
   transition: color 180ms ease, transform 180ms ease;
 }
 
-.race-targets a:hover,
-.race-targets a:focus-visible {
-  color: var(--oleander);
-}
-
-.race-targets a:hover::after,
-.race-targets a:focus-visible::after {
-  width: 100%;
-  background: var(--oleander);
+.race-targets a:hover > span:first-child,
+.race-targets a:focus-visible > span:first-child {
+  text-decoration-color: var(--oleander);
 }
 
 .race-targets a:hover .race-target-arrow,
 .race-targets a:focus-visible .race-target-arrow {
   color: var(--oleander);
-  transform: translate(0.12rem, -0.12rem);
 }
 
 /* Третий экран: опыт тренеров и один финальный шаг. */
@@ -2706,6 +2698,7 @@ a {
   }
 
   .race-targets nav a {
+    grid-template-columns: minmax(0, 1fr) auto;
     min-height: 3.25rem;
     padding-block: clamp(0.85rem, 4vw, 1.05rem);
     font-size: clamp(1.85rem, 8.5vw, 2.5rem);
@@ -2713,10 +2706,6 @@ a {
 
   .race-targets nav a:not(:last-child) {
     border-bottom: 1px solid var(--line);
-  }
-
-  .race-targets nav a::after {
-    display: none;
   }
 
   .dot-motif--bike {
