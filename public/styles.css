@@ -2007,7 +2007,7 @@ a {
 
   .mobile-menu-scroll::after { content: none; }
   .mobile-menu-details { display: contents; }
-  .camp-cta-menu { width: min(100%, 26rem); margin-top: clamp(1.75rem, 3vh, 2.25rem); background: var(--oleander); color: var(--oleander-ink); }
+  .camp-cta-menu { width: 100%; margin-top: clamp(1.75rem, 3vh, 2.25rem); background: var(--oleander); color: var(--oleander-ink); }
   .mobile-menu-theme { display: flex; grid-column: 11 / 13; grid-row: 2; align-self: last baseline; justify-self: end; }
   .mobile-menu-theme .theme-toggle--menu {
     position: relative;
