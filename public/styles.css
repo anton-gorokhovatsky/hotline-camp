@@ -882,8 +882,8 @@ a {
   --dot-destination: 100% 0%;
 }
 
-.program > :not(.dot-motif),
-.trainers-heading > :not(.dot-motif) {
+.program > :not(.dot-motif):not(.dot-field),
+.trainers-heading > :not(.dot-motif):not(.dot-field) {
   position: relative;
   z-index: 1;
 }
@@ -1519,6 +1519,77 @@ a {
   height: auto;
   aspect-ratio: 1;
   --dot-flow-duration: 13.6s;
+}
+
+/* Одно поле на главу: солнечный диск переходит в склон и морской горизонт. */
+.dot-field {
+  --field-cell: clamp(0.72rem, 0.78vw, 0.9rem);
+  position: absolute;
+  z-index: 1;
+  display: block;
+  width: clamp(28rem, 48vw, 54rem);
+  aspect-ratio: 1.62;
+  color: var(--solar-marker);
+  pointer-events: none;
+  opacity: 0.36;
+  background-image:
+    radial-gradient(circle at 18% 20%, currentColor 0 0.052rem, transparent 0.07rem),
+    radial-gradient(circle at 69% 34%, currentColor 0 0.082rem, transparent 0.1rem),
+    radial-gradient(circle at 43% 79%, currentColor 0 0.038rem, transparent 0.056rem);
+  background-position: 0 0;
+  background-size: calc(var(--field-cell) * 2.35) calc(var(--field-cell) * 2.35);
+  -webkit-mask-image:
+    radial-gradient(circle at 76% 24%, #000 0 7%, rgba(0, 0, 0, 0.72) 10%, transparent 18%),
+    linear-gradient(154deg, transparent 0 36%, rgba(0, 0, 0, 0.22) 42%, #000 52%, rgba(0, 0, 0, 0.42) 65%, transparent 76%),
+    linear-gradient(to bottom, transparent 0 64%, rgba(0, 0, 0, 0.28) 68%, #000 74%, rgba(0, 0, 0, 0.36) 80%, transparent 89%);
+  mask-image:
+    radial-gradient(circle at 76% 24%, #000 0 7%, rgba(0, 0, 0, 0.72) 10%, transparent 18%),
+    linear-gradient(154deg, transparent 0 36%, rgba(0, 0, 0, 0.22) 42%, #000 52%, rgba(0, 0, 0, 0.42) 65%, transparent 76%),
+    linear-gradient(to bottom, transparent 0 64%, rgba(0, 0, 0, 0.28) 68%, #000 74%, rgba(0, 0, 0, 0.36) 80%, transparent 89%);
+  animation: dot-field-state 26s steps(6, end) infinite alternate;
+}
+
+.dot-field::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(circle at 22% 30%, currentColor 0 0.12rem, transparent 0.14rem),
+    radial-gradient(circle at 74% 66%, currentColor 0 0.075rem, transparent 0.095rem);
+  background-position: 0 0;
+  background-size: calc(var(--field-cell) * 4.1) calc(var(--field-cell) * 3.7);
+  -webkit-mask-image: linear-gradient(158deg, transparent 0 43%, #000 52%, rgba(0, 0, 0, 0.46) 64%, transparent 76%);
+  mask-image: linear-gradient(158deg, transparent 0 43%, #000 52%, rgba(0, 0, 0, 0.46) 64%, transparent 76%);
+  opacity: 0.42;
+  animation: dot-field-accent 21s steps(5, end) -7s infinite alternate;
+}
+
+.dot-field--hero {
+  inset: auto -5vw calc(var(--service-island-height) + 2.5rem) auto;
+  width: clamp(30rem, 52vw, 58rem);
+}
+
+.dot-field--program {
+  inset: clamp(1rem, 3vw, 3rem) -5vw auto auto;
+  width: clamp(32rem, 58vw, 66rem);
+  transform: scaleX(-1);
+}
+
+.dot-field--trainers {
+  inset: clamp(1rem, 3vw, 3rem) -8vw auto auto;
+  width: clamp(34rem, 60vw, 68rem);
+  color: var(--trainer-eyebrow);
+  opacity: 0.2;
+}
+
+@keyframes dot-field-state {
+  from { background-position: 0 0; }
+  to { background-position: calc(var(--field-cell) * 1.15) calc(var(--field-cell) * 0.55); }
+}
+
+@keyframes dot-field-accent {
+  from { opacity: 0.22; transform: translate3d(0, 0, 0); }
+  to { opacity: 0.5; transform: translate3d(var(--field-cell), calc(var(--field-cell) * -0.5), 0); }
 }
 
 .closing-action > :not(.dot-motif) {
@@ -2897,6 +2968,11 @@ a {
 
   .dot-motif::before,
   .dot-motif::after { animation: none; opacity: 0; }
+
+  .dot-field,
+  .dot-field::before {
+    animation: none;
+  }
 }
 
 /* Trainer chapters: the evidence is grouped as a competitive biography. */
@@ -3097,7 +3173,8 @@ a {
 }
 
 @media (forced-colors: active) {
-  .dot-motif {
+  .dot-motif,
+  .dot-field {
     display: none;
   }
 
