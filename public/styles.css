@@ -3037,7 +3037,7 @@ a {
     inset: auto;
     grid-column: 1;
     grid-row: 1;
-    align-self: start;
+    align-self: end;
     justify-self: end;
     font-size: clamp(6.4rem, 32vw, 9rem);
     line-height: 0.74;
