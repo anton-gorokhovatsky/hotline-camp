@@ -2164,9 +2164,19 @@ a {
     padding-bottom: 0.9rem;
   }
 
-  .mobile-menu-program-column,
-  .mobile-menu-key-facts {
+  .mobile-menu-program-column {
     display: contents;
+  }
+
+  .mobile-menu-key-facts {
+    display: grid;
+    order: 3;
+    grid-template-areas:
+      "dates price"
+      "countdown countdown";
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.55rem clamp(0.85rem, 4vw, 1.25rem);
+    align-items: end;
   }
 
   .mobile-menu-route--program {
@@ -2177,11 +2187,6 @@ a {
     order: 2;
   }
 
-  .mobile-menu-dates {
-    order: 3;
-  }
-
-  .mobile-menu-countdown,
   .mobile-menu-live-conditions {
     display: none;
   }
@@ -2328,6 +2333,7 @@ a {
 
   .mobile-menu-dates {
     display: grid;
+    grid-area: dates;
     gap: 0.45rem;
     color: var(--mobile-menu-text-soft);
     font-size: var(--type-label);
@@ -2339,6 +2345,41 @@ a {
     font-size: clamp(1.05rem, 4.8vw, 1.2rem);
     font-weight: 650;
     letter-spacing: -0.015em;
+  }
+
+  .mobile-menu-price {
+    display: grid;
+    grid-area: price;
+    justify-items: end;
+    gap: 0.45rem;
+    color: var(--mobile-menu-text-soft);
+    font-size: var(--type-label);
+    line-height: 1.35;
+  }
+
+  .mobile-menu-price strong {
+    color: var(--mobile-menu-text);
+    font-size: clamp(1.55rem, 7vw, 1.9rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  .mobile-menu-countdown {
+    display: flex;
+    grid-area: countdown;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.25rem 0.45rem;
+    color: var(--mobile-menu-text-soft);
+    font-size: clamp(0.76rem, 3.2vw, 0.88rem);
+    line-height: 1.25;
+  }
+
+  .mobile-menu-countdown-value {
+    color: var(--mobile-menu-text);
+    font-weight: 650;
   }
 
   .camp-cta-menu {
