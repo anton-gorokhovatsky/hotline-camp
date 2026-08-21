@@ -856,6 +856,9 @@ a {
 
 /* Второй экран: последовательность действий и единое фотографическое поле. */
 .program {
+  --program-space-tight: clamp(0.55rem, 0.7vw, 0.8rem);
+  --program-space-content: var(--space-copy);
+  --program-space-major: clamp(3rem, 4.5vw, 4.5rem);
   position: relative;
   isolation: isolate;
   overflow: hidden;
@@ -902,7 +905,7 @@ a {
 
 .program-heading h2 {
   max-width: 10ch;
-  margin-top: 0.8rem;
+  margin-top: var(--program-space-tight);
   font-size: var(--type-section);
   font-weight: 700;
   letter-spacing: var(--tracking-display);
@@ -911,7 +914,7 @@ a {
 
 .program-intro {
   max-width: 45rem;
-  margin-top: clamp(1.75rem, 2.4vw, 2.4rem);
+  margin-top: var(--program-space-content);
   color: var(--text-muted);
   font-size: var(--type-deck);
   line-height: 1.48;
@@ -926,32 +929,54 @@ a {
 
 .camp-facts {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: clamp(1.25rem, 2.5vw, 3rem);
+  grid-template-columns: minmax(0, 1.35fr) minmax(11rem, 0.65fr);
+  column-gap: var(--grid-gap);
+  row-gap: var(--program-space-content);
+  align-items: end;
 }
 
 .camp-facts div {
   display: grid;
-  gap: 0.25rem;
+  gap: calc(var(--program-space-tight) * 0.55);
 }
 
 .camp-facts dt {
   color: var(--text-muted);
-  font-size: var(--type-nav);
+  font-size: var(--type-label);
 }
 
 .camp-facts dd {
   color: var(--text);
-  font-size: var(--type-stat);
   font-weight: 700;
   letter-spacing: var(--tracking-stat);
   line-height: 1.05;
   white-space: nowrap;
 }
 
+.camp-facts div:first-child dd {
+  font-size: var(--type-feature);
+}
+
+.camp-facts div:nth-child(2) dd {
+  color: var(--text-muted);
+  font-size: var(--type-body);
+  font-weight: 620;
+  letter-spacing: var(--tracking-tight);
+}
+
+.camp-facts div:last-child {
+  grid-column: 1 / -1;
+}
+
+.camp-facts div:last-child dd {
+  color: var(--oleander);
+  font-size: var(--type-display);
+  line-height: var(--leading-display);
+}
+
 .cost-note {
   max-width: 38rem;
-  margin-top: 1rem;
+  margin-top: var(--program-space-tight);
   color: var(--text-muted);
   font-size: var(--type-body-small);
   font-weight: 520;
@@ -963,7 +988,7 @@ a {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: clamp(1rem, 2vw, 2rem);
   max-width: none;
-  margin-top: clamp(1.35rem, 2vw, 2rem);
+  margin-top: var(--program-space-content);
   color: var(--text-muted);
   font-size: var(--type-body-small);
   line-height: 1.46;
@@ -983,7 +1008,7 @@ a {
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
   gap: var(--grid-gap);
-  margin-top: clamp(3.25rem, 4.6vw, 4.75rem);
+  margin-top: var(--program-space-major);
   list-style: none;
 }
 
@@ -1036,7 +1061,7 @@ a {
   column-gap: clamp(2.5rem, 5vw, 6rem);
   row-gap: 1rem;
   max-width: none;
-  margin-top: clamp(3rem, 4.5vw, 4.5rem);
+  margin-top: var(--program-space-major);
 }
 
 .race-targets > :not(.dot-motif) {
@@ -2518,28 +2543,26 @@ a {
   .camp-facts {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: clamp(1rem, 5vw, 1.35rem);
+    column-gap: var(--grid-gap);
+    row-gap: var(--program-space-content);
   }
 
   .camp-facts div:last-child {
     grid-column: 1 / -1;
     grid-template-columns: minmax(0, 1fr) auto;
     align-items: end;
-    column-gap: 1rem;
-    margin-top: 0.15rem;
-    padding-block: clamp(1rem, 4vw, 1.2rem);
-    border-block-end: 1px solid var(--line);
+    column-gap: var(--grid-gap);
   }
 
   .camp-facts div:last-child dd {
     color: var(--oleander);
-    font-size: clamp(2.35rem, 11vw, 3.15rem);
-    line-height: 0.9;
+    font-size: var(--type-display);
+    line-height: var(--leading-display);
   }
 
   .cost-note {
     max-width: 29ch;
-    margin-top: 0.75rem;
+    margin-top: var(--program-space-tight);
     font-size: var(--type-nav);
   }
 
@@ -2558,7 +2581,7 @@ a {
 
   .program-side {
     max-width: none;
-    margin-top: clamp(1.6rem, 6vw, 2.25rem);
+    margin-top: var(--program-space-content);
     margin-left: 0;
   }
 
@@ -2566,14 +2589,13 @@ a {
     max-width: 9ch;
   }
 
-  .program-intro,
   .trainers-heading > p:last-child {
     margin-top: 1.5rem;
   }
 
   .program-intro {
     max-width: 31rem;
-    margin-top: clamp(2.1rem, 8vw, 2.75rem);
+    margin-top: var(--program-space-content);
     padding-top: 0;
     color: var(--text);
     font-weight: 520;
@@ -2583,7 +2605,7 @@ a {
   .camp-terms {
     grid-template-columns: minmax(0, 1fr);
     gap: 0;
-    margin-top: clamp(1.75rem, 7vw, 2.25rem);
+    margin-top: var(--program-space-content);
   }
 
   .camp-terms > li {
@@ -2600,12 +2622,12 @@ a {
 
   .program-side > .camp-cta {
     min-height: 3.75rem;
-    margin-top: clamp(1.6rem, 7vw, 2rem);
+    margin-top: var(--program-space-content);
   }
 
   .program-notes {
     display: block;
-    margin-top: 2.8rem;
+    margin-top: var(--program-space-major);
   }
 
   .program-notes li,
