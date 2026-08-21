@@ -1152,6 +1152,8 @@ a {
 
 /* Третий экран: опыт тренеров и один финальный шаг. */
 .trainers {
+  --space-trainers-heading-to-story: calc(clamp(4rem, 6vw, 6rem) + clamp(4rem, 6vw, 6.5rem));
+
   overflow: hidden;
   padding-top: 0;
   background: var(--trainer-surface);
@@ -1167,7 +1169,7 @@ a {
   align-items: end;
   column-gap: var(--grid-gap);
   row-gap: clamp(1rem, 1.5vw, 1.75rem);
-  padding: var(--space-section) var(--space-page) clamp(4rem, 6vw, 6rem);
+  padding: var(--space-section) var(--space-page) var(--space-trainers-heading-to-story);
   border-bottom: 0;
 }
 
@@ -1225,6 +1227,10 @@ a {
   padding: clamp(3.5rem, 4.5vw, 4.75rem) var(--space-page) clamp(3.5rem, 4.5vw, 5rem);
   border-bottom: 0;
   isolation: isolate;
+}
+
+.trainers > .coach-story:first-of-type {
+  padding-block-start: 0;
 }
 
 .coach-story::before {
@@ -2684,9 +2690,13 @@ a {
     inset: 0.5rem 0.75rem auto auto;
   }
 
+  .trainers {
+    --space-trainers-heading-to-story: calc(clamp(3.5rem, 10vw, 4.5rem) + 4rem);
+  }
+
   .trainers-heading {
     min-height: 0;
-    padding-block: var(--space-section) clamp(3.5rem, 10vw, 4.5rem);
+    padding-block: var(--space-section) var(--space-trainers-heading-to-story);
   }
 
   .trainers-heading h2 {
