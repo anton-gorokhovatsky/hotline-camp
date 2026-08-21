@@ -2596,15 +2596,19 @@ a {
 
   .camp-facts div:last-child {
     grid-column: 1 / -1;
-    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     align-items: end;
     column-gap: var(--grid-gap);
+    padding-bottom: var(--program-space-tight);
+    border-bottom: 1px solid var(--line);
   }
 
   .camp-facts div:last-child dd {
+    justify-self: center;
     color: var(--oleander);
     font-size: var(--type-display);
     line-height: var(--leading-display);
+    text-align: center;
   }
 
   .cost-note {
