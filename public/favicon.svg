@@ -8,14 +8,21 @@
     }
 
     @keyframes plot-course {
-      38%,
-      72% {
+      0%,
+      8% {
+        stroke-dashoffset: 1;
+        opacity: 1;
+      }
+
+      62%,
+      82% {
         stroke-dashoffset: 0;
         opacity: 1;
       }
-      92%,
+
+      82.01%,
       100% {
-        stroke-dashoffset: 0;
+        stroke-dashoffset: 1;
         opacity: 0;
       }
     }
