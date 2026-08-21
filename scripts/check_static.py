@@ -16,6 +16,8 @@ HTML_PATH = PUBLIC / "index.html"
 CSS_PATH = PUBLIC / "styles.css"
 JS_PATH = PUBLIC / "app.js"
 CTA_URL = "https://forms.gle/uhrh9pppLXSnwSN56"
+METRIKA_COUNTER_ID = "111830664"
+METRIKA_PIXEL_URL = f"https://mc.yandex.ru/watch/{METRIKA_COUNTER_ID}"
 
 
 class DocumentParser(HTMLParser):
@@ -106,12 +108,21 @@ def main() -> int:
         "coach-maksim-water.jpg",
         "final-finish.jpg",
     }
-    image_names = {Path(urlparse(image.get("src", "")).path).name for image in parser.images}
+    tracking_pixels = [image for image in parser.images if image.get("src") == METRIKA_PIXEL_URL]
+    narrative_images = [image for image in parser.images if image.get("src") != METRIKA_PIXEL_URL]
+    require(len(tracking_pixels) == 1, "Yandex Metrika needs one noscript tracking pixel")
+    image_names = {Path(urlparse(image.get("src", "")).path).name for image in narrative_images}
     require(image_names == selected_photos, "only the eight approved narrative photographs may be rendered")
-    require(all(image.get("alt", "").strip() for image in parser.images), "every rendered photograph needs alt text")
-    for image in parser.images:
+    require(all(image.get("alt", "").strip() for image in narrative_images), "every rendered photograph needs alt text")
+    for image in narrative_images:
         source = image.get("src", "")
         require((PUBLIC / source.removeprefix("./")).is_file(), f"missing image asset: {source}")
+
+    require(
+        f"https://mc.yandex.ru/metrika/tag.js?id={METRIKA_COUNTER_ID}" in html,
+        "Yandex Metrika loader must use the approved counter",
+    )
+    require(f'ym({METRIKA_COUNTER_ID},"init"' in html, "Yandex Metrika counter must be initialized")
 
     require("Четырёхкратный чемпион России" in html, "the trainer credential must use natural Russian wording")
     require("4-кратный" not in html, "the technical numeral wording must be removed")
@@ -150,7 +161,7 @@ def main() -> int:
     require(re.search(r"path:\s*(?:\./)?public", workflow) is not None, "Pages must upload the public directory")
 
     print("Static contract: OK")
-    print(f"Sections: {len(parser.sections)}; CTAs: {len(cta_indexes)}; photographs: {len(parser.images)}")
+    print(f"Sections: {len(parser.sections)}; CTAs: {len(cta_indexes)}; photographs: {len(narrative_images)}")
     print("Runtime: plain HTML/CSS/JS; no Node build required")
     return 0
 
