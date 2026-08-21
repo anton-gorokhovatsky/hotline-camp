@@ -1521,10 +1521,13 @@ a {
   --dot-flow-duration: 13.6s;
 }
 
-/* Одно поле на главу: регулярная сетка собирается в солнечный диск, склон и морской горизонт. */
+/* Одно поле на главу: квадратные ячейки переходят из дискретного состояния в текучее. */
 .dot-field {
-  --field-cell: clamp(0.68rem, 0.72vw, 0.84rem);
-  --field-dot: clamp(0.062rem, 0.07vw, 0.078rem);
+  --field-cell: clamp(1.2rem, 2.4vw, 2.45rem);
+  --field-primary: color-mix(in oklab, currentColor 82%, var(--solar-accent));
+  --field-sea: color-mix(in oklab, var(--surface-sea) 64%, currentColor);
+  --field-warm: color-mix(in oklab, var(--sochi-oleander) 52%, currentColor);
+  --field-cell-map: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 144 84'%3E%3Cdefs%3E%3Cpattern id='c' width='6' height='6' patternUnits='userSpaceOnUse'%3E%3Crect width='5.82' height='5.82' fill='black'/%3E%3C/pattern%3E%3C/defs%3E%3Cpath fill='url(%23c)' d='M102 0h6v6h-6zM90 6h18v6H90zM120 6h6v6h-6zM72 12h6v6h-6zM84 12h18v6H84zM114 12h18v6h-18zM66 18h12v6H66zM84 18h6v6h-6zM102 18h36v6h-36zM48 24h12v6H48zM72 24h12v6H72zM96 24h24v6H96zM132 24h12v6h-12zM42 30h24v6H42zM78 30h18v6H78zM108 30h18v6h-18zM30 36h24v6H30zM66 36h24v6H66zM96 36h18v6H96zM126 36h18v6h-18zM18 42h24v6H18zM54 42h24v6H54zM84 42h24v6H84zM120 42h18v6h-18zM6 48h24v6H6zM36 48h24v6H36zM72 48h24v6H72zM102 48h30v6h-30zM0 54h18v6H0zM24 54h24v6H24zM54 54h30v6H54zM90 54h30v6H90zM132 54h12v6h-12zM0 60h36v6H0zM42 60h30v6H42zM78 60h30v6H78zM114 60h30v6h-30zM0 66h48v6H0zM54 66h30v6H54zM90 66h54v6H90zM0 72h66v6H0zM72 72h54v6H72zM132 72h12v6h-12zM0 78h24v6H0zM30 78h36v6H30zM72 78h42v6H72zM120 78h24v6h-24z'/%3E%3C/svg%3E");
   position: absolute;
   z-index: 1;
   display: block;
@@ -1532,88 +1535,83 @@ a {
   aspect-ratio: 1.72;
   color: var(--solar-marker);
   pointer-events: none;
-  opacity: 0.3;
-  -webkit-mask-image: radial-gradient(
-    ellipse 54% 52% at 50% 50%,
-    #000 0 62%,
-    rgba(0, 0, 0, 0.9) 72%,
-    rgba(0, 0, 0, 0.42) 82%,
-    transparent 91%
-  );
-  mask-image: radial-gradient(
-    ellipse 54% 52% at 50% 50%,
-    #000 0 62%,
-    rgba(0, 0, 0, 0.9) 72%,
-    rgba(0, 0, 0, 0.42) 82%,
-    transparent 91%
-  );
+  opacity: 0.11;
+  filter: saturate(0.28);
+  -webkit-mask-image: radial-gradient(ellipse 58% 60% at 54% 54%, #000 0 48%, rgba(0, 0, 0, 0.86) 64%, rgba(0, 0, 0, 0.34) 80%, transparent 96%);
+  mask-image: radial-gradient(ellipse 58% 60% at 54% 54%, #000 0 48%, rgba(0, 0, 0, 0.86) 64%, rgba(0, 0, 0, 0.34) 80%, transparent 96%);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
 }
 
+.dot-field::before,
 .dot-field::after {
   content: "";
   position: absolute;
   inset: 0;
-  background-image: radial-gradient(
-    circle,
-    currentColor 0 var(--field-dot),
-    transparent calc(var(--field-dot) + 0.035rem)
-  );
-  background-position: 0 0;
-  background-size: var(--field-cell) var(--field-cell);
-  -webkit-mask-image:
-    radial-gradient(circle at 76% 23%, #000 0 8%, rgba(0, 0, 0, 0.76) 11%, transparent 21%),
-    linear-gradient(151deg, transparent 0 30%, rgba(0, 0, 0, 0.2) 38%, #000 49%, rgba(0, 0, 0, 0.5) 63%, transparent 78%),
-    linear-gradient(to bottom, transparent 0 66%, rgba(0, 0, 0, 0.2) 70%, #000 76%, rgba(0, 0, 0, 0.42) 82%, transparent 91%);
-  mask-image:
-    radial-gradient(circle at 76% 23%, #000 0 8%, rgba(0, 0, 0, 0.76) 11%, transparent 21%),
-    linear-gradient(151deg, transparent 0 30%, rgba(0, 0, 0, 0.2) 38%, #000 49%, rgba(0, 0, 0, 0.5) 63%, transparent 78%),
-    linear-gradient(to bottom, transparent 0 66%, rgba(0, 0, 0, 0.2) 70%, #000 76%, rgba(0, 0, 0, 0.42) 82%, transparent 91%);
-  animation: dot-field-drift 15s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite alternate;
+  background:
+    radial-gradient(circle at 78% 20%, var(--field-warm) 0 7%, transparent 26%),
+    linear-gradient(128deg, var(--field-primary) 0%, currentColor 38%, var(--field-sea) 68%, var(--field-warm) 100%);
+  background-position: 6% 20%, 8% 16%;
+  background-size: 126% 126%, 146% 146%;
+  -webkit-mask-image: var(--field-cell-map);
+  mask-image: var(--field-cell-map);
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
 }
 
 .dot-field::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-image: radial-gradient(circle, currentColor 0 0.105rem, transparent 0.14rem);
-  background-position: 0 0;
-  background-size: calc(var(--field-cell) * 2.8) calc(var(--field-cell) * 2.8);
-  -webkit-mask-image: radial-gradient(ellipse at 61% 62%, transparent 0 31%, rgba(0, 0, 0, 0.22) 40%, #000 51%, rgba(0, 0, 0, 0.38) 63%, transparent 76%);
-  mask-image: radial-gradient(ellipse at 61% 62%, transparent 0 31%, rgba(0, 0, 0, 0.22) 40%, #000 51%, rgba(0, 0, 0, 0.38) 63%, transparent 76%);
-  opacity: 0.36;
-  animation: dot-field-depth 12s ease-in-out -4s infinite alternate;
+  opacity: 0.86;
+  animation: cell-field-state 11s steps(4, end) infinite alternate;
+}
+
+.dot-field::after {
+  opacity: 0.26;
+  filter: blur(calc(var(--field-cell) * 0.54)) saturate(0.88);
+  transform: translate3d(0, calc(var(--field-cell) * 0.28), 0) scaleY(1.02);
+  animation: cell-field-flow 11s cubic-bezier(0.37, 0, 0.63, 1) -3.2s infinite alternate;
 }
 
 .dot-field--hero {
-  inset: auto -5vw calc(var(--service-island-height) + 2.5rem) auto;
+  inset: auto -10vw clamp(14rem, 25vh, 17rem) auto;
   width: clamp(30rem, 52vw, 58rem);
+  opacity: 0.08;
 }
 
 .dot-field--program {
-  inset: clamp(1rem, 3vw, 3rem) -5vw auto auto;
-  width: clamp(32rem, 58vw, 66rem);
+  inset: clamp(17rem, 24vw, 22rem) auto auto -7vw;
+  width: clamp(25rem, 40vw, 44rem);
   transform: scaleX(-1);
 }
 
 .dot-field--trainers {
-  inset: clamp(1rem, 3vw, 3rem) -8vw auto auto;
-  width: clamp(34rem, 60vw, 68rem);
+  inset: clamp(1rem, 2vw, 2rem) -3vw auto auto;
+  width: clamp(22rem, 30vw, 34rem);
   color: var(--trainer-eyebrow);
-  opacity: 0.2;
+  opacity: 0.07;
 }
 
-@keyframes dot-field-drift {
-  from { background-position: 0 0; }
-  to {
-    background-position:
-      calc(var(--field-cell) * 2.65)
-      calc(var(--field-cell) * -1.25);
+@keyframes cell-field-state {
+  from { background-position: 6% 20%, 8% 16%; opacity: 0.7; }
+  to { background-position: 94% 76%, 92% 84%; opacity: 1; }
+}
+
+@keyframes cell-field-flow {
+  from {
+    background-position: 4% 16%, 8% 14%;
+    filter: blur(calc(var(--field-cell) * 0.32)) saturate(0.9);
+    opacity: 0.14;
+    transform: translate3d(0, calc(var(--field-cell) * 0.18), 0) scaleY(0.98);
   }
-}
-
-@keyframes dot-field-depth {
-  from { opacity: 0.22; transform: translate3d(-0.85rem, 0.45rem, 0); }
-  to { opacity: 0.54; transform: translate3d(0.85rem, -0.45rem, 0); }
+  to {
+    background-position: 96% 80%, 92% 86%;
+    filter: blur(calc(var(--field-cell) * 0.78)) saturate(0.82);
+    opacity: 0.34;
+    transform: translate3d(0, calc(var(--field-cell) * -0.56), 0) scaleY(1.08);
+  }
 }
 
 .closing-action > :not(.dot-motif) {
@@ -1728,6 +1726,10 @@ a {
 }
 
 @media (max-width: 62rem) {
+  .dot-field {
+    display: none;
+  }
+
   .masthead {
     padding-inline: var(--space-page);
   }
