@@ -113,7 +113,7 @@
       ym(111830664,"init",{ssr:true,webvisor:true,clickmap:true,ecommerce:"dataLayer",referrer:document.referrer,url:location.href,accurateTrackBounce:true,trackLinks:true});
     </script>
     <!-- /Yandex.Metrika counter -->
-    <link rel="stylesheet" href="./styles.css?v=20260822-55">
+    <link rel="stylesheet" href="./styles.css?v=20260822-56">
     <script src="./app.js?v=20260822-wind-2" defer></script>
   </head>
   <body>
@@ -353,7 +353,7 @@
           aria-label="Ритм гонки: плавание — 66 гребков в минуту; первая транзитная зона — смена ритма; велосипед — 90 оборотов в минуту; вторая транзитная зона — смена ритма; бег — 180 шагов в минуту."
         >
           <div class="race-rhythm__score" aria-hidden="true">
-            <svg viewBox="0 0 1200 300" preserveAspectRatio="none">
+            <svg class="race-rhythm__art race-rhythm__art--desktop" viewBox="0 0 1200 300" preserveAspectRatio="none">
               <defs>
                 <g id="race-rhythm-cell">
                   <circle cx="7" cy="11" r="1.7"></circle><circle cx="26" cy="4" r="1.2"></circle>
@@ -411,6 +411,38 @@
                 <g mask="url(#race-rhythm-pulse-mask)">
                   <rect class="race-rhythm__field race-rhythm__field--active" width="1200" height="300" fill="url(#race-rhythm-accent)"></rect>
                 </g>
+              </g>
+            </svg>
+            <svg class="race-rhythm__art race-rhythm__art--mobile" viewBox="0 0 360 150" preserveAspectRatio="none">
+              <defs>
+                <pattern id="race-rhythm-mobile-base" width="36" height="28" patternUnits="userSpaceOnUse">
+                  <g fill="var(--text-muted)">
+                    <circle cx="4" cy="8" r="1.25"></circle><circle cx="18" cy="3" r="0.9"></circle><circle cx="31" cy="11" r="1.5"></circle>
+                    <circle cx="10" cy="21" r="1.55"></circle><circle cx="24" cy="17" r="1.1"></circle><circle cx="35" cy="26" r="0.85"></circle>
+                    <circle cx="2" cy="27" r="0.9"></circle><circle cx="29" cy="26" r="1.2"></circle>
+                  </g>
+                </pattern>
+                <pattern id="race-rhythm-mobile-accent" width="36" height="28" patternUnits="userSpaceOnUse">
+                  <use href="#race-rhythm-mobile-dots"></use>
+                </pattern>
+                <g id="race-rhythm-mobile-dots" fill="var(--oleander)">
+                  <circle cx="4" cy="8" r="1.25"></circle><circle cx="18" cy="3" r="0.9"></circle><circle cx="31" cy="11" r="1.5"></circle>
+                  <circle cx="10" cy="21" r="1.55"></circle><circle cx="24" cy="17" r="1.1"></circle><circle cx="35" cy="26" r="0.85"></circle>
+                  <circle cx="2" cy="27" r="0.9"></circle><circle cx="29" cy="26" r="1.2"></circle>
+                </g>
+                <linearGradient id="race-rhythm-mobile-fade"><stop stop-color="black"></stop><stop offset="0.1" stop-color="white"></stop><stop offset="0.9" stop-color="white"></stop><stop offset="1" stop-color="black"></stop></linearGradient>
+                <filter id="race-rhythm-mobile-edge"><feGaussianBlur stdDeviation="5"></feGaussianBlur></filter>
+                <filter id="race-rhythm-mobile-pulse-soft"><feGaussianBlur stdDeviation="5"></feGaussianBlur></filter>
+                <mask id="race-rhythm-mobile-field-mask" x="-60" y="-30" width="480" height="210" maskUnits="userSpaceOnUse">
+                  <path fill="url(#race-rhythm-mobile-fade)" filter="url(#race-rhythm-mobile-edge)" d="M-30 100C18 38 72 28 104 58c16 14 28 16 40 7 18-15 26-43 60-45 34-2 46 38 60 50 14 12 28 10 42-8 22-28 54-28 84-4v60c-35 18-62 12-86-6-18-16-32-18-48-6-22 18-31 42-64 39-34-3-42-33-56-43-14-10-26-6-40 10-24 28-76 24-126 4Z"></path>
+                </mask>
+                <mask id="race-rhythm-mobile-pulse-mask" x="-70" y="-30" width="500" height="210" maskUnits="userSpaceOnUse">
+                  <ellipse class="race-rhythm__pulse race-rhythm__pulse--mobile" cx="0" cy="78" rx="48" ry="62" fill="white" filter="url(#race-rhythm-mobile-pulse-soft)"></ellipse>
+                </mask>
+              </defs>
+              <g mask="url(#race-rhythm-mobile-field-mask)">
+                <rect class="race-rhythm__field race-rhythm__field--base" width="360" height="150" fill="url(#race-rhythm-mobile-base)"></rect>
+                <g mask="url(#race-rhythm-mobile-pulse-mask)"><rect class="race-rhythm__field race-rhythm__field--active" width="360" height="150" fill="url(#race-rhythm-mobile-accent)"></rect></g>
               </g>
             </svg>
           </div>
