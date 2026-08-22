@@ -2847,7 +2847,7 @@ a {
   }
 
   .race-rhythm {
-    margin-top: clamp(2.5rem, 10vw, 3.5rem);
+    margin-top: clamp(-2.25rem, -8vw, -1.75rem);
   }
 
   .race-rhythm__score {
@@ -2861,6 +2861,10 @@ a {
 
   .race-rhythm__pulse--mobile {
     animation-name: race-rhythm-travel-mobile, race-rhythm-cadence;
+  }
+
+  .race-rhythm + .program-notes {
+    margin-top: clamp(-2.75rem, -9vw, -2rem);
   }
 
   .program-side {
