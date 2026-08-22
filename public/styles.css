@@ -882,8 +882,8 @@ a {
   --dot-destination: 100% 0%;
 }
 
-.program > :not(.dot-motif):not(.dot-field),
-.trainers-heading > :not(.dot-motif):not(.dot-field) {
+.program > :not(.dot-motif):not(.dot-field):not(.race-trace),
+.trainers-heading > :not(.dot-motif):not(.dot-field):not(.race-trace) {
   position: relative;
   z-index: 1;
 }
@@ -1521,7 +1521,7 @@ a {
   --dot-flow-duration: 13.6s;
 }
 
-/* Три главы, три скорости: велосипедный разгон, водное течение и беговой каденс. */
+/* Первый экран: точечный след велосипедного разгона. */
 .dot-field {
   --field-gap: clamp(0.62rem, 0.8vw, 0.86rem);
   --field-dot: clamp(0.06rem, 0.082vw, 0.085rem);
@@ -1592,35 +1592,68 @@ a {
   opacity: 0.34;
 }
 
-.dot-field--program {
-  --field-motion-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 144 84'%3E%3Cdefs%3E%3ClinearGradient id='f' x1='0' y1='0' x2='1' y2='0'%3E%3Cstop offset='0' stop-color='black' stop-opacity='0'/%3E%3Cstop offset='.16' stop-color='black' stop-opacity='.5'/%3E%3Cstop offset='.5' stop-color='black'/%3E%3Cstop offset='.86' stop-color='black' stop-opacity='.45'/%3E%3Cstop offset='1' stop-color='black' stop-opacity='0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cg fill='none' stroke='url(%23f)' stroke-linecap='round'%3E%3Cpath stroke-width='11' d='M-4 49C13 28 31 70 49 49S84 28 102 49S137 70 151 49'/%3E%3Cpath stroke-width='6' opacity='.58' d='M-4 67C14 48 31 82 49 64S84 47 102 65S136 82 151 63'/%3E%3Cpath stroke-width='4' opacity='.36' d='M-4 31C14 15 31 45 49 29S84 14 102 30S136 45 151 28'/%3E%3C/g%3E%3C/svg%3E");
-  --field-motion-duration: 4.4s;
-  --field-motion-delay: -2.2s;
-  --field-trail-delay: -2.54s;
-  --field-motion-x: calc(var(--field-gap) * 4);
-  inset: clamp(17rem, 24vw, 22rem) auto auto -7vw;
-  width: clamp(25rem, 40vw, 44rem);
-  transform: scaleX(-1);
-  opacity: 0.29;
-}
-
-.dot-field--trainers {
-  --field-motion-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 144 84'%3E%3Cdefs%3E%3ClinearGradient id='f' x1='0' y1='1' x2='1' y2='0'%3E%3Cstop offset='0' stop-color='black' stop-opacity='0'/%3E%3Cstop offset='.2' stop-color='black' stop-opacity='.55'/%3E%3Cstop offset='.58' stop-color='black'/%3E%3Cstop offset='.9' stop-color='black' stop-opacity='.4'/%3E%3Cstop offset='1' stop-color='black' stop-opacity='0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cg fill='none' stroke='url(%23f)' stroke-linecap='round' stroke-dasharray='15 9'%3E%3Cpath stroke-width='10' d='M3 79C25 66 39 54 61 47S97 30 121 8'/%3E%3Cpath stroke-width='6' opacity='.58' d='M0 62C22 51 35 40 55 34S89 20 109 2'/%3E%3Cpath stroke-width='4' opacity='.34' d='M25 84C47 70 61 62 81 53S116 36 139 15'/%3E%3C/g%3E%3C/svg%3E");
-  --field-motion-duration: 3.2s;
-  --field-motion-delay: -0.8s;
-  --field-trail-delay: -1.02s;
-  --field-motion-x: calc(var(--field-gap) * 3);
-  --field-motion-y: calc(var(--field-gap) * -3);
-  --field-motion-easing: steps(12, end);
-  inset: clamp(1rem, 2vw, 2rem) -3vw auto auto;
-  width: clamp(22rem, 30vw, 34rem);
-  color: var(--trainer-eyebrow);
-  opacity: 0.26;
-}
-
 @keyframes discipline-field-flow {
   from { background-position: 0 0; }
   to { background-position: var(--field-motion-x) var(--field-motion-y); }
+}
+
+/* Программа и тренеры: одна гоночная траектория, разные состояния дистанции. */
+.race-trace {
+  --trace-duration: 6.4s;
+  --trace-accent: var(--oleander);
+  position: absolute;
+  z-index: 0;
+  display: block;
+  overflow: visible;
+  color: color-mix(in oklab, var(--text-muted) 62%, transparent);
+  pointer-events: none;
+}
+
+.race-trace path,
+.race-trace circle {
+  vector-effect: non-scaling-stroke;
+}
+
+.race-trace__guide,
+.race-trace__flow,
+.race-trace__split,
+.race-trace__checkpoints path {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.race-trace__guide { stroke: currentColor; stroke-width: 1.4; }
+.race-trace__guide--secondary { opacity: 0.62; }
+.race-trace__flow {
+  animation: race-trace-progress var(--trace-duration) linear infinite;
+  stroke: var(--trace-accent);
+  stroke-width: 2.4;
+  stroke-dasharray: 13 87;
+}
+.race-trace__flow--secondary { animation-delay: -2.7s; stroke: var(--trace-accent-secondary); }
+.race-trace__split,
+.race-trace__checkpoints path { stroke: currentColor; stroke-width: 1; stroke-dasharray: 2 7; opacity: 0.72; }
+.race-trace__checkpoints circle { fill: var(--trace-surface); stroke: var(--trace-accent); stroke-width: 1.7; }
+
+.race-trace--program {
+  --trace-surface: var(--surface);
+  inset: clamp(17rem, 24vw, 22rem) auto auto -1.5rem;
+  width: clamp(29rem, 42vw, 48rem);
+}
+
+.race-trace--trainers {
+  --trace-duration: 5.2s;
+  --trace-accent: var(--trainer-eyebrow);
+  --trace-accent-secondary: color-mix(in oklab, var(--paper) 68%, var(--trainer-eyebrow));
+  inset: clamp(2.5rem, 4vw, 4.5rem) -2rem auto auto;
+  width: clamp(28rem, 42vw, 48rem);
+  color: color-mix(in srgb, var(--paper) 24%, transparent);
+}
+
+@keyframes race-trace-progress {
+  from { stroke-dashoffset: 100; }
+  to { stroke-dashoffset: 0; }
 }
 
 .closing-action > :not(.dot-motif) {
@@ -1735,7 +1768,8 @@ a {
 }
 
 @media (max-width: 62rem) {
-  .dot-field {
+  .dot-field,
+  .race-trace {
     display: none;
   }
 
@@ -3027,6 +3061,11 @@ a {
     opacity: 0;
     transform: none;
   }
+
+  .race-trace__flow {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
 }
 
 /* Trainer chapters: the evidence is grouped as a competitive biography. */
@@ -3228,7 +3267,8 @@ a {
 
 @media (forced-colors: active) {
   .dot-motif,
-  .dot-field {
+  .dot-field,
+  .race-trace {
     display: none;
   }
 
