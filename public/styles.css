@@ -932,7 +932,7 @@ a {
   grid-template-columns: minmax(0, 1.35fr) minmax(11rem, 0.65fr);
   column-gap: var(--grid-gap);
   row-gap: var(--program-space-content);
-  align-items: end;
+  align-items: start;
 }
 
 .camp-facts div {
@@ -1616,8 +1616,7 @@ a {
 
 .race-trace__guide,
 .race-trace__flow,
-.race-trace__split,
-.race-trace__checkpoints path {
+.race-trace__split {
   fill: none;
   stroke-linecap: round;
   stroke-linejoin: round;
@@ -1632,14 +1631,52 @@ a {
   stroke-dasharray: 13 87;
 }
 .race-trace__flow--secondary { animation-delay: -2.7s; stroke: var(--trace-accent-secondary); }
-.race-trace__split,
-.race-trace__checkpoints path { stroke: currentColor; stroke-width: 1; stroke-dasharray: 2 7; opacity: 0.72; }
-.race-trace__checkpoints circle { fill: var(--trace-surface); stroke: var(--trace-accent); stroke-width: 1.7; }
+.race-trace__split { stroke: currentColor; stroke-width: 1; stroke-dasharray: 2 7; opacity: 0.72; }
 
-.race-trace--program {
-  --trace-surface: var(--surface);
-  inset: clamp(17rem, 24vw, 22rem) auto auto -1.5rem;
-  width: clamp(29rem, 42vw, 48rem);
+.race-rhythm {
+  --race-cycle: 12s;
+  width: 100%;
+  margin: clamp(4rem, 6vw, 6.5rem) 0 0;
+}
+
+.race-rhythm__score {
+  height: clamp(6rem, 8vw, 8rem);
+  overflow: hidden;
+}
+
+.race-rhythm__score svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.race-rhythm__field--base { opacity: 0.2; }
+.race-rhythm__field--active { opacity: 0.95; }
+
+.race-rhythm__pulse {
+  opacity: 0;
+  transform: translateX(-110px);
+  transform-origin: 0 0;
+  animation:
+    race-rhythm-travel var(--race-cycle) linear infinite,
+    race-rhythm-cadence var(--race-cycle) ease-in-out infinite;
+}
+
+.race-rhythm + .program-notes {
+  margin-top: clamp(4rem, 6vw, 6rem);
+}
+
+@keyframes race-rhythm-travel {
+  0% { transform: translateX(-110px); }
+  24%, 31% { transform: translateX(335px); }
+  67%, 75% { transform: translateX(855px); }
+  96%, 100% { transform: translateX(1320px); }
+}
+
+@keyframes race-rhythm-cadence {
+  0%, 4.8%, 11.8%, 18.8%, 24%, 31%, 35.5%, 40.5%, 45.5%, 50.5%, 55.5%, 60.5%, 65.5%, 67%, 75%, 78.25%, 80.75%, 83.25%, 85.75%, 88.25%, 90.75%, 93.25%, 96%, 100% { opacity: 0; }
+  2%, 9%, 16%, 23%, 33%, 38%, 43%, 48%, 53%, 58%, 63%, 77%, 79.5%, 82%, 84.5%, 87%, 89.5%, 92%, 94.5% { opacity: 1; }
 }
 
 .race-trace--trainers {
@@ -1769,6 +1806,7 @@ a {
 
 @media (max-width: 62rem) {
   .dot-field,
+  .race-rhythm,
   .race-trace {
     display: none;
   }
@@ -3066,6 +3104,12 @@ a {
     animation: none;
     stroke-dashoffset: 0;
   }
+
+  .race-rhythm__pulse {
+    animation: none;
+    opacity: 0;
+    transform: translateX(-110px);
+  }
 }
 
 /* Trainer chapters: the evidence is grouped as a competitive biography. */
@@ -3268,6 +3312,7 @@ a {
 @media (forced-colors: active) {
   .dot-motif,
   .dot-field,
+  .race-rhythm,
   .race-trace {
     display: none;
   }

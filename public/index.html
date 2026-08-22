@@ -114,7 +114,7 @@
     </script>
     <!-- /Yandex.Metrika counter -->
     <link rel="stylesheet" href="./styles.css?v=20260822-52">
-    <script src="./app.js?v=20260820-4" defer></script>
+    <script src="./app.js?v=20260822-wind-1" defer></script>
   </head>
   <body>
     <noscript><div><img src="https://mc.yandex.ru/watch/111830664" style="position:absolute; left:-9999px;" alt=""></div></noscript>
@@ -313,11 +313,6 @@
       </section>
 
       <section class="program screen" id="program" aria-labelledby="program-title">
-        <svg class="race-trace race-trace--program" aria-hidden="true" viewBox="0 0 760 280" preserveAspectRatio="xMidYMid meet">
-          <path class="race-trace__guide" pathLength="100" d="M-24 230C64 230 78 108 174 108C240 108 266 188 336 188H410C447 188 448 126 487 126H550C575 126 583 166 608 166H664V112H784"></path>
-          <path class="race-trace__flow" pathLength="100" d="M-24 230C64 230 78 108 174 108C240 108 266 188 336 188H410C447 188 448 126 487 126H550C575 126 583 166 608 166H664V112H784"></path>
-          <g class="race-trace__checkpoints"><circle cx="174" cy="108" r="7"></circle><circle cx="487" cy="126" r="7"></circle><path d="M550 94v72M568 94v82M686 96v34M714 88v34M742 80v34"></path></g>
-        </svg>
         <header class="program-heading">
           <div class="program-title-block">
             <p class="eyebrow">Подготовка на&nbsp;месте</p>
@@ -347,6 +342,55 @@
             </a>
           </div>
         </header>
+
+        <figure
+          class="race-rhythm"
+          role="img"
+          aria-label="Ритм гонки: плавание — 66 гребков в минуту; первая транзитная зона — смена ритма; велосипед — 90 оборотов в минуту; вторая транзитная зона — смена ритма; бег — 180 шагов в минуту."
+        >
+          <div class="race-rhythm__score" aria-hidden="true">
+            <svg viewBox="0 0 1200 140" preserveAspectRatio="none">
+              <defs>
+                <g id="race-rhythm-cell">
+                  <circle cx="7" cy="11" r="1.7"></circle><circle cx="26" cy="4" r="1.2"></circle>
+                  <circle cx="49" cy="15" r="1.8"></circle><circle cx="76" cy="8" r="1.35"></circle>
+                  <circle cx="16" cy="31" r="1.45"></circle><circle cx="39" cy="36" r="2"></circle>
+                  <circle cx="65" cy="29" r="1.35"></circle><circle cx="88" cy="39" r="1.75"></circle>
+                  <circle cx="3" cy="55" r="1.25"></circle><circle cx="29" cy="58" r="1.8"></circle>
+                  <circle cx="54" cy="52" r="1.3"></circle><circle cx="80" cy="60" r="1.55"></circle>
+                  <circle cx="15" cy="19" r="1.05"></circle><circle cx="37" cy="22" r="1.25"></circle>
+                  <circle cx="61" cy="4" r="1.15"></circle><circle cx="86" cy="20" r="1.2"></circle>
+                  <circle cx="4" cy="39" r="1.1"></circle><circle cx="28" cy="45" r="1.35"></circle>
+                  <circle cx="54" cy="34" r="1.1"></circle><circle cx="73" cy="47" r="1.25"></circle>
+                </g>
+                <pattern id="race-rhythm-base" width="92" height="64" patternUnits="userSpaceOnUse">
+                  <use href="#race-rhythm-cell" fill="var(--text-muted)"></use>
+                </pattern>
+                <pattern id="race-rhythm-accent" width="92" height="64" patternUnits="userSpaceOnUse">
+                  <use href="#race-rhythm-cell" fill="var(--oleander)"></use>
+                </pattern>
+                <linearGradient id="race-rhythm-fade">
+                  <stop offset="0" stop-color="black"></stop><stop offset="0.07" stop-color="white"></stop>
+                  <stop offset="0.93" stop-color="white"></stop><stop offset="1" stop-color="black"></stop>
+                </linearGradient>
+                <filter id="race-rhythm-edge-soft"><feGaussianBlur stdDeviation="8"></feGaussianBlur></filter>
+                <filter id="race-rhythm-pulse-soft"><feGaussianBlur stdDeviation="12"></feGaussianBlur></filter>
+                <mask id="race-rhythm-field-mask" x="-120" y="-40" width="1440" height="220" maskUnits="userSpaceOnUse">
+                  <path fill="url(#race-rhythm-fade)" filter="url(#race-rhythm-edge-soft)" d="M-80 90C70 18 210 32 335 50s210-32 340-18c150 16 245 54 370 28 75-16 135-13 235 22v36c-135 18-230-6-350 3-140 11-230-18-365 0-155 20-250-19-390 5C60 146-10 130-80 118Z"></path>
+                </mask>
+                <mask id="race-rhythm-pulse-mask" x="-180" y="-80" width="1560" height="300" maskUnits="userSpaceOnUse">
+                  <ellipse class="race-rhythm__pulse" cx="0" cy="78" rx="118" ry="62" fill="white" filter="url(#race-rhythm-pulse-soft)"></ellipse>
+                </mask>
+              </defs>
+              <g mask="url(#race-rhythm-field-mask)">
+                <rect class="race-rhythm__field race-rhythm__field--base" width="1200" height="140" fill="url(#race-rhythm-base)"></rect>
+                <g mask="url(#race-rhythm-pulse-mask)">
+                  <rect class="race-rhythm__field race-rhythm__field--active" width="1200" height="140" fill="url(#race-rhythm-accent)"></rect>
+                </g>
+              </g>
+            </svg>
+          </div>
+        </figure>
 
         <ol class="program-notes" aria-label="Что отрабатываем на сборе">
           <li>

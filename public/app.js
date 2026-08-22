@@ -311,7 +311,7 @@
   if (!(panel instanceof HTMLElement)) return;
 
   const SOCHI_TIME_ZONE = "Europe/Moscow";
-  const WEATHER_URL = "https://api.open-meteo.com/v1/forecast?latitude=43.5855&longitude=39.7231&current=temperature_2m%2Cweather_code&daily=sunrise%2Csunset&timezone=Europe%2FMoscow&forecast_days=1";
+  const WEATHER_URL = "https://api.open-meteo.com/v1/forecast?latitude=43.5855&longitude=39.7231&current=temperature_2m%2Cweather_code%2Cwind_speed_10m%2Cwind_direction_10m&wind_speed_unit=ms&daily=sunrise%2Csunset&timezone=Europe%2FMoscow&forecast_days=1";
   const MARINE_URL = "https://marine-api.open-meteo.com/v1/marine?latitude=43.55&longitude=39.69&current=sea_surface_temperature&timezone=Europe%2FMoscow&forecast_days=1";
   let solarTimes = null;
   let solarTimer = null;
@@ -326,6 +326,15 @@
   const formatTemperature = (value) => {
     const rounded = Math.round(value);
     return `${rounded > 0 ? "+" : ""}${rounded}°`;
+  };
+  const formatWind = (speed, direction) => {
+    if (!isNumber(speed)) return null;
+    if (speed < 0.5) return "штиль";
+    const directions = ["С", "СВ", "В", "ЮВ", "Ю", "ЮЗ", "З", "СЗ"];
+    const normalized = isNumber(direction) ? ((direction % 360) + 360) % 360 : null;
+    const compass = normalized === null ? null : directions[Math.round(normalized / 45) % directions.length];
+    const value = new Intl.NumberFormat("ru-RU", { maximumFractionDigits: 1 }).format(speed);
+    return `ветер ${value} м/с${compass ? `, ${compass}` : ""}`;
   };
   const formatClock = (value) => value?.split("T")[1]?.slice(0, 5) || null;
   const formatDate = (value) => {
@@ -469,7 +478,8 @@
 
         if (isNumber(current?.temperature_2m)) {
           setField("air-value", formatTemperature(current.temperature_2m));
-          setField("air-note", describeWeather(current.weather_code));
+          const wind = formatWind(current.wind_speed_10m, current.wind_direction_10m);
+          setField("air-note", [describeWeather(current.weather_code), wind].filter(Boolean).join(" · "));
           availableGroups += 1;
         } else {
           unavailable("air");
