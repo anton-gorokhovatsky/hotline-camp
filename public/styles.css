@@ -1117,6 +1117,7 @@ a {
 .race-targets nav a > span:first-child {
   text-decoration-color: transparent;
   text-decoration-line: underline;
+  text-underline-position: under;
   text-decoration-skip-ink: auto;
   text-decoration-thickness: clamp(2px, 0.045em, 4px);
   text-underline-offset: 0.12em;
