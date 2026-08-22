@@ -1636,11 +1636,11 @@ a {
 .race-rhythm {
   --race-cycle: 12s;
   width: 100%;
-  margin: clamp(4rem, 6vw, 6.5rem) 0 0;
+  margin: clamp(2.75rem, 4vw, 4.5rem) 0 0;
 }
 
 .race-rhythm__score {
-  height: clamp(9rem, 12vw, 13rem);
+  height: clamp(12rem, 16vw, 16rem);
   overflow: hidden;
 }
 
@@ -1664,7 +1664,7 @@ a {
 }
 
 .race-rhythm + .program-notes {
-  margin-top: clamp(4rem, 6vw, 6rem);
+  margin-top: clamp(2.75rem, 4vw, 4.5rem);
 }
 
 @keyframes race-rhythm-travel {
