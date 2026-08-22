@@ -329,12 +329,13 @@
   };
   const formatWind = (speed, direction) => {
     if (!isNumber(speed)) return null;
-    if (speed < 0.5) return "штиль";
+    if (speed < 0.5) return { value: "штиль", note: "штиль" };
     const directions = ["С", "СВ", "В", "ЮВ", "Ю", "ЮЗ", "З", "СЗ"];
     const normalized = isNumber(direction) ? ((direction % 360) + 360) % 360 : null;
     const compass = normalized === null ? null : directions[Math.round(normalized / 45) % directions.length];
     const value = new Intl.NumberFormat("ru-RU", { maximumFractionDigits: 1 }).format(speed);
-    return `ветер ${value} м/с${compass ? `, ${compass}` : ""}`;
+    const reading = `${value} м/с${compass ? `, ${compass}` : ""}`;
+    return { value: reading, note: `ветер ${reading}` };
   };
   const formatClock = (value) => value?.split("T")[1]?.slice(0, 5) || null;
   const formatDate = (value) => {
@@ -475,11 +476,14 @@
         const sunrise = formatClock(daily?.sunrise?.[0]);
         const sunset = formatClock(daily?.sunset?.[0]);
         setSolarTimes(daily?.sunrise?.[0], daily?.sunset?.[0]);
+        const wind = formatWind(current?.wind_speed_10m, current?.wind_direction_10m);
+
+        if (wind) setField("wind-value", wind.value);
+        else unavailable("wind");
 
         if (isNumber(current?.temperature_2m)) {
           setField("air-value", formatTemperature(current.temperature_2m));
-          const wind = formatWind(current.wind_speed_10m, current.wind_direction_10m);
-          setField("air-note", [describeWeather(current.weather_code), wind].filter(Boolean).join(" · "));
+          setField("air-note", [describeWeather(current.weather_code), wind?.note].filter(Boolean).join(" · "));
           availableGroups += 1;
         } else {
           unavailable("air");
@@ -496,6 +500,7 @@
         observation = formatObservation(current?.time);
       } else {
         unavailable("air");
+        unavailable("wind");
         unavailable("daylight");
       }
 
@@ -521,6 +526,7 @@
     } catch (_) {
       unavailable("air");
       unavailable("sea");
+      unavailable("wind");
       unavailable("daylight");
       setField("status", "Данные Open-Meteo сейчас недоступны");
       setField("source-note", "данные недоступны");

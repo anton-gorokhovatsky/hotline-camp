@@ -2099,7 +2099,7 @@ a {
   .mobile-menu-countdown-value { color: var(--mobile-menu-text); font-size: clamp(1.05rem, 1.25vw, 1.3rem); font-weight: 650; letter-spacing: -0.02em; line-height: 1; }
   .mobile-menu-price { margin-top: clamp(0.85rem, 1.8vh, 1.2rem); }
   .mobile-menu-price strong { color: var(--mobile-menu-text); font-size: clamp(2.75rem, 3.8vw, 3.9rem); font-weight: 700; letter-spacing: -0.035em; line-height: 0.98; }
-  .mobile-menu-live-conditions { grid-column: 1 / 5; grid-row: 2; align-self: last baseline; display: grid; grid-template-columns: repeat(2, max-content); column-gap: clamp(1.25rem, 2vw, 2rem); justify-content: start; }
+  .mobile-menu-live-conditions { grid-column: 1 / 5; grid-row: 2; align-self: last baseline; display: grid; grid-template-columns: repeat(3, max-content); column-gap: clamp(1.25rem, 2vw, 2rem); justify-content: start; }
   .mobile-menu-live-heading { grid-column: 1 / -1; margin-bottom: 0.85rem; color: var(--mobile-menu-text); font-size: clamp(1.05rem, 1.2vw, 1.2rem); font-weight: 620; line-height: 1.2; }
   .mobile-menu-key-fact { display: grid; min-width: 0; gap: 0.35rem; }
   .mobile-menu-key-fact + .mobile-menu-key-fact { padding-inline-start: 0; }
