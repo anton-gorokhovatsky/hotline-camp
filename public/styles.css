@@ -1114,14 +1114,19 @@ a {
   text-wrap: balance;
 }
 
-.race-targets nav a > span:first-child {
+.race-targets nav a > span:first-child,
+.race-target-fraction > span {
   text-decoration-color: transparent;
   text-decoration-line: underline;
-  text-underline-position: under;
   text-decoration-skip-ink: auto;
   text-decoration-thickness: clamp(2px, 0.045em, 4px);
   text-underline-offset: 0.12em;
   transition: text-decoration-color 180ms ease;
+}
+
+.race-targets nav a > span.race-target-fraction {
+  text-decoration-line: none;
+  white-space: nowrap;
 }
 
 .race-target-arrow {
@@ -1134,7 +1139,9 @@ a {
 }
 
 .race-targets a:hover > span:first-child,
-.race-targets a:focus-visible > span:first-child {
+.race-targets a:focus-visible > span:first-child,
+.race-targets a:hover > .race-target-fraction > span,
+.race-targets a:focus-visible > .race-target-fraction > span {
   text-decoration-color: var(--oleander);
 }
 
