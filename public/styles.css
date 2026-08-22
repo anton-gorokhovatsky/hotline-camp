@@ -1640,7 +1640,7 @@ a {
 }
 
 .race-rhythm__score {
-  height: clamp(6rem, 8vw, 8rem);
+  height: clamp(9rem, 12vw, 13rem);
   overflow: hidden;
 }
 

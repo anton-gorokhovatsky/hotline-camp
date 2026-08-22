@@ -113,7 +113,7 @@
       ym(111830664,"init",{ssr:true,webvisor:true,clickmap:true,ecommerce:"dataLayer",referrer:document.referrer,url:location.href,accurateTrackBounce:true,trackLinks:true});
     </script>
     <!-- /Yandex.Metrika counter -->
-    <link rel="stylesheet" href="./styles.css?v=20260822-53">
+    <link rel="stylesheet" href="./styles.css?v=20260822-54">
     <script src="./app.js?v=20260822-wind-2" defer></script>
   </head>
   <body>
@@ -353,7 +353,7 @@
           aria-label="Ритм гонки: плавание — 66 гребков в минуту; первая транзитная зона — смена ритма; велосипед — 90 оборотов в минуту; вторая транзитная зона — смена ритма; бег — 180 шагов в минуту."
         >
           <div class="race-rhythm__score" aria-hidden="true">
-            <svg viewBox="0 0 1200 140" preserveAspectRatio="none">
+            <svg viewBox="0 0 1200 220" preserveAspectRatio="none">
               <defs>
                 <g id="race-rhythm-cell">
                   <circle cx="7" cy="11" r="1.7"></circle><circle cx="26" cy="4" r="1.2"></circle>
@@ -399,17 +399,17 @@
                 </linearGradient>
                 <filter id="race-rhythm-edge-soft"><feGaussianBlur stdDeviation="8"></feGaussianBlur></filter>
                 <filter id="race-rhythm-pulse-soft"><feGaussianBlur stdDeviation="12"></feGaussianBlur></filter>
-                <mask id="race-rhythm-field-mask" x="-120" y="-40" width="1440" height="220" maskUnits="userSpaceOnUse">
-                  <path fill="url(#race-rhythm-fade)" filter="url(#race-rhythm-edge-soft)" d="M-80 90C70 18 210 32 335 50s210-32 340-18c150 16 245 54 370 28 75-16 135-13 235 22v36c-135 18-230-6-350 3-140 11-230-18-365 0-155 20-250-19-390 5C60 146-10 130-80 118Z"></path>
+                <mask id="race-rhythm-field-mask" x="-120" y="-50" width="1440" height="320" maskUnits="userSpaceOnUse">
+                  <path fill="url(#race-rhythm-fade)" filter="url(#race-rhythm-edge-soft)" transform="scale(1 1.5)" d="M-80 90C70 18 210 32 335 50s210-32 340-18c150 16 245 54 370 28 75-16 135-13 235 22v36c-135 18-230-6-350 3-140 11-230-18-365 0-155 20-250-19-390 5C60 146-10 130-80 118Z"></path>
                 </mask>
-                <mask id="race-rhythm-pulse-mask" x="-180" y="-80" width="1560" height="300" maskUnits="userSpaceOnUse">
-                  <ellipse class="race-rhythm__pulse" cx="0" cy="78" rx="118" ry="62" fill="white" filter="url(#race-rhythm-pulse-soft)"></ellipse>
+                <mask id="race-rhythm-pulse-mask" x="-180" y="-80" width="1560" height="380" maskUnits="userSpaceOnUse">
+                  <ellipse class="race-rhythm__pulse" cx="0" cy="110" rx="118" ry="90" fill="white" filter="url(#race-rhythm-pulse-soft)"></ellipse>
                 </mask>
               </defs>
               <g mask="url(#race-rhythm-field-mask)">
-                <rect class="race-rhythm__field race-rhythm__field--base" width="1200" height="140" fill="url(#race-rhythm-base)"></rect>
+                <rect class="race-rhythm__field race-rhythm__field--base" width="1200" height="220" fill="url(#race-rhythm-base)"></rect>
                 <g mask="url(#race-rhythm-pulse-mask)">
-                  <rect class="race-rhythm__field race-rhythm__field--active" width="1200" height="140" fill="url(#race-rhythm-accent)"></rect>
+                  <rect class="race-rhythm__field race-rhythm__field--active" width="1200" height="220" fill="url(#race-rhythm-accent)"></rect>
                 </g>
               </g>
             </svg>
