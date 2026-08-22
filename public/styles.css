@@ -104,7 +104,6 @@
   --material-accent-shadow: 0 0.55rem 1.5rem rgba(44, 3, 12, 0.18);
   --service-island-height: 5.125rem;
   --service-island-gap: 0.25rem;
-  --race-signal-cycle: 8.8s;
   --sochi-dot-field: radial-gradient(circle at center, color-mix(in srgb, currentColor 24%, transparent) 1.2px, transparent 1.7px);
   --sochi-dot-active-field: radial-gradient(circle at center, currentColor 1.55px, transparent 2px);
   --sochi-dot-step: clamp(0.62rem, 0.74vw, 0.82rem);
@@ -632,14 +631,11 @@ a {
 }
 
 .hero-countdown-value {
-  position: relative;
   color: var(--oleander);
   font-size: clamp(2rem, 3vw, 3.4rem);
   font-weight: 700;
   letter-spacing: -0.035em;
   line-height: 0.95;
-  transform-origin: 100% 50%;
-  animation: hero-countdown-signal var(--race-signal-cycle) cubic-bezier(0.22, 1, 0.36, 1) infinite;
 }
 
 .hero-countdown-label {
@@ -731,31 +727,6 @@ a {
 :root[data-theme="dark"] .program .camp-cta:hover {
   background: var(--oleander);
   color: var(--oleander-ink);
-}
-
-.hero-copy > .camp-cta {
-  position: relative;
-  overflow: hidden;
-  isolation: isolate;
-}
-
-.hero-copy > .camp-cta > * {
-  position: relative;
-  z-index: 1;
-}
-
-.hero-copy > .camp-cta::before {
-  content: "";
-  position: absolute;
-  z-index: 0;
-  inset: -70% auto -70% -36%;
-  width: 30%;
-  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--paper) 78%, transparent), transparent);
-  filter: blur(0.16rem);
-  opacity: 0;
-  transform: translate3d(0, 0, 0) skewX(-16deg);
-  animation: race-signal-sweep var(--race-signal-cycle) cubic-bezier(0.2, 0.8, 0.25, 1) infinite;
-  pointer-events: none;
 }
 
 .camp-cta {
@@ -1619,27 +1590,6 @@ a {
   inset: auto -10vw clamp(14rem, 25vh, 17rem) auto;
   width: clamp(30rem, 52vw, 58rem);
   opacity: 0.34;
-  animation: hero-field-signal var(--race-signal-cycle) ease-in-out infinite;
-}
-
-@keyframes race-signal-sweep {
-  0%, 4%, 30%, 100% { opacity: 0; transform: translate3d(0, 0, 0) skewX(-16deg); }
-  8% { opacity: 0.18; }
-  18% { opacity: 0.78; }
-  27% { opacity: 0; transform: translate3d(740%, 0, 0) skewX(-16deg); }
-}
-
-@keyframes hero-field-signal {
-  0%, 8%, 38%, 100% { opacity: 0.34; }
-  20% { opacity: 0.52; }
-  30% { opacity: 0.4; }
-}
-
-@keyframes hero-countdown-signal {
-  0%, 20%, 38%, 100% { filter: none; transform: scale(1); }
-  24% { filter: drop-shadow(0 0 0.2rem color-mix(in srgb, var(--oleander) 72%, transparent)); transform: scale(0.97); }
-  29% { filter: drop-shadow(0 0 0.9rem color-mix(in srgb, var(--oleander) 58%, transparent)); transform: scale(1.075); }
-  34% { filter: none; transform: scale(1); }
 }
 
 @keyframes discipline-field-flow {
@@ -1788,44 +1738,18 @@ a {
 .site-footer {
   position: relative;
   z-index: 4;
-  overflow: hidden;
   width: 100%;
   min-height: 0;
   margin: 0;
   padding: 0 var(--space-page);
   border: 0;
   border-radius: 0;
-  background: var(--material-accent-fill);
-  box-shadow: var(--material-accent-shadow);
-  -webkit-backdrop-filter: var(--material-accent-filter);
-  backdrop-filter: var(--material-accent-filter);
+  background: var(--final-red);
+  box-shadow: none;
   color: var(--paper);
 }
 
-.site-footer::before {
-  content: "";
-  position: absolute;
-  z-index: 0;
-  inset: 0 auto 0 -6rem;
-  width: clamp(2.5rem, 4vw, 4rem);
-  background: linear-gradient(90deg, transparent 0%, color-mix(in srgb, var(--paper) 52%, transparent) 42%, color-mix(in srgb, var(--paper) 72%, transparent) 50%, color-mix(in srgb, var(--paper) 52%, transparent) 58%, transparent 100%);
-  filter: blur(0.07rem);
-  opacity: 0;
-  transform: translate3d(0, 0, 0) skewX(-12deg);
-  animation: finish-signal-sweep var(--race-signal-cycle) cubic-bezier(0.2, 0.8, 0.25, 1) infinite;
-  pointer-events: none;
-}
-
-@keyframes finish-signal-sweep {
-  0%, 4%, 30%, 100% { opacity: 0; transform: translate3d(0, 0, 0) skewX(-12deg); }
-  8% { opacity: 0.16; }
-  18% { opacity: 0.76; }
-  27% { opacity: 0; transform: translate3d(calc(100vw + 8rem), 0, 0) skewX(-12deg); }
-}
-
 .footer-meta {
-  position: relative;
-  z-index: 1;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -3187,17 +3111,6 @@ a {
     transform: translateX(-110px);
   }
 
-  .hero-countdown-value,
-  .dot-field--hero,
-  .hero-copy > .camp-cta::before,
-  .site-footer::before {
-    animation: none;
-  }
-
-  .hero-countdown-value { filter: none; transform: none; }
-  .dot-field--hero { opacity: 0.34; }
-  .hero-copy > .camp-cta::before,
-  .site-footer::before { opacity: 0; }
 }
 
 /* Trainer chapters: the evidence is grouped as a competitive biography. */
@@ -3398,11 +3311,6 @@ a {
 }
 
 @media (forced-colors: active) {
-  .hero-copy > .camp-cta::before,
-  .site-footer::before {
-    display: none;
-  }
-
   .dot-motif,
   .dot-field,
   .race-rhythm,
