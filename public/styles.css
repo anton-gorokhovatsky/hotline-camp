@@ -1639,7 +1639,7 @@ a {
 .race-trace__split { stroke: currentColor; stroke-width: 1; stroke-dasharray: 2 7; opacity: 0.72; }
 
 .race-rhythm {
-  --race-cycle: 12s;
+  --race-cycle: 10.8s;
   position: relative;
   z-index: 0;
   width: 100%;
@@ -1661,8 +1661,9 @@ a {
 
 .race-rhythm__score .race-rhythm__art--mobile { display: none; }
 
-.race-rhythm__field--base { opacity: 0.2; }
-.race-rhythm__field--active { opacity: 0.95; }
+.race-rhythm__field--continuity { opacity: 0.07; }
+.race-rhythm__field--base { opacity: 0.25; }
+.race-rhythm__field--active { opacity: 0.96; }
 
 .race-rhythm__pulse {
   opacity: 0;
@@ -1689,21 +1690,21 @@ a {
 
 @keyframes race-rhythm-travel {
   0% { transform: translateX(-110px); }
-  24%, 31% { transform: translateX(335px); }
-  67%, 75% { transform: translateX(855px); }
-  96%, 100% { transform: translateX(1320px); }
+  26%, 32% { transform: translateX(330px); }
+  68%, 74% { transform: translateX(810px); }
+  98%, 100% { transform: translateX(1320px); }
 }
 
 @keyframes race-rhythm-cadence {
-  0%, 4.8%, 11.8%, 18.8%, 24%, 31%, 35.5%, 40.5%, 45.5%, 50.5%, 55.5%, 60.5%, 65.5%, 67%, 75%, 78.25%, 80.75%, 83.25%, 85.75%, 88.25%, 90.75%, 93.25%, 96%, 100% { opacity: 0; }
-  2%, 9%, 16%, 23%, 33%, 38%, 43%, 48%, 53%, 58%, 63%, 77%, 79.5%, 82%, 84.5%, 87%, 89.5%, 92%, 94.5% { opacity: 1; }
+  0%, 5%, 12.5%, 20%, 26%, 32%, 36.5%, 41.5%, 46.5%, 51.5%, 56.5%, 61.5%, 66.5%, 68%, 74%, 77.25%, 79.75%, 82.25%, 84.75%, 87.25%, 89.75%, 92.25%, 94.75%, 98%, 100% { opacity: 0; }
+  2.5%, 9%, 16.5%, 24%, 34%, 39%, 44%, 49%, 54%, 59%, 64%, 75.5%, 78.5%, 81%, 83.5%, 86%, 88.5%, 91%, 93.5%, 96.5% { opacity: 1; }
 }
 
 @keyframes race-rhythm-travel-mobile {
   0% { transform: translateX(-44px); }
-  24%, 31% { transform: translateX(104px); }
-  67%, 75% { transform: translateX(250px); }
-  96%, 100% { transform: translateX(404px); }
+  26%, 32% { transform: translateX(100px); }
+  68%, 74% { transform: translateX(250px); }
+  98%, 100% { transform: translateX(404px); }
 }
 
 .race-trace--trainers {
@@ -2915,7 +2916,8 @@ a {
   .race-rhythm__score .race-rhythm__art--desktop { display: none; }
   .race-rhythm__score .race-rhythm__art--mobile { display: block; }
 
-  .race-rhythm__art--mobile .race-rhythm__field--base { opacity: 0.26; }
+  .race-rhythm__art--mobile .race-rhythm__field--continuity { opacity: 0.09; }
+  .race-rhythm__art--mobile .race-rhythm__field--base { opacity: 0.32; }
 
   .race-rhythm__pulse--mobile {
     animation-name: race-rhythm-travel-mobile, race-rhythm-cadence;

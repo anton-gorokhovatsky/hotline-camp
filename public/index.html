@@ -113,7 +113,7 @@
       ym(111830664,"init",{ssr:true,webvisor:true,clickmap:true,ecommerce:"dataLayer",referrer:document.referrer,url:location.href,accurateTrackBounce:true,trackLinks:true});
     </script>
     <!-- /Yandex.Metrika counter -->
-    <link rel="stylesheet" href="./styles.css?v=20260823-63">
+    <link rel="stylesheet" href="./styles.css?v=20260823-64">
     <script src="./app.js?v=20260822-wind-2" defer></script>
   </head>
   <body>
@@ -387,10 +387,22 @@
                   <circle cx="7" cy="48" r="1.25"></circle><circle cx="26" cy="24" r="1.05"></circle>
                   <circle cx="47" cy="61" r="0.95"></circle><circle cx="82" cy="33" r="1.15"></circle>
                 </g>
-                <pattern id="race-rhythm-base" width="92" height="64" patternUnits="userSpaceOnUse">
+                <pattern id="race-rhythm-base-swim" width="92" height="64" patternUnits="userSpaceOnUse" patternTransform="scale(1.22)">
                   <use href="#race-rhythm-cell" fill="var(--text-muted)"></use>
                 </pattern>
-                <pattern id="race-rhythm-accent" width="92" height="64" patternUnits="userSpaceOnUse">
+                <pattern id="race-rhythm-base-bike" width="92" height="64" patternUnits="userSpaceOnUse" patternTransform="scale(0.92)">
+                  <use href="#race-rhythm-cell" fill="var(--text-muted)"></use>
+                </pattern>
+                <pattern id="race-rhythm-base-run" width="92" height="64" patternUnits="userSpaceOnUse" patternTransform="scale(0.68)">
+                  <use href="#race-rhythm-cell" fill="var(--text-muted)"></use>
+                </pattern>
+                <pattern id="race-rhythm-accent-swim" width="92" height="64" patternUnits="userSpaceOnUse" patternTransform="scale(1.22)">
+                  <use href="#race-rhythm-cell" fill="var(--oleander)"></use>
+                </pattern>
+                <pattern id="race-rhythm-accent-bike" width="92" height="64" patternUnits="userSpaceOnUse" patternTransform="scale(0.92)">
+                  <use href="#race-rhythm-cell" fill="var(--oleander)"></use>
+                </pattern>
+                <pattern id="race-rhythm-accent-run" width="92" height="64" patternUnits="userSpaceOnUse" patternTransform="scale(0.68)">
                   <use href="#race-rhythm-cell" fill="var(--oleander)"></use>
                 </pattern>
                 <linearGradient id="race-rhythm-fade">
@@ -398,33 +410,52 @@
                   <stop offset="0.93" stop-color="white"></stop><stop offset="1" stop-color="black"></stop>
                 </linearGradient>
                 <filter id="race-rhythm-edge-soft"><feGaussianBlur stdDeviation="16"></feGaussianBlur></filter>
-                <filter id="race-rhythm-pulse-soft"><feGaussianBlur stdDeviation="12"></feGaussianBlur></filter>
+                <filter id="race-rhythm-pulse-soft"><feGaussianBlur stdDeviation="10"></feGaussianBlur></filter>
+                <linearGradient id="race-rhythm-zone-swim" gradientUnits="userSpaceOnUse" x2="1200"><stop offset="0" stop-color="white"></stop><stop offset="0.245" stop-color="white"></stop><stop offset="0.275" stop-color="black"></stop></linearGradient>
+                <linearGradient id="race-rhythm-zone-bike" gradientUnits="userSpaceOnUse" x2="1200"><stop offset="0.3" stop-color="black"></stop><stop offset="0.325" stop-color="white"></stop><stop offset="0.645" stop-color="white"></stop><stop offset="0.675" stop-color="black"></stop></linearGradient>
+                <linearGradient id="race-rhythm-zone-run" gradientUnits="userSpaceOnUse" x2="1200"><stop offset="0.7" stop-color="black"></stop><stop offset="0.735" stop-color="white"></stop><stop offset="1" stop-color="white"></stop></linearGradient>
                 <mask id="race-rhythm-field-mask" x="-180" y="-70" width="1560" height="440" maskUnits="userSpaceOnUse">
-                  <path fill="url(#race-rhythm-fade)" filter="url(#race-rhythm-edge-soft)" d="M-100 166C24 92 126 48 236 70c56 12 76 46 116 48 56 2 88-70 208-80 114-10 170 56 228 72 24 6 46 8 70 4 62-10 108-60 206-48 94 12 148 52 236 30v118c-92 6-150 38-244 24-86-12-138-54-198-50-28 2-50 6-80 14-78 20-126 74-230 66-110-8-140-72-196-74-46-2-72 30-130 50-106 38-204-10-322-24Z"></path>
+                  <path fill="url(#race-rhythm-fade)" filter="url(#race-rhythm-edge-soft)" d="M-100 158C-38 122 18 88 82 106c70 20 122-30 188-6 34 12 46 40 66 43 18 3 29-16 47-22 106-34 244-22 355-10 36 4 53 28 75 31 19 3 31-16 54-24 102-34 218-36 433-58v130c-208 24-330 22-430 2-28-6-42-30-61-28-21 2-31 29-67 34-116 16-251 17-360-7-21-5-27-28-44-29-20-1-34 28-69 37-70 18-119-29-185-10-70 20-124 0-184-21Z"></path>
                 </mask>
+                <mask id="race-rhythm-zone-swim-mask"><rect width="1200" height="300" fill="url(#race-rhythm-zone-swim)"></rect></mask>
+                <mask id="race-rhythm-zone-bike-mask"><rect width="1200" height="300" fill="url(#race-rhythm-zone-bike)"></rect></mask>
+                <mask id="race-rhythm-zone-run-mask"><rect width="1200" height="300" fill="url(#race-rhythm-zone-run)"></rect></mask>
                 <mask id="race-rhythm-pulse-mask" x="-180" y="-100" width="1560" height="500" maskUnits="userSpaceOnUse">
-                  <ellipse class="race-rhythm__pulse" cx="0" cy="150" rx="118" ry="124" fill="white" filter="url(#race-rhythm-pulse-soft)"></ellipse>
+                  <ellipse class="race-rhythm__pulse" cx="0" cy="150" rx="82" ry="128" fill="white" filter="url(#race-rhythm-pulse-soft)"></ellipse>
                 </mask>
               </defs>
               <g mask="url(#race-rhythm-field-mask)">
-                <rect class="race-rhythm__field race-rhythm__field--base" width="1200" height="300" fill="url(#race-rhythm-base)"></rect>
+                <rect class="race-rhythm__field race-rhythm__field--continuity" width="1200" height="300" fill="url(#race-rhythm-base-bike)"></rect>
+                <g class="race-rhythm__field race-rhythm__field--base">
+                  <rect width="1200" height="300" fill="url(#race-rhythm-base-swim)" mask="url(#race-rhythm-zone-swim-mask)"></rect>
+                  <rect width="1200" height="300" fill="url(#race-rhythm-base-bike)" mask="url(#race-rhythm-zone-bike-mask)"></rect>
+                  <rect width="1200" height="300" fill="url(#race-rhythm-base-run)" mask="url(#race-rhythm-zone-run-mask)"></rect>
+                </g>
                 <g mask="url(#race-rhythm-pulse-mask)">
-                  <rect class="race-rhythm__field race-rhythm__field--active" width="1200" height="300" fill="url(#race-rhythm-accent)"></rect>
+                  <g class="race-rhythm__field race-rhythm__field--active">
+                    <rect width="1200" height="300" fill="url(#race-rhythm-accent-swim)" mask="url(#race-rhythm-zone-swim-mask)"></rect>
+                    <rect width="1200" height="300" fill="url(#race-rhythm-accent-bike)" mask="url(#race-rhythm-zone-bike-mask)"></rect>
+                    <rect width="1200" height="300" fill="url(#race-rhythm-accent-run)" mask="url(#race-rhythm-zone-run-mask)"></rect>
+                  </g>
                 </g>
               </g>
             </svg>
             <svg class="race-rhythm__art race-rhythm__art--mobile" viewBox="0 0 360 150" preserveAspectRatio="none">
               <defs>
-                <pattern id="race-rhythm-mobile-base" width="36" height="28" patternUnits="userSpaceOnUse">
+                <pattern id="race-rhythm-mobile-base-swim" width="36" height="28" patternUnits="userSpaceOnUse" patternTransform="scale(1.18)">
                   <g fill="var(--text-muted)">
                     <circle cx="4" cy="8" r="1.25"></circle><circle cx="18" cy="3" r="0.9"></circle><circle cx="31" cy="11" r="1.5"></circle>
                     <circle cx="10" cy="21" r="1.55"></circle><circle cx="24" cy="17" r="1.1"></circle><circle cx="35" cy="26" r="0.85"></circle>
                     <circle cx="2" cy="27" r="0.9"></circle><circle cx="29" cy="26" r="1.2"></circle>
                   </g>
                 </pattern>
-                <pattern id="race-rhythm-mobile-accent" width="36" height="28" patternUnits="userSpaceOnUse">
+                <pattern id="race-rhythm-mobile-base-bike" width="36" height="28" patternUnits="userSpaceOnUse" patternTransform="scale(0.9)"><use href="#race-rhythm-mobile-dots" fill="var(--text-muted)"></use></pattern>
+                <pattern id="race-rhythm-mobile-base-run" width="36" height="28" patternUnits="userSpaceOnUse" patternTransform="scale(0.68)"><use href="#race-rhythm-mobile-dots" fill="var(--text-muted)"></use></pattern>
+                <pattern id="race-rhythm-mobile-accent-swim" width="36" height="28" patternUnits="userSpaceOnUse" patternTransform="scale(1.18)">
                   <use href="#race-rhythm-mobile-dots"></use>
                 </pattern>
+                <pattern id="race-rhythm-mobile-accent-bike" width="36" height="28" patternUnits="userSpaceOnUse" patternTransform="scale(0.9)"><use href="#race-rhythm-mobile-dots"></use></pattern>
+                <pattern id="race-rhythm-mobile-accent-run" width="36" height="28" patternUnits="userSpaceOnUse" patternTransform="scale(0.68)"><use href="#race-rhythm-mobile-dots"></use></pattern>
                 <g id="race-rhythm-mobile-dots" fill="var(--oleander)">
                   <circle cx="4" cy="8" r="1.25"></circle><circle cx="18" cy="3" r="0.9"></circle><circle cx="31" cy="11" r="1.5"></circle>
                   <circle cx="10" cy="21" r="1.55"></circle><circle cx="24" cy="17" r="1.1"></circle><circle cx="35" cy="26" r="0.85"></circle>
@@ -432,17 +463,32 @@
                 </g>
                 <linearGradient id="race-rhythm-mobile-fade"><stop stop-color="black"></stop><stop offset="0.1" stop-color="white"></stop><stop offset="0.9" stop-color="white"></stop><stop offset="1" stop-color="black"></stop></linearGradient>
                 <filter id="race-rhythm-mobile-edge"><feGaussianBlur stdDeviation="5"></feGaussianBlur></filter>
-                <filter id="race-rhythm-mobile-pulse-soft"><feGaussianBlur stdDeviation="5"></feGaussianBlur></filter>
+                <filter id="race-rhythm-mobile-pulse-soft"><feGaussianBlur stdDeviation="4"></feGaussianBlur></filter>
+                <linearGradient id="race-rhythm-mobile-zone-swim" gradientUnits="userSpaceOnUse" x2="360"><stop offset="0" stop-color="white"></stop><stop offset="0.245" stop-color="white"></stop><stop offset="0.285" stop-color="black"></stop></linearGradient>
+                <linearGradient id="race-rhythm-mobile-zone-bike" gradientUnits="userSpaceOnUse" x2="360"><stop offset="0.305" stop-color="black"></stop><stop offset="0.34" stop-color="white"></stop><stop offset="0.64" stop-color="white"></stop><stop offset="0.675" stop-color="black"></stop></linearGradient>
+                <linearGradient id="race-rhythm-mobile-zone-run" gradientUnits="userSpaceOnUse" x2="360"><stop offset="0.7" stop-color="black"></stop><stop offset="0.74" stop-color="white"></stop><stop offset="1" stop-color="white"></stop></linearGradient>
                 <mask id="race-rhythm-mobile-field-mask" x="-60" y="-30" width="480" height="210" maskUnits="userSpaceOnUse">
-                  <path fill="url(#race-rhythm-mobile-fade)" filter="url(#race-rhythm-mobile-edge)" d="M-30 100C18 38 72 28 104 58c16 14 28 16 40 7 18-15 26-43 60-45 34-2 46 38 60 50 14 12 28 10 42-8 22-28 54-28 84-4v60c-35 18-62 12-86-6-18-16-32-18-48-6-22 18-31 42-64 39-34-3-42-33-56-43-14-10-26-6-40 10-24 28-76 24-126 4Z"></path>
+                  <path fill="url(#race-rhythm-mobile-fade)" filter="url(#race-rhythm-mobile-edge)" d="M-30 82C5 58 31 38 62 50c22 8 28 21 38 24 7 2 11-7 18-10 33-14 75-12 108-3 11 3 16 12 24 13 7 1 12-8 22-13 32-16 70-19 118-27v78c-52 7-88 5-118-12-10-6-15-18-22-17-8 1-13 10-24 13-36 10-74 7-108-2-8-2-11-13-18-13-8 0-16 17-38 23-34 9-58-7-92-12Z"></path>
                 </mask>
+                <mask id="race-rhythm-mobile-zone-swim-mask"><rect width="360" height="150" fill="url(#race-rhythm-mobile-zone-swim)"></rect></mask>
+                <mask id="race-rhythm-mobile-zone-bike-mask"><rect width="360" height="150" fill="url(#race-rhythm-mobile-zone-bike)"></rect></mask>
+                <mask id="race-rhythm-mobile-zone-run-mask"><rect width="360" height="150" fill="url(#race-rhythm-mobile-zone-run)"></rect></mask>
                 <mask id="race-rhythm-mobile-pulse-mask" x="-70" y="-30" width="500" height="210" maskUnits="userSpaceOnUse">
-                  <ellipse class="race-rhythm__pulse race-rhythm__pulse--mobile" cx="0" cy="78" rx="48" ry="62" fill="white" filter="url(#race-rhythm-mobile-pulse-soft)"></ellipse>
+                  <ellipse class="race-rhythm__pulse race-rhythm__pulse--mobile" cx="0" cy="78" rx="36" ry="64" fill="white" filter="url(#race-rhythm-mobile-pulse-soft)"></ellipse>
                 </mask>
               </defs>
               <g mask="url(#race-rhythm-mobile-field-mask)">
-                <rect class="race-rhythm__field race-rhythm__field--base" width="360" height="150" fill="url(#race-rhythm-mobile-base)"></rect>
-                <g mask="url(#race-rhythm-mobile-pulse-mask)"><rect class="race-rhythm__field race-rhythm__field--active" width="360" height="150" fill="url(#race-rhythm-mobile-accent)"></rect></g>
+                <rect class="race-rhythm__field race-rhythm__field--continuity" width="360" height="150" fill="url(#race-rhythm-mobile-base-bike)"></rect>
+                <g class="race-rhythm__field race-rhythm__field--base">
+                  <rect width="360" height="150" fill="url(#race-rhythm-mobile-base-swim)" mask="url(#race-rhythm-mobile-zone-swim-mask)"></rect>
+                  <rect width="360" height="150" fill="url(#race-rhythm-mobile-base-bike)" mask="url(#race-rhythm-mobile-zone-bike-mask)"></rect>
+                  <rect width="360" height="150" fill="url(#race-rhythm-mobile-base-run)" mask="url(#race-rhythm-mobile-zone-run-mask)"></rect>
+                </g>
+                <g mask="url(#race-rhythm-mobile-pulse-mask)"><g class="race-rhythm__field race-rhythm__field--active">
+                  <rect width="360" height="150" fill="url(#race-rhythm-mobile-accent-swim)" mask="url(#race-rhythm-mobile-zone-swim-mask)"></rect>
+                  <rect width="360" height="150" fill="url(#race-rhythm-mobile-accent-bike)" mask="url(#race-rhythm-mobile-zone-bike-mask)"></rect>
+                  <rect width="360" height="150" fill="url(#race-rhythm-mobile-accent-run)" mask="url(#race-rhythm-mobile-zone-run-mask)"></rect>
+                </g></g>
               </g>
             </svg>
           </div>
