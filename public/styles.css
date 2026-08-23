@@ -785,7 +785,7 @@ a {
 
 .conditions-row {
   display: grid;
-  grid-template-columns: 1fr 1fr 1.39fr 2.02fr 1.08fr;
+  grid-template-columns: minmax(max-content, 1.4fr) minmax(max-content, 0.8fr) minmax(max-content, 1.1fr) minmax(max-content, 1.3fr) minmax(max-content, 1fr);
   align-items: stretch;
   gap: var(--service-island-gap);
 }
@@ -1661,13 +1661,13 @@ a {
 
 .race-rhythm__score .race-rhythm__art--mobile { display: none; }
 
-.race-rhythm__field--continuity { opacity: 0.07; }
-.race-rhythm__field--base { opacity: 0.25; }
+.race-rhythm__field--continuity { opacity: 0.1; }
+.race-rhythm__field--base { opacity: 0.28; }
 .race-rhythm__field--active { opacity: 0.96; }
 
 .race-rhythm__pulse {
   opacity: 0;
-  transform: translateX(-110px);
+  transform: translate(-110px, 10px);
   transform-origin: 0 0;
   animation:
     race-rhythm-travel var(--race-cycle) linear infinite,
@@ -1689,10 +1689,10 @@ a {
 }
 
 @keyframes race-rhythm-travel {
-  0% { transform: translateX(-110px); }
-  26%, 32% { transform: translateX(330px); }
-  68%, 74% { transform: translateX(810px); }
-  98%, 100% { transform: translateX(1320px); }
+  0% { transform: translate(-110px, 10px); }
+  26%, 32% { transform: translate(330px, -14px); }
+  68%, 74% { transform: translate(810px, -36px); }
+  98%, 100% { transform: translate(1320px, -73px); }
 }
 
 @keyframes race-rhythm-cadence {
@@ -1701,10 +1701,10 @@ a {
 }
 
 @keyframes race-rhythm-travel-mobile {
-  0% { transform: translateX(-44px); }
-  26%, 32% { transform: translateX(100px); }
-  68%, 74% { transform: translateX(250px); }
-  98%, 100% { transform: translateX(404px); }
+  0% { transform: translate(-44px, 18px); }
+  26%, 32% { transform: translate(100px, -4px); }
+  68%, 74% { transform: translate(250px, -18px); }
+  98%, 100% { transform: translate(404px, -35px); }
 }
 
 .race-trace--trainers {
@@ -2613,6 +2613,8 @@ a {
     display: grid;
     min-height: 100vh;
     min-height: 100svh;
+    min-height: max(100vh, 42rem);
+    min-height: max(100svh, 42rem);
     grid-template-columns: minmax(0, 1fr);
     grid-template-rows: auto minmax(0, 1fr) auto;
     overflow: hidden;
@@ -2916,8 +2918,8 @@ a {
   .race-rhythm__score .race-rhythm__art--desktop { display: none; }
   .race-rhythm__score .race-rhythm__art--mobile { display: block; }
 
-  .race-rhythm__art--mobile .race-rhythm__field--continuity { opacity: 0.09; }
-  .race-rhythm__art--mobile .race-rhythm__field--base { opacity: 0.32; }
+  .race-rhythm__art--mobile .race-rhythm__field--continuity { opacity: 0.14; }
+  .race-rhythm__art--mobile .race-rhythm__field--base { opacity: 0.38; }
 
   .race-rhythm__pulse--mobile {
     animation-name: race-rhythm-travel-mobile, race-rhythm-cadence;
@@ -3232,7 +3234,7 @@ a {
   .race-rhythm__pulse {
     animation: none;
     opacity: 0;
-    transform: translateX(-110px);
+    transform: translate(-110px, 10px);
   }
 
 }
