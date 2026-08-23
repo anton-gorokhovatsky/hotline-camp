@@ -541,3 +541,108 @@
   window.addEventListener("pageshow", resetPosition);
   void loadConditions();
 })();
+
+(() => {
+  "use strict";
+
+  if (new URLSearchParams(window.location.search).get("experiment") !== "race-field") return;
+
+  const root = document.documentElement;
+  const host = document.querySelector(".race-rhythm");
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  if (!(host instanceof HTMLElement)) return;
+
+  const canvas = document.createElement("canvas");
+  canvas.setAttribute("aria-hidden", "true");
+  const gl = canvas.getContext("webgl", { alpha: false, antialias: false });
+  if (!gl) return;
+
+  const vertexSource = "attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}";
+  const fragmentSource = `
+    precision highp float;uniform vec2 r;uniform float time,dark,reduced;const float PI=3.14159265;
+    float sat(float x){return clamp(x,0.,1.);}float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+    float bell(float x,float a,float b,float c,float d){return smoothstep(a,b,x)*(1.-smoothstep(c,d,x));}
+    float water(vec2 d,float t){float back=smoothstep(.08,-.03,d.x)*exp(d.x*.78)*exp(-abs(d.y)*1.8);float rings=sin(length(vec2(d.x*.62,d.y))*38.-t*7.2);float cross=sin(d.x*17.+sin(d.y*9.-t*1.5)*2.4);return(rings*.72+cross*.28)*back;}
+    float air(vec2 d,float t){float back=smoothstep(.1,-.04,d.x)*exp(d.x*.62)*exp(-abs(d.y)*2.35);float pressure=sin(d.x*25.+sin(d.y*10.+t*2.)*2.6);float vortex=sin(atan(d.y,d.x)*2.+length(vec2(d.x*.38,d.y))*31.-t*3.);return(pressure*.58+vortex*.42)*back;}
+    float knot(vec2 d,float t,float turn){float l=length(d),fold=sin((d.x+d.y*turn*.3)*39.-t*8.);return fold*exp(-l*5.4)*(1.+d.y*turn*.55);}
+    float stride(vec2 uv,float p,float aspect){float f=0.;for(int i=0;i<8;i++){float q=.765+float(i)*.032,age=p-q;if(age>0.&&age<.085){float x=mix(-aspect*.56,aspect*.56,q),side=mod(float(i),2.)<1.?1.:-1.;float spread=.026+age*.52,dx=(uv.x-x)/spread;float column=exp(-dx*dx),height=exp(-pow((uv.y+.02)/.48,2.));float snap=sin(clamp(age/.085,0.,1.)*PI);f+=side*column*height*snap*(1.+side*uv.y*.82);}}return f;}
+    void main(){vec2 uv=(gl_FragCoord.xy-.5*r)/r.y;float aspect=r.x/r.y;float p=mod(time,10.4)/10.4,sx=mix(-aspect*.56,aspect*.56,p);float sy=.035*sin(p*30.);if(p>.28)sy=mix(sy,.1,smoothstep(.28,.36,p));if(p>.68)sy=mix(.1,-.03,smoothstep(.68,.77,p));if(p>.76)sy=-.19+.038*abs(sin((p-.76)*78.));vec2 d=uv-vec2(sx,sy);float w=1.-smoothstep(.27,.35,p),b=bell(p,.29,.38,.66,.75),run=smoothstep(.69,.78,p);float t1=bell(p,.265,.29,.34,.37),t2=bell(p,.665,.69,.74,.77);float field=water(d,time)*w+air(d,time)*b+stride(uv,p,aspect)*run+knot(d,time,4.)*t1+knot(d,time,-5.)*t2;if(reduced>.5){field=water(uv-vec2(-aspect*.37,.04),9.2)*.72+air(uv-vec2(0.,.08),9.2)*.72;field+=stride(uv,.97,aspect*.7)*.85;}float edge=.34+.045*sin(uv.x*2.2)+.025*sin(uv.x*5.7+1.4);float band=1.-smoothstep(edge,edge+.12,abs(uv.y));band*=smoothstep(-aspect*.61,-aspect*.49,uv.x)*(1.-smoothstep(aspect*.49,aspect*.61,uv.x));float paperNoise=(hash(floor(gl_FragCoord.xy*.42))-.5)*.018;float threads=pow(.5+.5*cos((uv.y+field*.075)*92.+sin(uv.x*3.)*.7),11.);float body=band*sat(.075+abs(field)*.3+threads*.34);float heat=reduced>.5?0.:exp(-length(d*vec2(.82,1.15))*8.)*(.42+.38*abs(field));vec3 bg=mix(vec3(.949,.929,.878),vec3(.063,.098,.086),dark);vec3 sea=mix(vec3(.25,.43,.43),vec3(.56,.68,.66),dark);vec3 rose=mix(vec3(.79,.26,.37),vec3(.91,.43,.53),dark);vec3 col=mix(bg,sea,body);col=mix(col,rose,sat(heat)*band);col+=paperNoise;gl_FragColor=vec4(col,1.);}
+  `;
+  const compile = (type, source) => {
+    const shader = gl.createShader(type);
+    gl.shaderSource(shader, source);
+    gl.compileShader(shader);
+    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(shader));
+    return shader;
+  };
+
+  let program;
+  try {
+    program = gl.createProgram();
+    gl.attachShader(program, compile(gl.VERTEX_SHADER, vertexSource));
+    gl.attachShader(program, compile(gl.FRAGMENT_SHADER, fragmentSource));
+    gl.linkProgram(program);
+    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(program));
+  } catch (error) {
+    console.warn("Race field preview is unavailable", error);
+    return;
+  }
+
+  const style = document.createElement("style");
+  style.dataset.raceFieldPreview = "";
+  style.textContent = `
+    .race-rhythm.race-rhythm--field{display:block;width:calc(100% + var(--space-page) + var(--space-page));margin:clamp(1.25rem,2.5vw,2.5rem) calc(var(--space-page) * -1) 0;overflow:hidden}
+    .race-rhythm--field canvas{display:block;width:100%;height:clamp(24rem,42vw,40rem)}
+    .race-rhythm.race-rhythm--field+.program-notes{margin-top:clamp(-1.25rem,-1.2vw,-.75rem)}
+    @media(max-width:62rem){.race-rhythm.race-rhythm--field{display:block;margin-top:clamp(1rem,4vw,1.75rem)}.race-rhythm--field canvas{height:clamp(24rem,118vw,30rem)}.race-rhythm.race-rhythm--field+.program-notes{margin-top:clamp(-1.5rem,-5vw,-1rem)}}
+  `;
+  document.head.append(style);
+  host.classList.add("race-rhythm--field");
+  host.setAttribute("aria-label", "Одна непрерывная среда меняется под движением пловца, велосипедиста и бегуна.");
+  host.replaceChildren(canvas);
+  host.hidden = false;
+
+  gl.useProgram(program);
+  const buffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1]), gl.STATIC_DRAW);
+  const point = gl.getAttribLocation(program, "p");
+  gl.enableVertexAttribArray(point);
+  gl.vertexAttribPointer(point, 2, gl.FLOAT, false, 0, 0);
+  const uniform = (name) => gl.getUniformLocation(program, name);
+  const resolution = uniform("r");
+  const clock = uniform("time");
+  const theme = uniform("dark");
+  const still = uniform("reduced");
+  const startedAt = performance.now();
+  let frameRequest = 0;
+
+  const resize = () => {
+    const scale = Math.min(window.devicePixelRatio || 1, 2);
+    const width = Math.max(1, Math.round(canvas.clientWidth * scale));
+    const height = Math.max(1, Math.round(canvas.clientHeight * scale));
+    if (canvas.width === width && canvas.height === height) return;
+    canvas.width = width;
+    canvas.height = height;
+    gl.viewport(0, 0, width, height);
+    gl.uniform2f(resolution, width, height);
+  };
+  const frame = (now) => {
+    resize();
+    gl.uniform1f(clock, reduceMotion.matches ? 9.8 : (now - startedAt) / 1000);
+    gl.uniform1f(theme, root.dataset.theme === "dark" ? 1 : 0);
+    gl.uniform1f(still, reduceMotion.matches ? 1 : 0);
+    gl.drawArrays(gl.TRIANGLES, 0, 6);
+    if (!reduceMotion.matches) frameRequest = window.requestAnimationFrame(frame);
+  };
+  const restart = () => {
+    window.cancelAnimationFrame(frameRequest);
+    frameRequest = window.requestAnimationFrame(frame);
+  };
+
+  reduceMotion.addEventListener("change", restart);
+  new MutationObserver(() => { if (reduceMotion.matches) restart(); }).observe(root, { attributes: true, attributeFilter: ["data-theme"] });
+  window.addEventListener("resize", () => { if (reduceMotion.matches) restart(); });
+  canvas.addEventListener("webglcontextlost", (event) => { event.preventDefault(); window.cancelAnimationFrame(frameRequest); });
+  restart();
+})();
