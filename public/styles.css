@@ -1797,6 +1797,10 @@ a {
   }
 }
 
+.race-rhythm[hidden] + .program-notes {
+  margin-top: var(--program-space-major);
+}
+
 @keyframes race-rhythm-travel {
   0% { transform: translate(-110px, 10px); }
   26%, 32% { transform: translate(330px, -14px); }
