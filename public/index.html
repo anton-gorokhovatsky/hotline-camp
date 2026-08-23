@@ -113,7 +113,7 @@
       ym(111830664,"init",{ssr:true,webvisor:true,clickmap:true,ecommerce:"dataLayer",referrer:document.referrer,url:location.href,accurateTrackBounce:true,trackLinks:true});
     </script>
     <!-- /Yandex.Metrika counter -->
-    <link rel="stylesheet" href="./styles.css?v=20260823-66">
+    <link rel="stylesheet" href="./styles.css?v=20260823-67">
     <script src="./app.js?v=20260822-wind-2" defer></script>
   </head>
   <body>
@@ -353,7 +353,13 @@
           aria-label="Ритм гонки: плавание — 66 гребков в минуту; первая транзитная зона — смена ритма; велосипед — 90 оборотов в минуту; вторая транзитная зона — смена ритма; бег — 180 шагов в минуту."
         >
           <div class="race-rhythm__score" aria-hidden="true">
-            <svg class="race-rhythm__art race-rhythm__art--desktop" viewBox="0 0 1200 300" preserveAspectRatio="none">
+            <div class="cadence-reactor">
+              <div class="cadence-reactor__unit cadence-reactor__unit--swim" data-cadence="66"><span>66</span></div>
+              <div class="cadence-reactor__unit cadence-reactor__unit--bike" data-cadence="90"><span>90</span></div>
+              <div class="cadence-reactor__unit cadence-reactor__unit--run" data-cadence="180"><span>180</span></div>
+              <i class="cadence-reactor__impulse"></i>
+            </div>
+            <svg hidden class="race-rhythm__art race-rhythm__art--desktop" viewBox="0 0 1200 300" preserveAspectRatio="none">
               <defs>
                 <g id="race-rhythm-cell">
                   <circle cx="7" cy="11" r="1.7"></circle><circle cx="26" cy="4" r="1.2"></circle>
@@ -440,7 +446,7 @@
                 </g>
               </g>
             </svg>
-            <svg class="race-rhythm__art race-rhythm__art--mobile" viewBox="0 0 360 150" preserveAspectRatio="none">
+            <svg hidden class="race-rhythm__art race-rhythm__art--mobile" viewBox="0 0 360 150" preserveAspectRatio="none">
               <defs>
                 <pattern id="race-rhythm-mobile-base-swim" width="36" height="28" patternUnits="userSpaceOnUse" patternTransform="scale(1.18)">
                   <g fill="var(--text-muted)">

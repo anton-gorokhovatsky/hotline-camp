@@ -1652,6 +1652,115 @@ a {
   overflow: hidden;
 }
 
+.cadence-reactor {
+  position: relative;
+  display: grid;
+  grid-template-columns: 0.82fr 0.9fr 1.28fr;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  padding-inline: clamp(0.25rem, 2vw, 2rem);
+  overflow: hidden;
+  isolation: isolate;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+}
+
+.cadence-reactor__unit {
+  --echo-x: -0.08em;
+  --echo-y: 0;
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  min-width: 0;
+  color: var(--oleander);
+  font-size: clamp(4.5rem, 14vw, 13rem);
+  font-weight: 690;
+  font-variant-numeric: tabular-nums;
+  line-height: 0.72;
+  letter-spacing: -0.105em;
+  animation: cadence-reactor-beat var(--beat) cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+
+.cadence-reactor__unit::before,
+.cadence-reactor__unit::after,
+.cadence-reactor__unit span {
+  grid-area: 1 / 1;
+}
+
+.cadence-reactor__unit::before,
+.cadence-reactor__unit::after {
+  content: attr(data-cadence);
+  color: transparent;
+  -webkit-text-stroke: clamp(1px, 0.11vw, 1.8px) color-mix(in oklab, var(--text) 34%, transparent);
+}
+
+.cadence-reactor__unit::after {
+  opacity: 0.34;
+  transform: translate(var(--echo-x), var(--echo-y)) scale(1.055);
+}
+
+.cadence-reactor__unit span {
+  color: var(--oleander);
+  text-shadow: 0 0 0.55em color-mix(in oklab, var(--oleander) 25%, transparent);
+}
+
+.cadence-reactor__unit--swim { --beat: 0.909s; --echo-y: 0.07em; }
+.cadence-reactor__unit--bike { --beat: 0.667s; --echo-x: 0; --echo-y: -0.065em; }
+.cadence-reactor__unit--run { --beat: 0.333s; --echo-x: 0.055em; }
+
+.cadence-reactor__unit--swim span { animation: cadence-reactor-swim var(--race-cycle) linear infinite; }
+.cadence-reactor__unit--bike span { animation: cadence-reactor-bike var(--race-cycle) linear infinite; }
+.cadence-reactor__unit--run span { animation: cadence-reactor-run var(--race-cycle) linear infinite; }
+
+.cadence-reactor__impulse {
+  position: absolute;
+  inset: 7% auto 7% -18%;
+  z-index: 0;
+  width: 18%;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, color-mix(in oklab, var(--oleander) 62%, transparent), transparent 70%);
+  filter: blur(clamp(0.9rem, 1.8vw, 1.7rem));
+  mix-blend-mode: multiply;
+  animation: cadence-reactor-course var(--race-cycle) linear infinite;
+}
+
+:root[data-theme="dark"] .cadence-reactor__impulse { mix-blend-mode: screen; }
+
+@keyframes cadence-reactor-beat {
+  0%, 100% { transform: scaleY(0.985); }
+  45% { transform: scaleY(1.025); }
+}
+
+@keyframes cadence-reactor-swim {
+  0%, 25% { opacity: 0.94; }
+  28%, 97% { opacity: 0.025; }
+  100% { opacity: 0.94; }
+}
+
+@keyframes cadence-reactor-bike {
+  0%, 29%, 70%, 100% { opacity: 0.025; }
+  33%, 66% { opacity: 0.94; }
+}
+
+@keyframes cadence-reactor-run {
+  0%, 71%, 100% { opacity: 0.025; }
+  75%, 97% { opacity: 0.94; }
+}
+
+@keyframes cadence-reactor-course {
+  0% { opacity: 0; transform: translate3d(0, 0, 0) scale(0.6); }
+  3%, 24% { opacity: 0.72; }
+  27% { opacity: 0; transform: translate3d(155%, 4%, 0) scaleX(0.08); }
+  32% { opacity: 0; transform: translate3d(190%, -3%, 0) scaleX(0.08); }
+  35%, 65% { opacity: 0.72; }
+  69% { opacity: 0; transform: translate3d(430%, 3%, 0) scaleX(0.08); }
+  74% { opacity: 0; transform: translate3d(465%, -4%, 0) scaleX(0.08); }
+  77%, 97% { opacity: 0.72; }
+  100% { opacity: 0; transform: translate3d(665%, 0, 0) scale(0.6); }
+}
+
 .race-rhythm__score svg {
   display: block;
   width: 100%;
@@ -3236,6 +3345,13 @@ a {
     opacity: 0;
     transform: translate(-110px, 10px);
   }
+
+  .cadence-reactor__unit,
+  .cadence-reactor__unit span,
+  .cadence-reactor__impulse { animation: none; }
+
+  .cadence-reactor__unit span { opacity: 0.12; }
+  .cadence-reactor__impulse { display: none; }
 
 }
 
