@@ -2652,6 +2652,30 @@ a {
     backdrop-filter: blur(0.4rem) saturate(0.82) brightness(0.78);
   }
 
+  :root[data-theme="light"] .hero-stage::before {
+    background: rgba(238, 234, 225, 0.37);
+    -webkit-backdrop-filter: blur(0.32rem) saturate(0.92) brightness(1.01);
+    backdrop-filter: blur(0.32rem) saturate(0.92) brightness(1.01);
+    -webkit-mask-image: radial-gradient(
+      ellipse 112% 96% at -16% 30%,
+      #000 0%,
+      #000 38%,
+      rgba(0, 0, 0, 0.74) 53%,
+      rgba(0, 0, 0, 0.3) 68%,
+      rgba(0, 0, 0, 0.06) 80%,
+      transparent 92%
+    );
+    mask-image: radial-gradient(
+      ellipse 112% 96% at -16% 30%,
+      #000 0%,
+      #000 38%,
+      rgba(0, 0, 0, 0.74) 53%,
+      rgba(0, 0, 0, 0.3) 68%,
+      rgba(0, 0, 0, 0.06) 80%,
+      transparent 92%
+    );
+  }
+
   .hero-media {
     grid-column: 1;
     grid-row: 1;
@@ -3304,16 +3328,17 @@ a {
 @media (max-width: 46rem) {
   .coach-story {
     display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    grid-template-rows: repeat(5, auto);
-    gap: clamp(1.75rem, 7vw, 2.75rem);
-    padding-block: 4rem 5rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: repeat(4, auto);
+    column-gap: clamp(0.75rem, 3vw, 1rem);
+    row-gap: clamp(1.6rem, 6vw, 2.2rem);
+    padding-block: 3.5rem 4rem;
   }
 
   .coach-story::before,
   .coach-story-maksim::before {
     inset: auto;
-    grid-column: 1;
+    grid-column: 1 / -1;
     grid-row: 1;
     align-self: end;
     justify-self: end;
@@ -3323,7 +3348,7 @@ a {
 
   .coach-copy,
   .coach-story-maksim .coach-copy {
-    grid-column: 1;
+    grid-column: 1 / -1;
     grid-row: 1;
     order: initial;
     padding: 0 clamp(6.25rem, 32vw, 8rem) 0 0;
@@ -3340,13 +3365,13 @@ a {
 
   .coach-finish,
   .coach-story-maksim .coach-finish {
-    grid-column: 1;
+    grid-column: 1 / -1;
     grid-row: 2;
   }
 
   .coach-credentials,
   .coach-story-maksim .coach-credentials {
-    grid-column: 1;
+    grid-column: 1 / -1;
     grid-row: 3;
     grid-template-columns: minmax(0, 1fr);
     gap: clamp(1.75rem, 7vw, 2.5rem);
@@ -3362,9 +3387,26 @@ a {
 
   .coach-motion,
   .coach-story-maksim .coach-motion {
-    grid-column: 1;
-    grid-row: 5;
+    grid-column: 2;
+    grid-row: 4;
     width: 100%;
+  }
+
+  .closing-scene {
+    min-height: auto;
+  }
+
+  .closing-media {
+    aspect-ratio: 4 / 3;
+  }
+
+  .closing-media::before {
+    height: clamp(9rem, 45vw, 11rem);
+  }
+
+  .closing-action {
+    margin-top: 0;
+    padding-top: clamp(2.5rem, 10vw, 3rem);
   }
 
   .dot-motif:is(.dot-motif--bike, .dot-motif--mountains, .dot-motif--crown, .dot-motif--wave, .dot-motif--palm, .dot-motif--finish) { width: clamp(17rem, 74vw, 22rem); height: auto; aspect-ratio: 1; }
