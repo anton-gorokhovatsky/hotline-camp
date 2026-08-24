@@ -11,13 +11,23 @@
     <link rel="icon" href="./favicon.svg?v=20260821-1" type="image/svg+xml">
     <script>
       (() => {
+        const root = document.documentElement;
         const favicon = document.querySelector('link[rel="icon"]');
         const canvas = document.createElement("canvas");
         const context = canvas.getContext("2d");
         const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
         let timer = null;
+        try {
+          const storedMotion = localStorage.getItem("camp-motion");
+          root.dataset.motion = storedMotion === "full" || storedMotion === "reduce"
+            ? storedMotion
+            : reducedMotion.matches ? "reduce" : "full";
+        } catch (_) {
+          root.dataset.motion = reducedMotion.matches ? "reduce" : "full";
+        }
 
         if (!(favicon instanceof HTMLLinkElement) || !context) return;
+        const motionIsReduced = () => root.dataset.motion === "reduce";
 
         canvas.width = 32;
         canvas.height = 32;
@@ -33,9 +43,9 @@
         };
 
         const drawMark = (time) => {
-          const phase = reducedMotion.matches ? 0.7 : (time % 4000) / 4000;
+          const phase = motionIsReduced() ? 0.7 : (time % 4000) / 4000;
           const drawingProgress = Math.max(0, Math.min(1, (phase - 0.08) / 0.54));
-          const traceProgress = reducedMotion.matches || phase <= 0.82
+          const traceProgress = motionIsReduced() || phase <= 0.82
             ? 1 - Math.pow(1 - drawingProgress, 3)
             : 0;
 
@@ -67,12 +77,12 @@
         const updateMotion = () => {
           if (timer) window.clearInterval(timer);
           drawMark(performance.now());
-          timer = reducedMotion.matches
+          timer = motionIsReduced()
             ? null
             : window.setInterval(() => drawMark(performance.now()), 1000 / 12);
         };
 
-        reducedMotion.addEventListener("change", updateMotion);
+        window.addEventListener("campmotionchange", updateMotion);
         updateMotion();
       })();
     </script>
@@ -113,8 +123,8 @@
       ym(111830664,"init",{ssr:true,webvisor:true,clickmap:true,ecommerce:"dataLayer",referrer:document.referrer,url:location.href,accurateTrackBounce:true,trackLinks:true});
     </script>
     <!-- /Yandex.Metrika counter -->
-    <link rel="stylesheet" href="./styles.css?v=20260824-safari-alpha">
-    <script src="./app.js?v=20260824-race-cadence" defer></script>
+    <link rel="stylesheet" href="./styles.css?v=20260824-release-9">
+    <script src="./app.js?v=20260824-motion-settings" defer></script>
   </head>
   <body>
     <noscript><div><img src="https://mc.yandex.ru/watch/111830664" style="position:absolute; left:-9999px;" alt=""></div></noscript>
@@ -180,7 +190,7 @@
                   <div class="mobile-menu-key-facts" aria-label="Даты и стоимость">
                     <p class="mobile-menu-dates">
                       <span>Сочи · Сириус</span>
-                      <strong>27 сентября — 4 октября</strong>
+                      <strong>27 сентября — 4&nbsp;октября</strong>
                     </p>
                     <p class="mobile-menu-countdown" data-camp-countdown>
                       <strong class="mobile-menu-countdown-value" data-camp-countdown-value>Считаем дни</strong>
@@ -230,7 +240,16 @@
                   </span>
                 </div>
               </div>
-              <div class="mobile-menu-theme">
+              <div class="mobile-menu-theme" role="group" aria-label="Настройки отображения">
+                <button class="motion-toggle motion-toggle--menu" type="button" data-motion-toggle aria-pressed="false">
+                  <svg class="motion-toggle-icon motion-toggle-icon--pause" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M7.5 3v18M16.5 3v18"></path>
+                  </svg>
+                  <svg class="motion-toggle-icon motion-toggle-icon--play" viewBox="0 0 24 24" aria-hidden="true" hidden>
+                    <path d="m6 3 14 9-14 9Z"></path>
+                  </svg>
+                  <span class="motion-toggle-label">Остановить движение</span>
+                </button>
                 <button class="theme-toggle theme-toggle--menu" type="button" data-theme-toggle aria-pressed="false">
                   <svg class="theme-toggle-icon theme-toggle-icon--moon" viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M20 15.2A8.5 8.5 0 0 1 8.8 4a8.5 8.5 0 1 0 11.2 11.2Z"></path>
@@ -239,7 +258,7 @@
                     <circle cx="12" cy="12" r="4"></circle>
                     <path d="M12 2v2m0 16v2M2 12h2m16 0h2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4"></path>
                   </svg>
-                  <span class="theme-toggle-label">Ночная версия</span>
+                  <span class="theme-toggle-label">Ночная тема</span>
                 </button>
               </div>
             </div>
@@ -266,10 +285,11 @@
             </h1>
             <p class="hero-lead">
               <strong class="hero-lead-principle">
-                Решающие дни перед гонкой определяют результат не&nbsp;меньше, чем месяцы тренировок.
+                Решающие дни перед гонкой определяют результат<br class="hero-lead-break">
+                не&nbsp;меньше, чем месяцы тренировок.
               </strong>
               <span class="hero-lead-outcome">
-                Переводим накопленную форму в&nbsp;готовность к&nbsp;конкретной гонке.
+                Переводим накопленную форму в&nbsp;готовность к&nbsp;старту.
               </span>
             </p>
             <a class="camp-cta" href="https://forms.gle/uhrh9pppLXSnwSN56" target="_blank" rel="noreferrer">

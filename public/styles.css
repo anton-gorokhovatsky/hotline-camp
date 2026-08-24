@@ -528,6 +528,75 @@ a {
   text-decoration: none;
 }
 
+.motion-toggle {
+  display: inline-flex;
+  min-height: 3rem;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: color 180ms ease;
+}
+
+.motion-toggle:hover { color: var(--oleander); }
+.motion-toggle:focus-visible { outline: 0; box-shadow: inset 0 -0.2rem var(--oleander); }
+.motion-toggle-label { white-space: nowrap; }
+.motion-toggle-icon {
+  width: 1.3rem;
+  height: 1.3rem;
+  flex: 0 0 auto;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.7;
+}
+
+.mobile-menu-theme {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.8rem, 4vw, 1.5rem);
+}
+
+.mobile-menu-theme .theme-toggle--menu { width: auto; }
+.mobile-menu-theme .theme-toggle--menu,
+.mobile-menu-theme .motion-toggle {
+  display: inline-grid;
+  grid-template-columns: 1.25em max-content;
+  align-items: center;
+  column-gap: 0.5rem;
+  font-size: clamp(0.78rem, 3.8vw, 1rem);
+}
+.mobile-menu-theme .theme-toggle-label,
+.mobile-menu-theme .motion-toggle-label {
+  font-size: inherit;
+  font-weight: 520;
+  line-height: 1;
+  text-align: left;
+}
+.mobile-menu-theme .theme-toggle-label { inline-size: 10.75ch; }
+.mobile-menu-theme .motion-toggle-label { inline-size: 18ch; }
+.mobile-menu-theme .theme-toggle-icon,
+.mobile-menu-theme .motion-toggle-icon {
+  width: 1.25em;
+  height: 1.25em;
+  transform: translateY(-0.035em);
+}
+.mobile-menu-theme .theme-toggle-icon {
+  stroke-width: 1.55;
+}
+.mobile-menu-theme .motion-toggle-icon--pause {
+  stroke-width: 1.95;
+}
+.mobile-menu-theme .motion-toggle-icon--play {
+  stroke-width: 1.75;
+}
+
 .mobile-menu,
 .menu-toggle {
   display: none;
@@ -679,6 +748,8 @@ a {
 .hero-lead-principle {
   font-weight: 620;
 }
+
+.hero-lead-break { display: block; }
 
 .hero-lead-outcome {
   font-size: var(--type-nav);
@@ -2080,22 +2151,28 @@ a {
   .mobile-menu-scroll::after { content: none; }
   .mobile-menu-details { display: contents; }
   .camp-cta-menu { width: min(100%, 26rem); margin-top: clamp(1.75rem, 3vh, 2.25rem); background: var(--oleander); color: var(--oleander-ink); }
-  .mobile-menu-theme { display: flex; grid-column: 11 / 13; grid-row: 2; align-self: last baseline; justify-self: end; }
+  .mobile-menu-theme {
+    grid-column: 11 / 13;
+    grid-row: 2;
+    align-self: last baseline;
+    justify-self: end;
+    transform: translateY(0.2rem);
+  }
   .mobile-menu-theme .theme-toggle--menu {
-    position: relative;
-    display: inline-block;
+    position: static;
+    display: inline-grid;
     width: auto;
-    min-height: 0;
-    padding-inline-start: 2rem;
+    min-height: 3rem;
+    padding-inline-start: 0;
     line-height: 1;
   }
   .mobile-menu-theme .theme-toggle-icon {
-    position: absolute;
-    inset-inline-start: 0;
-    top: 50%;
-    transform: translateY(-52%);
+    position: static;
+    inset-inline-start: auto;
+    top: auto;
   }
-  .mobile-menu-panel .theme-toggle { color: var(--mobile-menu-text); }
+  .mobile-menu-panel .theme-toggle,
+  .mobile-menu-panel .motion-toggle { color: var(--mobile-menu-text); }
 
   .mobile-menu-route:focus-visible { outline: 0; }
 }
@@ -2471,7 +2548,7 @@ a {
   .mobile-menu-theme {
     grid-row: 2;
     align-self: end;
-    justify-self: end;
+    justify-self: start;
   }
 
   .mobile-menu-details {
@@ -2541,7 +2618,8 @@ a {
     color: var(--oleander-ink);
   }
 
-  .mobile-menu-panel .theme-toggle {
+  .mobile-menu-panel .theme-toggle,
+  .mobile-menu-panel .motion-toggle {
     color: var(--mobile-menu-text);
   }
 
@@ -2790,6 +2868,8 @@ a {
     margin-top: 1.25rem;
   }
 
+  .hero-lead-break { display: none; }
+
   .hero-copy .camp-cta {
     margin-top: 1.35rem;
   }
@@ -2813,7 +2893,7 @@ a {
   .camp-facts div:last-child dd {
     justify-self: center;
     color: var(--oleander);
-    font-size: var(--type-display);
+    font-size: clamp(1.875rem, 9.5vw, var(--type-display));
     line-height: var(--leading-display);
     text-align: center;
   }
@@ -3098,6 +3178,11 @@ a {
 }
 
 @media (max-width: 23rem) {
+  .hero-stage {
+    min-height: max(100vh, 46rem);
+    min-height: max(100svh, 46rem);
+  }
+
   .brand {
     max-width: 13rem;
   }
@@ -3105,49 +3190,63 @@ a {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  html {
+  html:not([data-motion="full"]) {
     scroll-behavior: auto;
   }
 
-  *,
-  *::before,
-  *::after {
+  html:not([data-motion="full"]) *,
+  html:not([data-motion="full"]) *::before,
+  html:not([data-motion="full"]) *::after {
     scroll-behavior: auto !important;
     transition-duration: 0.01ms !important;
   }
 
-  .conditions {
+  html:not([data-motion="full"]) .conditions {
     scroll-snap-type: none;
   }
 
-  .dot-motif {
+  html:not([data-motion="full"]) .dot-motif {
     animation: none;
     opacity: 1;
     background-position: 0 0;
     transform: none;
   }
 
-  .dot-motif::before,
-  .dot-motif::after { animation: none; opacity: 0; }
+  html:not([data-motion="full"]) .dot-motif::before,
+  html:not([data-motion="full"]) .dot-motif::after { animation: none; opacity: 0; }
 
-  .dot-field,
-  .dot-field::before,
-  .dot-field::after {
+  html:not([data-motion="full"]) .dot-field,
+  html:not([data-motion="full"]) .dot-field::before,
+  html:not([data-motion="full"]) .dot-field::after {
     animation: none;
   }
 
-  .dot-field::after {
+  html:not([data-motion="full"]) .dot-field::after {
     opacity: 0;
     transform: none;
   }
 
-  .race-trace__flow {
+  html:not([data-motion="full"]) .race-trace__flow {
     animation: none;
     stroke-dashoffset: 0;
   }
 
 
 }
+
+html[data-motion="reduce"] { scroll-behavior: auto; }
+html[data-motion="reduce"] *,
+html[data-motion="reduce"] *::before,
+html[data-motion="reduce"] *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; }
+html[data-motion="reduce"] .conditions { scroll-snap-type: none; }
+html[data-motion="reduce"] .dot-motif { animation: none; opacity: 1; background-position: 0 0; transform: none; }
+html[data-motion="reduce"] .dot-motif::before,
+html[data-motion="reduce"] .dot-motif::after { animation: none; opacity: 0; }
+html[data-motion="reduce"] .dot-field,
+html[data-motion="reduce"] .dot-field::before,
+html[data-motion="reduce"] .dot-field::after { animation: none; }
+html[data-motion="reduce"] .dot-field::after { opacity: 0; transform: none; }
+html[data-motion="reduce"] .race-trace__flow { animation: none; stroke-dashoffset: 0; }
 
 /* Trainer chapters: the evidence is grouped as a competitive biography. */
 .coach-story {

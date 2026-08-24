@@ -24,7 +24,7 @@
 
   const updateThemeControls = (theme) => {
     const nextTheme = theme === "dark" ? "light" : "dark";
-    const statusLabel = theme === "dark" ? "Дневная версия" : "Ночная версия";
+    const statusLabel = theme === "dark" ? "Дневная тема" : "Ночная тема";
     const accessibleLabel = `Включить ${nextTheme === "dark" ? "тёмную" : "светлую"} тему`;
 
     themeToggles.forEach((toggle) => {
@@ -74,6 +74,59 @@
     if (event.key === storageKey) {
       applyTheme(storedTheme() || (systemTheme.matches ? "dark" : "light"));
     }
+  });
+})();
+
+(() => {
+  "use strict";
+
+  const root = document.documentElement;
+  const motionToggles = [...document.querySelectorAll("[data-motion-toggle]")];
+  const systemMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const storageKey = "camp-motion";
+
+  const storedMotion = () => {
+    try {
+      const value = localStorage.getItem(storageKey);
+      return value === "full" || value === "reduce" ? value : null;
+    } catch (_) {
+      return null;
+    }
+  };
+
+  const currentMotion = () => root.dataset.motion === "reduce" ? "reduce" : "full";
+  const updateMotionControls = (motion) => {
+    const isReduced = motion === "reduce";
+    motionToggles.forEach((toggle) => {
+      toggle.setAttribute("aria-pressed", String(isReduced));
+      const label = toggle.querySelector(".motion-toggle-label");
+      if (label) label.textContent = isReduced ? "Включить движение" : "Остановить движение";
+      const pause = toggle.querySelector(".motion-toggle-icon--pause");
+      const play = toggle.querySelector(".motion-toggle-icon--play");
+      if (pause) pause.toggleAttribute("hidden", isReduced);
+      if (play) play.toggleAttribute("hidden", !isReduced);
+    });
+  };
+  const applyMotion = (motion, persist = false) => {
+    root.dataset.motion = motion;
+    if (persist) {
+      try { localStorage.setItem(storageKey, motion); } catch (_) {}
+    }
+    updateMotionControls(motion);
+    window.dispatchEvent(new CustomEvent("campmotionchange", { detail: { reduced: motion === "reduce" } }));
+  };
+
+  applyMotion(storedMotion() || (systemMotion.matches ? "reduce" : "full"));
+  motionToggles.forEach((toggle) => {
+    toggle.addEventListener("click", () => {
+      applyMotion(currentMotion() === "reduce" ? "full" : "reduce", true);
+    });
+  });
+  systemMotion.addEventListener("change", (event) => {
+    if (!storedMotion()) applyMotion(event.matches ? "reduce" : "full");
+  });
+  window.addEventListener("storage", (event) => {
+    if (event.key === storageKey) applyMotion(storedMotion() || (systemMotion.matches ? "reduce" : "full"));
   });
 })();
 
@@ -190,7 +243,7 @@
 
     const previousScrollBehavior = root.style.scrollBehavior;
     const shouldMove = destination instanceof HTMLElement;
-    const scrollBehavior = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth";
+    const scrollBehavior = root.dataset.motion === "reduce" ? "auto" : "smooth";
     toggle.setAttribute("aria-expanded", "false");
     toggle.setAttribute("aria-label", "Открыть меню");
     root.classList.remove("menu-open");
@@ -615,6 +668,7 @@
   const still = uniform("reduced");
   const startedAt = performance.now();
   let frameRequest = 0;
+  const motionIsReduced = () => root.dataset.motion === "reduce";
 
   const resize = () => {
     const scale = Math.min(window.devicePixelRatio || 1, 2);
@@ -628,11 +682,12 @@
   };
   const frame = (now) => {
     resize();
-    gl.uniform1f(clock, reduceMotion.matches ? 9.8 : (now - startedAt) / 1000);
+    const motionReduced = motionIsReduced();
+    gl.uniform1f(clock, motionReduced ? 9.8 : (now - startedAt) / 1000);
     gl.uniform1f(theme, root.dataset.theme === "dark" ? 1 : 0);
-    gl.uniform1f(still, reduceMotion.matches ? 1 : 0);
+    gl.uniform1f(still, motionReduced ? 1 : 0);
     gl.drawArrays(gl.TRIANGLES, 0, 6);
-    if (!reduceMotion.matches) frameRequest = window.requestAnimationFrame(frame);
+    if (!motionReduced) frameRequest = window.requestAnimationFrame(frame);
   };
   const restart = () => {
     window.cancelAnimationFrame(frameRequest);
@@ -640,8 +695,9 @@
   };
 
   reduceMotion.addEventListener("change", restart);
-  new MutationObserver(() => { if (reduceMotion.matches) restart(); }).observe(root, { attributes: true, attributeFilter: ["data-theme"] });
-  window.addEventListener("resize", () => { if (reduceMotion.matches) restart(); });
+  window.addEventListener("campmotionchange", restart);
+  new MutationObserver(() => { if (motionIsReduced()) restart(); }).observe(root, { attributes: true, attributeFilter: ["data-theme"] });
+  window.addEventListener("resize", () => { if (motionIsReduced()) restart(); });
   canvas.addEventListener("webglcontextlost", (event) => { event.preventDefault(); window.cancelAnimationFrame(frameRequest); });
   restart();
 })();
