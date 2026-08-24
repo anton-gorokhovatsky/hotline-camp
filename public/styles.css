@@ -591,6 +591,7 @@ a {
   stroke-width: 1.55;
 }
 .mobile-menu-theme .motion-toggle-icon--pause {
+  transform: translateY(0.05em);
   stroke-width: 1.95;
 }
 .mobile-menu-theme .motion-toggle-icon--play {
