@@ -545,12 +545,11 @@
 (() => {
   "use strict";
 
-  if (new URLSearchParams(window.location.search).get("experiment") !== "race-field") return;
-
   const root = document.documentElement;
   const host = document.querySelector(".race-rhythm");
+  const programNotes = document.querySelector(".program-notes");
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-  if (!(host instanceof HTMLElement)) return;
+  if (!(host instanceof HTMLElement) || !(programNotes instanceof HTMLOListElement)) return;
 
   const canvas = document.createElement("canvas");
   canvas.setAttribute("aria-hidden", "true");
@@ -589,14 +588,14 @@
   }
 
   const style = document.createElement("style");
-  style.dataset.raceFieldPreview = "";
+  style.dataset.raceField = "";
   style.textContent = `
-    .race-rhythm.race-rhythm--field{display:block;width:calc(100% + var(--space-page) + var(--space-page));margin:clamp(1.25rem,2.5vw,2.5rem) calc(var(--space-page) * -1) 0;overflow:hidden}
-    .race-rhythm--field canvas{display:block;width:100%;height:clamp(18rem,24vw,22rem);background:transparent}
-    .race-rhythm.race-rhythm--field+.program-notes{margin-top:clamp(.5rem,1vw,1rem)}
-    @media(max-width:62rem){.race-rhythm.race-rhythm--field{display:block;margin-top:clamp(1rem,4vw,1.75rem)}.race-rhythm--field canvas{height:clamp(18rem,76vw,23rem)}.race-rhythm.race-rhythm--field+.program-notes{margin-top:clamp(.75rem,3vw,1.25rem)}}
+    .race-rhythm.race-rhythm--field{display:block;width:calc(100% + var(--space-page) + var(--space-page));margin:var(--program-space-major) calc(var(--space-page) * -1) 0;overflow:hidden}
+    .race-rhythm--field canvas{display:block;width:100%;height:clamp(13.5rem,16vw,16rem);background:transparent}
+    @media(max-width:62rem){.race-rhythm.race-rhythm--field{display:block;margin-top:var(--program-space-major)}.race-rhythm--field canvas{height:clamp(13rem,56vw,14.5rem)}}
   `;
   document.head.append(style);
+  programNotes.after(host);
   host.classList.add("race-rhythm--field");
   host.setAttribute("aria-label", "Одна непрерывная среда меняется под движением пловца, велосипедиста и бегуна.");
   host.replaceChildren(canvas);
