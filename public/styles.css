@@ -1639,185 +1639,9 @@ a {
 .race-trace__split { stroke: currentColor; stroke-width: 1; stroke-dasharray: 2 7; opacity: 0.72; }
 
 .race-rhythm {
-  --race-cycle: 10.8s;
   position: relative;
   z-index: 0;
-  width: 100%;
-  margin: clamp(2.75rem, 4vw, 4.5rem) 0 0;
   pointer-events: none;
-}
-
-.race-rhythm__score {
-  height: clamp(12rem, 16vw, 16rem);
-  overflow: hidden;
-}
-
-.cadence-reactor {
-  position: relative;
-  display: grid;
-  grid-template-columns: 0.82fr 0.9fr 1.28fr;
-  align-items: center;
-  width: 100%;
-  height: 100%;
-  padding-inline: clamp(0.25rem, 2vw, 2rem);
-  overflow: hidden;
-  isolation: isolate;
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
-  mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
-}
-
-.cadence-reactor__unit {
-  --echo-x: -0.08em;
-  --echo-y: 0;
-  position: relative;
-  z-index: 1;
-  display: grid;
-  place-items: center;
-  min-width: 0;
-  color: var(--oleander);
-  font-size: clamp(4.5rem, 14vw, 13rem);
-  font-weight: 690;
-  font-variant-numeric: tabular-nums;
-  line-height: 0.72;
-  letter-spacing: -0.105em;
-  animation: cadence-reactor-beat var(--beat) cubic-bezier(0.45, 0, 0.55, 1) infinite;
-}
-
-.cadence-reactor__unit::before,
-.cadence-reactor__unit::after,
-.cadence-reactor__unit span {
-  grid-area: 1 / 1;
-}
-
-.cadence-reactor__unit::before,
-.cadence-reactor__unit::after {
-  content: attr(data-cadence);
-  color: transparent;
-  -webkit-text-stroke: clamp(1px, 0.11vw, 1.8px) color-mix(in oklab, var(--text) 34%, transparent);
-}
-
-.cadence-reactor__unit::after {
-  opacity: 0.34;
-  transform: translate(var(--echo-x), var(--echo-y)) scale(1.055);
-}
-
-.cadence-reactor__unit span {
-  color: var(--oleander);
-  text-shadow: 0 0 0.55em color-mix(in oklab, var(--oleander) 25%, transparent);
-}
-
-.cadence-reactor__unit--swim { --beat: 0.909s; --echo-y: 0.07em; }
-.cadence-reactor__unit--bike { --beat: 0.667s; --echo-x: 0; --echo-y: -0.065em; }
-.cadence-reactor__unit--run { --beat: 0.333s; --echo-x: 0.055em; }
-
-.cadence-reactor__unit--swim span { animation: cadence-reactor-swim var(--race-cycle) linear infinite; }
-.cadence-reactor__unit--bike span { animation: cadence-reactor-bike var(--race-cycle) linear infinite; }
-.cadence-reactor__unit--run span { animation: cadence-reactor-run var(--race-cycle) linear infinite; }
-
-.cadence-reactor__impulse {
-  position: absolute;
-  inset: 7% auto 7% -18%;
-  z-index: 0;
-  width: 18%;
-  border-radius: 50%;
-  background: radial-gradient(ellipse, color-mix(in oklab, var(--oleander) 62%, transparent), transparent 70%);
-  filter: blur(clamp(0.9rem, 1.8vw, 1.7rem));
-  mix-blend-mode: multiply;
-  animation: cadence-reactor-course var(--race-cycle) linear infinite;
-}
-
-:root[data-theme="dark"] .cadence-reactor__impulse { mix-blend-mode: screen; }
-
-@keyframes cadence-reactor-beat {
-  0%, 100% { transform: scaleY(0.985); }
-  45% { transform: scaleY(1.025); }
-}
-
-@keyframes cadence-reactor-swim {
-  0%, 25% { opacity: 0.94; }
-  28%, 97% { opacity: 0.025; }
-  100% { opacity: 0.94; }
-}
-
-@keyframes cadence-reactor-bike {
-  0%, 29%, 70%, 100% { opacity: 0.025; }
-  33%, 66% { opacity: 0.94; }
-}
-
-@keyframes cadence-reactor-run {
-  0%, 71%, 100% { opacity: 0.025; }
-  75%, 97% { opacity: 0.94; }
-}
-
-@keyframes cadence-reactor-course {
-  0% { opacity: 0; transform: translate3d(0, 0, 0) scale(0.6); }
-  3%, 24% { opacity: 0.72; }
-  27% { opacity: 0; transform: translate3d(155%, 4%, 0) scaleX(0.08); }
-  32% { opacity: 0; transform: translate3d(190%, -3%, 0) scaleX(0.08); }
-  35%, 65% { opacity: 0.72; }
-  69% { opacity: 0; transform: translate3d(430%, 3%, 0) scaleX(0.08); }
-  74% { opacity: 0; transform: translate3d(465%, -4%, 0) scaleX(0.08); }
-  77%, 97% { opacity: 0.72; }
-  100% { opacity: 0; transform: translate3d(665%, 0, 0) scale(0.6); }
-}
-
-.race-rhythm__score svg {
-  display: block;
-  width: 100%;
-  height: 100%;
-  overflow: visible;
-}
-
-.race-rhythm__score .race-rhythm__art--mobile { display: none; }
-
-.race-rhythm__field--continuity { opacity: 0.1; }
-.race-rhythm__field--base { opacity: 0.28; }
-.race-rhythm__field--active { opacity: 0.96; }
-
-.race-rhythm__pulse {
-  opacity: 0;
-  transform: translate(-110px, 10px);
-  transform-origin: 0 0;
-  animation:
-    race-rhythm-travel var(--race-cycle) linear infinite,
-    race-rhythm-cadence var(--race-cycle) ease-in-out infinite;
-}
-
-.race-rhythm + .program-notes {
-  margin-top: clamp(2.75rem, 4vw, 4.5rem);
-}
-
-@media (min-width: 62.01rem) {
-  .race-rhythm {
-    margin-top: clamp(-3rem, -3vw, -2.5rem);
-  }
-
-  .race-rhythm + .program-notes {
-    margin-top: clamp(-2.25rem, -2.2vw, -1.5rem);
-  }
-}
-
-.race-rhythm[hidden] + .program-notes {
-  margin-top: var(--program-space-major);
-}
-
-@keyframes race-rhythm-travel {
-  0% { transform: translate(-110px, 10px); }
-  26%, 32% { transform: translate(330px, -14px); }
-  68%, 74% { transform: translate(810px, -36px); }
-  98%, 100% { transform: translate(1320px, -73px); }
-}
-
-@keyframes race-rhythm-cadence {
-  0%, 5%, 12.5%, 20%, 26%, 32%, 36.5%, 41.5%, 46.5%, 51.5%, 56.5%, 61.5%, 66.5%, 68%, 74%, 77.25%, 79.75%, 82.25%, 84.75%, 87.25%, 89.75%, 92.25%, 94.75%, 98%, 100% { opacity: 0; }
-  2.5%, 9%, 16.5%, 24%, 34%, 39%, 44%, 49%, 54%, 59%, 64%, 75.5%, 78.5%, 81%, 83.5%, 86%, 88.5%, 91%, 93.5%, 96.5% { opacity: 1; }
-}
-
-@keyframes race-rhythm-travel-mobile {
-  0% { transform: translate(-44px, 18px); }
-  26%, 32% { transform: translate(100px, -4px); }
-  68%, 74% { transform: translate(250px, -18px); }
-  98%, 100% { transform: translate(404px, -35px); }
 }
 
 .race-trace--trainers {
@@ -1947,7 +1771,6 @@ a {
 
 @media (max-width: 62rem) {
   .dot-field,
-  .race-rhythm,
   .race-trace {
     display: none;
   }
@@ -3015,32 +2838,10 @@ a {
     display: block;
   }
 
-  .race-rhythm,
   .race-trace {
     display: block;
   }
 
-  .race-rhythm {
-    margin-top: clamp(-2.25rem, -8vw, -1.75rem);
-  }
-
-  .race-rhythm__score {
-    height: clamp(8.25rem, 38vw, 9.5rem);
-  }
-
-  .race-rhythm__score .race-rhythm__art--desktop { display: none; }
-  .race-rhythm__score .race-rhythm__art--mobile { display: block; }
-
-  .race-rhythm__art--mobile .race-rhythm__field--continuity { opacity: 0.14; }
-  .race-rhythm__art--mobile .race-rhythm__field--base { opacity: 0.38; }
-
-  .race-rhythm__pulse--mobile {
-    animation-name: race-rhythm-travel-mobile, race-rhythm-cadence;
-  }
-
-  .race-rhythm + .program-notes {
-    margin-top: clamp(-2.75rem, -9vw, -2rem);
-  }
 
   .program-side {
     max-width: none;
@@ -3344,18 +3145,6 @@ a {
     stroke-dashoffset: 0;
   }
 
-  .race-rhythm__pulse {
-    animation: none;
-    opacity: 0;
-    transform: translate(-110px, 10px);
-  }
-
-  .cadence-reactor__unit,
-  .cadence-reactor__unit span,
-  .cadence-reactor__impulse { animation: none; }
-
-  .cadence-reactor__unit span { opacity: 0.12; }
-  .cadence-reactor__impulse { display: none; }
 
 }
 
