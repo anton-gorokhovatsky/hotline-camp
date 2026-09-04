@@ -1,3 +1,68 @@
+// Progressive enhancement: controls keep their static SVGs if the module cannot load.
+const campIconMorph = (() => {
+  const records = new Map();
+  const systemMotion = matchMedia("(prefers-reduced-motion: reduce)");
+  const moduleUrl = new URL("./vendor/morphicons-1.7.1.js", document.currentScript.src);
+  const spring = { stiffness: 600, damping: 50 };
+  let createMorph;
+  const reduced = () => document.documentElement.dataset.motion === "reduce" || systemMotion.matches;
+  const iconData = (node) => node.localName === "svg"
+    ? [...node.children].map((child) => [child.localName, Object.fromEntries([...child.attributes].map((attr) => [attr.name, attr.value]))])
+    : node.getAttribute("d");
+
+  const render = (record, animate) => {
+    if (!createMorph) return;
+    if (!record.driver) {
+      const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      record.driver = createMorph(path, record.icons[record.current], { reducedMotion: "user" });
+      const first = record.nodes[0];
+      if (first.localName === "svg") {
+        record.surface = first.cloneNode(false);
+        record.surface.removeAttribute("hidden");
+        record.surface.append(path);
+        first.before(record.surface);
+      } else {
+        record.surface = path;
+        first.parentNode.append(path);
+      }
+      record.surface.dataset.iconMorph = "";
+      record.nodes.forEach((node) => { node.style.display = "none"; });
+    }
+    const still = reduced() || document.hidden;
+    record.driver.reducedMotion = still ? "always" : "user";
+    record.surface.style.transition = still || !animate ? "none" : "transform 180ms ease-out, stroke-width 180ms ease-out";
+    if (record.surface.localName === "svg") {
+      record.surface.setAttribute("class", record.nodes[record.next].getAttribute("class") || "");
+    }
+    if (animate && !still && record.surface.getClientRects().length) {
+      record.driver.morphTo(record.icons[record.next], spring);
+    } else {
+      record.driver.set(record.icons[record.next]);
+    }
+    record.current = record.next;
+  };
+  const settle = () => records.forEach((record) => render(record, false));
+  import(moduleUrl.href).then((module) => {
+    createMorph = module.createMorph;
+    settle();
+  }).catch(() => { /* Static controls remain usable without icon animation. */ });
+  window.addEventListener("campmotionchange", () => { if (reduced()) settle(); });
+  systemMotion.addEventListener("change", settle);
+  window.addEventListener("resize", settle);
+  document.addEventListener("visibilitychange", () => { if (document.hidden) settle(); });
+
+  return (first, second, showSecond) => {
+    if (!first || !second) return;
+    const next = Number(showSecond);
+    if (!records.has(first)) {
+      records.set(first, { nodes: [first, second], icons: [iconData(first), iconData(second)], current: next, next });
+    }
+    const record = records.get(first);
+    record.next = next;
+    render(record, record.current !== next);
+  };
+})();
+
 (() => {
   "use strict";
 
@@ -38,10 +103,11 @@
       const label = toggle.querySelector(".theme-toggle-label");
       if (label) label.textContent = statusLabel;
 
-      const moon = toggle.querySelector(".theme-toggle-icon--moon");
-      const sun = toggle.querySelector(".theme-toggle-icon--sun");
+      const moon = toggle.querySelector(".theme-toggle-icon--moon:not([data-icon-morph])");
+      const sun = toggle.querySelector(".theme-toggle-icon--sun:not([data-icon-morph])");
       if (moon) moon.toggleAttribute("hidden", nextTheme !== "dark");
       if (sun) sun.toggleAttribute("hidden", nextTheme !== "light");
+      campIconMorph(moon, sun, nextTheme === "light");
     });
   };
 
@@ -101,10 +167,11 @@
       toggle.setAttribute("aria-pressed", String(isReduced));
       const label = toggle.querySelector(".motion-toggle-label");
       if (label) label.textContent = isReduced ? "Включить движение" : "Остановить движение";
-      const pause = toggle.querySelector(".motion-toggle-icon--pause");
-      const play = toggle.querySelector(".motion-toggle-icon--play");
+      const pause = toggle.querySelector(".motion-toggle-icon--pause:not([data-icon-morph])");
+      const play = toggle.querySelector(".motion-toggle-icon--play:not([data-icon-morph])");
       if (pause) pause.toggleAttribute("hidden", isReduced);
       if (play) play.toggleAttribute("hidden", !isReduced);
+      campIconMorph(pause, play, isReduced);
     });
   };
   const applyMotion = (motion, persist = false) => {
@@ -207,6 +274,7 @@
 
   const openIcon = toggle.querySelector(".menu-icon-open");
   const closeIcon = toggle.querySelector(".menu-icon-close");
+  campIconMorph(openIcon, closeIcon, false);
   let savedScroll = 0;
   let previousBodyStyles = null;
 
@@ -250,6 +318,7 @@
     panel.hidden = true;
     if (openIcon instanceof SVGElement) openIcon.hidden = false;
     if (closeIcon instanceof SVGElement) closeIcon.hidden = true;
+    campIconMorph(openIcon, closeIcon, false);
 
     if (previousBodyStyles) {
       body.style.overflow = previousBodyStyles.overflow;
@@ -296,6 +365,7 @@
     root.classList.add("menu-open");
     if (openIcon instanceof SVGElement) openIcon.hidden = true;
     if (closeIcon instanceof SVGElement) closeIcon.hidden = false;
+    campIconMorph(openIcon, closeIcon, true);
 
     body.style.overflow = "hidden";
   };
