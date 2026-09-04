@@ -139,7 +139,17 @@ def main() -> int:
     require("Четырёхкратный чемпион России" in html, "the trainer credential must use natural Russian wording")
     require("4-кратный" not in html, "the technical numeral wording must be removed")
     require('<span class="hero-title-main">Финальная неделя перед стартами</span>' in html, "the hero heading must keep its primary line")
-    require(html.count("IRONSTAR 2026") >= 2, "the event name must align across the hero and metadata")
+    require(html.replace("\u00a0", " ").count("IRONSTAR 2026") >= 2, "the event name must align across the hero and metadata")
+    metadata = {
+        attrs.get("property", attrs.get("name")): attrs.get("content", "")
+        for tag, attrs in parser.tags if tag == "meta"
+    }
+    title = re.search(r"<title>(.*?)</title>", html, re.S)
+    require(title is not None and "IRONSTAR\u00a02026" in title.group(1), "the page title must keep the event name and year together")
+    for key in ("description", "og:title"):
+        require("IRONSTAR\u00a02026" in metadata.get(key, ""), f"{key} must keep the event name and year together")
+    for key in ("description", "og:description", "og:image:alt"):
+        require("27\u00a0сентября" in metadata.get(key, ""), f"{key} must keep the day and month together")
     require(html.count("Переводим накопленную форму в&nbsp;готовность к&nbsp;старту.") == 1, "the hero promise must appear exactly once")
     require("Абсолютный победитель Ironman 70.3 Oman 2025" in html, "the supplied trainer distinction must be preserved")
     require("Победитель VII Всероссийской летней спартакиады учащихся, 2015" in html, "the supplied Spartakiad title must be preserved")
