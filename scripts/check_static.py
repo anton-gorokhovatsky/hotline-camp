@@ -74,6 +74,13 @@ def main() -> int:
     parser = DocumentParser()
     parser.feed(html)
 
+    require(any(tag == "link" and attrs.get("rel") == "canonical" and attrs.get("href") == "https://hotlinecamp.ru/" for tag, attrs in parser.tags), "canonical must use the public domain")
+    for property_name, url in (("og:url", "https://hotlinecamp.ru/"), ("og:image", "https://hotlinecamp.ru/og.png")):
+        require(any(tag == "meta" and attrs.get("property") == property_name and attrs.get("content") == url for tag, attrs in parser.tags), f"{property_name} must use the public domain")
+    for document in ("AGENTS.md", "README.md", "docs/interface-rules.md"):
+        copy = read(ROOT / document)
+        require(CTA_URL in copy and "Заполнить заявку" in copy, f"{document} must describe the current CTA")
+
     require(html.lower().startswith("<!doctype html>"), "document must start with a doctype")
     require(re.search(r'<html\b[^>]*\blang="ru"', html, re.I) is not None, "html lang must be ru")
     require(sum(tag == "main" for tag, _ in parser.tags) == 1, "exactly one main is required")
@@ -117,6 +124,11 @@ def main() -> int:
     for image in narrative_images:
         source = image.get("src", "")
         require((PUBLIC / source.removeprefix("./")).is_file(), f"missing image asset: {source}")
+        require(image.get("sizes") and image.get("srcset"), "every narrative image needs responsive sources")
+        for candidate in image["srcset"].split(","):
+            path, descriptor = candidate.strip().split()
+            require(descriptor.endswith("w") and descriptor[:-1].isdigit(), "srcset must use width descriptors")
+            require((PUBLIC / path.removeprefix("./")).is_file(), f"missing responsive image: {path}")
 
     require(
         f"https://mc.yandex.ru/metrika/tag.js?id={METRIKA_COUNTER_ID}" in html,
@@ -139,6 +151,11 @@ def main() -> int:
         require(state in html + js, f"missing honest data state: {state}")
     require("sea_surface_temperature" in js, "sea temperature must come from Open-Meteo")
     require("temperature_2m" in js, "air temperature must come from Open-Meteo")
+    require("temperature_2m_min" in js and "temperature_2m_max" in js, "camp forecast must use real daily temperatures")
+    for field in ("forecast-label", "forecast-value", "forecast-note"):
+        require(f'data-condition="{field}"' in html, f"missing dynamic forecast field: {field}")
+    require("IntersectionObserver" in js and '"visibilitychange"' in js, "animation must pause outside the viewport and in the background")
+    require(".dot-motif" not in css, "retired decorative motifs must not return")
 
     for token in (
         "--space-page: clamp(",

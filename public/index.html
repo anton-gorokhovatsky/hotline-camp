@@ -7,7 +7,7 @@
     <meta name="theme-color" content="#101110" media="(prefers-color-scheme: dark)">
     <title>Предстартовый кэмп IRONSTAR 2026 в Сириусе</title>
     <meta name="description" content="Финальная неделя подготовки к стартам IRONSTAR 2026 в Сириусе: трасса, открытая вода, транзитные зоны и питание. 27 сентября — 4 октября.">
-    <link rel="canonical" href="https://anton-gorokhovatsky.github.io/hotline-camp/">
+    <link rel="canonical" href="https://hotlinecamp.ru/">
     <link rel="icon" href="./favicon.svg?v=20260821-1" type="image/svg+xml">
     <script>
       (() => {
@@ -76,6 +76,8 @@
 
         const updateMotion = () => {
           if (timer) window.clearInterval(timer);
+          timer = null;
+          if (document.hidden) return;
           drawMark(performance.now());
           timer = motionIsReduced()
             ? null
@@ -83,6 +85,7 @@
         };
 
         window.addEventListener("campmotionchange", updateMotion);
+        document.addEventListener("visibilitychange", updateMotion);
         updateMotion();
       })();
     </script>
@@ -92,8 +95,8 @@
     <meta property="og:site_name" content="Тренировочный сбор по триатлону в Сочи">
     <meta property="og:title" content="Финальная неделя перед стартами IRONSTAR 2026">
     <meta property="og:description" content="Предстартовый кэмп в Сириусе: трасса, открытая вода, транзитные зоны и питание. 27 сентября — 4 октября.">
-    <meta property="og:url" content="https://anton-gorokhovatsky.github.io/hotline-camp/">
-    <meta property="og:image" content="https://anton-gorokhovatsky.github.io/hotline-camp/og.png">
+    <meta property="og:url" content="https://hotlinecamp.ru/">
+    <meta property="og:image" content="https://hotlinecamp.ru/og.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:image:alt" content="Атлет на финише и текст о предстартовом кэмпе в Сириусе, 27 сентября — 4 октября">
@@ -123,8 +126,8 @@
       ym(111830664,"init",{ssr:true,webvisor:true,clickmap:true,ecommerce:"dataLayer",referrer:document.referrer,url:location.href,accurateTrackBounce:true,trackLinks:true});
     </script>
     <!-- /Yandex.Metrika counter -->
-    <link rel="stylesheet" href="./styles.css?v=20260824-release-11">
-    <script src="./app.js?v=20260904-morphicons" defer></script>
+    <link rel="stylesheet" href="./styles.css?v=20260904-audit">
+    <script src="./app.js?v=20260904-audit" defer></script>
   </head>
   <body>
     <noscript><div><img src="https://mc.yandex.ru/watch/111830664" style="position:absolute; left:-9999px;" alt=""></div></noscript>
@@ -270,6 +273,8 @@
           <figure class="hero-media">
             <img
               src="./media/hero-time-trial.jpg"
+              srcset="./media/responsive/hero-time-trial-480.jpg 480w, ./media/responsive/hero-time-trial-960.jpg 960w, ./media/hero-time-trial.jpg 2400w"
+              sizes="(max-width: 46rem) 150vh, 100vw"
               alt="Евгений Тихонин проходит велосипедный этап на разделочном велосипеде"
               width="2400"
               height="1599"
@@ -321,9 +326,9 @@
                 <small data-condition="daylight-note">сегодня</small>
               </div>
               <div class="condition condition-forecast service-island material-glass">
-                <span>27.09—04.10</span>
-                <strong>Прогноз с&nbsp;17 сентября</strong>
-                <small>за&nbsp;10 дней до&nbsp;старта</small>
+                <span data-condition="forecast-label">27.09—04.10</span>
+                <strong data-condition="forecast-value">Прогноз на&nbsp;даты кэмпа</strong>
+                <small data-condition="forecast-note">нужно подключение к&nbsp;Open-Meteo</small>
               </div>
               <a class="condition condition-source service-island material-glass" href="https://open-meteo.com/en/docs" target="_blank" rel="noreferrer">
                 <span>Источник</span>
@@ -446,6 +451,8 @@
             <figure class="coach-finish">
               <img
                 src="./media/coach-evgeny-finish.jpg"
+                srcset="./media/responsive/coach-evgeny-finish-480.jpg 480w, ./media/responsive/coach-evgeny-finish-960.jpg 960w, ./media/coach-evgeny-finish.jpg 2400w"
+                sizes="(max-width: 46rem) calc(100vw - 2rem), 40vw"
                 alt="Евгений Тихонин финиширует Ironman 70.3 Durban под табло с результатом 03:56:27"
                 width="2400"
                 height="1599"
@@ -455,6 +462,8 @@
             <figure class="coach-context">
               <img
                 src="./media/week-swimmer.jpg"
+                srcset="./media/responsive/week-swimmer-480.jpg 480w, ./media/responsive/week-swimmer-960.jpg 960w, ./media/week-swimmer.jpg 1600w"
+                sizes="(max-width: 46rem) calc(50vw - 1.5rem), 24vw"
                 alt="Евгений Тихонин выходит из воды после плавательного этапа в гидрокостюме"
                 width="1600"
                 height="2400"
@@ -464,6 +473,8 @@
             <figure class="coach-motion">
               <img
                 src="./media/coach-evgeny-bike.jpg"
+                srcset="./media/responsive/coach-evgeny-bike-480.jpg 480w, ./media/responsive/coach-evgeny-bike-960.jpg 960w, ./media/coach-evgeny-bike.jpg 1600w"
+                sizes="(max-width: 46rem) calc(50vw - 1.5rem), 24vw"
                 alt="Евгений Тихонин едет на гоночном велосипеде"
                 width="1600"
                 height="2400"
@@ -505,6 +516,8 @@
             <figure class="coach-finish">
               <img
                 src="./media/coach-maksim-finish.jpg"
+                srcset="./media/responsive/coach-maksim-finish-480.jpg 480w, ./media/responsive/coach-maksim-finish-960.jpg 960w, ./media/coach-maksim-finish.jpg 1800w"
+                sizes="(max-width: 46rem) calc(100vw - 2rem), 40vw"
                 alt="Максим Кубышко приближается к финишной ленте"
                 width="1800"
                 height="1199"
@@ -514,6 +527,8 @@
             <figure class="coach-context">
               <img
                 src="./media/maksim-pool.jpg"
+                srcset="./media/responsive/maksim-pool-480.jpg 480w, ./media/responsive/maksim-pool-960.jpg 960w, ./media/maksim-pool.jpg 1597w"
+                sizes="(max-width: 46rem) calc(50vw - 1.5rem), 24vw"
                 alt="Максим Кубышко поправляет очки перед тренировкой в бассейне"
                 width="1597"
                 height="2400"
@@ -523,6 +538,8 @@
             <figure class="coach-motion">
               <img
                 src="./media/coach-maksim-water.jpg"
+                srcset="./media/responsive/coach-maksim-water-480.jpg 480w, ./media/responsive/coach-maksim-water-960.jpg 960w, ./media/coach-maksim-water.jpg 1597w"
+                sizes="(max-width: 46rem) calc(50vw - 1.5rem), 24vw"
                 alt="Максим Кубышко выходит из воды после плавательной тренировки"
                 width="1597"
                 height="2400"
@@ -568,6 +585,8 @@
         <figure class="closing-media">
           <img
             src="./media/final-finish.jpg"
+            srcset="./media/responsive/final-finish-480.jpg 480w, ./media/responsive/final-finish-960.jpg 960w, ./media/final-finish.jpg 2400w"
+            sizes="100vw"
             alt="Максим Кубышко пересекает финишную ленту с поднятыми руками"
             width="2400"
             height="1599"

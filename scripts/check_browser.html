@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="ru">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hotline — локальные регрессии</title>
+<style>body{margin:0;font:14px system-ui}header{padding:8px;background:#fff;color:#111}button{min-height:48px}iframe{display:block;width:100%;height:900px;border:0}pre{white-space:pre-wrap}</style>
+<header>
+  <strong>Локальная QA-фикстура · вымышленные тестовые данные, не прогноз</strong>
+  <pre id="results">Проверяем…</pre>
+  <button id="start">Начало</button><button id="field">Поле</button>
+  <button id="hidden">Скрыть / показать документ</button>
+  <button id="theme">Сменить тему</button>
+  <button id="forecast">Прогноз</button><button id="contrast">Проверить контраст</button>
+  <output id="counts"></output>
+</header>
+<iframe id="fixture" title="Тестовая страница"></iframe>
+<script type="module">
+const source = await (await fetch('../public/app.js')).text();
+const helpers = source.slice(source.indexOf('  const isNumber ='), source.indexOf('  const showForecast ='));
+const state = new Function('forecastOpens', 'campStart', 'campEnd', `${helpers};return forecastState;`)('2026-09-17', '2026-09-27', '2026-10-04');
+const daily = {time:[], temperature_2m_min:[], temperature_2m_max:[], sunrise:[], sunset:[]};
+for(let day=17;day<=34;day++) {
+  const date = new Date(Date.UTC(2026,8,day)).toISOString().slice(0,10);
+  daily.time.push(date); daily.temperature_2m_min.push(15); daily.temperature_2m_max.push(27);
+  daily.sunrise.push(`${date}T06:00`); daily.sunset.push(`${date}T19:00`);
+}
+const results=[];
+const check=(name,ok)=>{results.push(`${ok?'PASS':'FAIL'} ${name}`);document.querySelector('#results').textContent=results.join('\n');if(!ok)throw Error(name)};
+check('До 17 сентября — анонс, даже без API', state(null,'2026-09-16').state==='soon');
+check('17 сентября — загрузка', state(null,'2026-09-17','loading').state==='loading');
+const partial={...daily,time:daily.time.slice(0,16)};
+check('Горизонт 16 дней — только 27.09—02.10', state(partial,'2026-09-17').label==='27.09—02.10 · часть дат');
+check('Полный диапазон', state(daily,'2026-09-19').label==='27.09—04.10');
+check('Честные минимум и максимум', state(daily,'2026-09-19').value==='+15…+27°');
+check('Во время кэмпа — только оставшиеся дни', state(daily,'2026-10-01').label==='01.10—04.10');
+check('Последний день', state(daily,'2026-10-04').label==='04.10');
+check('После кэмпа — завершение', state(null,'2026-10-05').state==='ended');
+check('Ошибка API', state(null,'2026-09-17').state==='unavailable');
+check('Пустой ответ', state({},'2026-09-17').state==='unavailable');
+check('null не превращается в ноль', state({...daily,temperature_2m_min:[]},'2026-09-17').state==='unavailable');
+check('Перевёрнутый диапазон недопустим', state({...daily,temperature_2m_min:daily.time.map(()=>40)},'2026-09-17').state==='unavailable');
+const gap={...daily,temperature_2m_min:[...daily.temperature_2m_min]};gap.temperature_2m_min[11]=null;
+check('Пропуск дня не скрывается',state(gap,'2026-09-19').label==='27.09 · часть дат');
+document.querySelector('#results').textContent=results.join('\n');
+const scenario=new URLSearchParams(location.search).get('scenario')||'partial';
+const fixture=document.querySelector('#fixture');
+let html=await (await fetch('../public/index.html')).text();
+// Never send analytics from a synthetic test document.
+html=html.replace(/<script\b[^>]*>[\s\S]*?<\/script>/g,tag=>tag.includes('mc.yandex.ru')?'':tag);
+const boot=()=>{
+  const nativeDate=Date;
+  const date=scenario==='ended'?'2026-10-05T09:00:00Z':scenario==='soon'?'2026-09-04T09:00:00Z':scenario==='full'?'2026-09-19T09:00:00Z':'2026-09-17T09:00:00Z';
+  window.Date=class extends nativeDate{constructor(...args){super(...(args.length?args:[date]))}static now(){return new nativeDate(date).getTime()}};
+  const nativeFetch=fetch;
+  window.fetch=(url,options)=>{
+    if(String(url).includes('api.open-meteo.com/v1/forecast')){
+      document.documentElement.dataset.qaWeatherUrl=String(url);
+      if(scenario==='error')return Promise.reject(Error('QA network failure'));
+      return Promise.resolve(new Response(JSON.stringify({current:{time:'2026-09-17T12:00',temperature_2m:25,weather_code:2,wind_speed_10m:2,wind_direction_10m:90},daily:scenario==='partial'?partial:daily})));
+    }
+    if(String(url).includes('marine-api.open-meteo.com'))return Promise.resolve(new Response(JSON.stringify({current:{sea_surface_temperature:24}})));
+    return nativeFetch(url,options);
+  };
+  const draw=WebGLRenderingContext.prototype.drawArrays;
+  WebGLRenderingContext.prototype.drawArrays=function(...args){document.documentElement.dataset.qaDraws=Number(document.documentElement.dataset.qaDraws||0)+1;return draw.apply(this,args)};
+  new MutationObserver(records=>{const changes=records.filter(r=>r.attributeName==='href'&&r.target.matches('link[rel="icon"]')).length;if(changes)document.documentElement.dataset.qaFavicons=Number(document.documentElement.dataset.qaFavicons||0)+changes}).observe(document.head,{subtree:true,attributes:true,attributeFilter:['href']});
+  if(new URLSearchParams(parent.location.search).has('reduce')) {
+    const media=matchMedia;
+    window.matchMedia=query=>query.includes('prefers-reduced-motion')?new Proxy(media(query),{get:(target,key)=>key==='matches'?true:typeof target[key]==='function'?target[key].bind(target):target[key]}):media(query);
+    const get=Storage.prototype.getItem;
+    Storage.prototype.getItem=function(key){return key==='camp-motion'?null:get.call(this,key)};
+  }
+};
+const setup=`const scenario=${JSON.stringify(scenario)},daily=${JSON.stringify(daily)},partial=${JSON.stringify(partial)};(${boot})();`;
+html=html.replace('<head>',`<head><base href="../public/"><script>${setup}<\/script>`);
+fixture.srcdoc=html;
+document.querySelector('#start').onclick=()=>fixture.contentDocument.querySelector('#about').scrollIntoView();
+document.querySelector('#field').onclick=()=>fixture.contentDocument.querySelector('.race-rhythm').scrollIntoView({block:'center'});
+document.querySelector('#hidden').onclick=()=>{
+  const doc=fixture.contentDocument, hidden=!doc.hidden;
+  Object.defineProperty(doc,'hidden',{configurable:true,value:hidden});
+  doc.dispatchEvent(new Event('visibilitychange'));
+};
+document.querySelector('#theme').onclick=()=>{const root=fixture.contentDocument.documentElement;root.dataset.theme=root.dataset.theme==='dark'?'light':'dark'};
+document.querySelector('#forecast').onclick=()=>fixture.contentDocument.querySelector('.conditions').scrollIntoView({block:'center'});
+document.querySelector('#contrast').onclick=()=>{
+  const doc=fixture.contentDocument,root=doc.documentElement,win=fixture.contentWindow;
+  const originalTheme=root.dataset.theme,originalStyle=root.getAttribute('style');
+  const instant=doc.createElement('style');instant.textContent='*{transition:none!important}';doc.head.append(instant);
+  const canvas=doc.createElement('canvas');canvas.width=canvas.height=1;const ctx=canvas.getContext('2d');
+  const luminance=color=>{ctx.fillStyle=color;ctx.fillRect(0,0,1,1);const rgb=[...ctx.getImageData(0,0,1,1).data].slice(0,3).map(v=>{v/=255;return v<=.04045?v/12.92:((v+.055)/1.055)**2.4});return rgb[0]*.2126+rgb[1]*.7152+rgb[2]*.0722};
+  const ratios=[];
+  for(const theme of ['light','dark'])for(const [surface,deep] of [['#c8d0d0','#081611'],['#ccd4d1','#0a1b15'],['#ead7d7','#163025'],['#f4ead7','#0a2f20'],['#ead5c2','#2a2118'],['#c9cfce','#091713']]){
+    root.dataset.theme=theme;root.style.setProperty('--solar-surface-tint',surface);root.style.setProperty('--solar-deep',deep);
+    const ink=luminance(win.getComputedStyle(doc.querySelector('.camp-terms strong')).color),paper=luminance(win.getComputedStyle(doc.querySelector('#program')).backgroundColor);
+    ratios.push((Math.max(ink,paper)+.05)/(Math.min(ink,paper)+.05));
+  }
+  root.dataset.theme=originalTheme;if(originalStyle===null)root.removeAttribute('style');else root.setAttribute('style',originalStyle);
+  instant.remove();
+  check('Контраст во всех 12 состояниях ≥4,5:1',Math.min(...ratios)>=4.5);
+  document.querySelector('#results').textContent+=`\nМинимальный контраст: ${Math.min(...ratios).toFixed(2)}:1`;
+};
+setInterval(()=>{const d=fixture.contentDocument?.documentElement.dataset;if(d)document.querySelector('#counts').textContent=`draws=${d.qaDraws||0}, favicons=${d.qaFavicons||0}, hidden=${fixture.contentDocument.hidden}`},250);
+</script>
+</html>

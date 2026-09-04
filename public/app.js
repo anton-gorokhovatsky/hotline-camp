@@ -436,6 +436,12 @@ const campIconMorph = (() => {
   const SOCHI_TIME_ZONE = "Europe/Moscow";
   const WEATHER_URL = "https://api.open-meteo.com/v1/forecast?latitude=43.5855&longitude=39.7231&current=temperature_2m%2Cweather_code%2Cwind_speed_10m%2Cwind_direction_10m&wind_speed_unit=ms&daily=sunrise%2Csunset&timezone=Europe%2FMoscow&forecast_days=1";
   const MARINE_URL = "https://marine-api.open-meteo.com/v1/marine?latitude=43.55&longitude=39.69&current=sea_surface_temperature&timezone=Europe%2FMoscow&forecast_days=1";
+  const forecastOpens = "2026-09-17";
+  const campStart = "2026-09-27";
+  const campEnd = "2026-10-04";
+  const todayInSochi = () => new Intl.DateTimeFormat("sv-SE", { timeZone: SOCHI_TIME_ZONE }).format(new Date());
+  let loadedAt = 0;
+  let loading = false;
   let solarTimes = null;
   let solarTimer = null;
 
@@ -449,6 +455,43 @@ const campIconMorph = (() => {
   const formatTemperature = (value) => {
     const rounded = Math.round(value);
     return `${rounded > 0 ? "+" : ""}${rounded}°`;
+  };
+  const forecastState = (daily, today, status = "ready") => {
+    const label = "27.09—04.10";
+    if (today < forecastOpens) return { label, value: "Прогноз с\u00a017 сентября", note: "за\u00a010 дней до\u00a0старта", state: "soon" };
+    if (today > campEnd) return { label, value: "Кэмп завершён", note: "прогноз на\u00a0эти даты больше не\u00a0обновляется", state: "ended" };
+    if (status === "loading") return { label, value: "Загрузка прогноза", note: "на\u00a0доступные даты кэмпа", state: "loading" };
+    const missing = { label, value: "Прогноз недоступен", note: "Open-Meteo: нет данных на\u00a0даты кэмпа", state: "unavailable" };
+    if (!Array.isArray(daily?.time)) return missing;
+    const firstDay = today > campStart ? today : campStart;
+    const days = [];
+    // A contiguous range only: a missing day must never be disguised by two endpoints.
+    for (let day = firstDay; day <= campEnd;) {
+      const index = daily.time.indexOf(day);
+      const min = daily.temperature_2m_min?.[index];
+      const max = daily.temperature_2m_max?.[index];
+      if (!isNumber(min) || !isNumber(max) || min > max) break;
+      days.push({ day, min, max });
+      day = new Date(Date.parse(`${day}T00:00:00Z`) + 86400000).toISOString().slice(0, 10);
+    }
+    if (!days.length) return missing;
+    const shortDate = (day) => `${day.slice(8)}.${day.slice(5, 7)}`;
+    const lastDay = days[days.length - 1].day;
+    const partial = lastDay < campEnd;
+    const dates = firstDay === lastDay ? shortDate(firstDay) : `${shortDate(firstDay)}—${shortDate(lastDay)}`;
+    const min = Math.round(Math.min(...days.map((day) => day.min)));
+    const max = Math.round(Math.max(...days.map((day) => day.max)));
+    return {
+      label: `${dates}${partial ? " · часть дат" : ""}`,
+      value: min === max ? formatTemperature(min) : `${formatTemperature(min).slice(0, -1)}…${formatTemperature(max)}`,
+      note: "прогноз · минимум / максимум",
+      state: partial ? "partial" : "ready",
+    };
+  };
+  const showForecast = (daily, today, status) => {
+    const forecast = forecastState(daily, today, status);
+    for (const field of ["label", "value", "note"]) setField(`forecast-${field}`, forecast[field]);
+    return forecast;
   };
   const formatWind = (speed, direction) => {
     if (!isNumber(speed)) return null;
@@ -535,7 +578,7 @@ const campIconMorph = (() => {
     };
   };
   const updateSolarPalette = () => {
-    if (!solarTimes) return;
+    if (!solarTimes || document.hidden) return;
     const minute = sochiMinutesNow();
     if (!isNumber(minute)) return;
     const palette = solarPalette(minute, solarTimes.sunrise, solarTimes.sunset);
@@ -581,17 +624,29 @@ const campIconMorph = (() => {
   };
 
   const loadConditions = async () => {
+    if (loading) return;
+    loading = true;
+    loadedAt = Date.now();
+    panel.setAttribute("aria-busy", "true");
+    const today = todayInSochi();
+    showForecast(null, today, "loading");
+    const weatherUrl = new URL(WEATHER_URL);
+    if (today >= forecastOpens && today <= campEnd) {
+      weatherUrl.searchParams.set("daily", "sunrise,sunset,temperature_2m_min,temperature_2m_max");
+      weatherUrl.searchParams.set("forecast_days", "16");
+    }
     const controller = new AbortController();
     const timeout = window.setTimeout(() => controller.abort(), 12000);
 
     try {
       const [weatherResult, marineResult] = await Promise.allSettled([
-        fetchJson(WEATHER_URL, controller.signal),
+        fetchJson(weatherUrl.href, controller.signal),
         fetchJson(MARINE_URL, controller.signal),
       ]);
 
       let availableGroups = 0;
       let observation = null;
+      const forecast = showForecast(weatherResult.status === "fulfilled" ? weatherResult.value.daily : null, today);
 
       if (weatherResult.status === "fulfilled") {
         const current = weatherResult.value.current;
@@ -636,7 +691,7 @@ const campIconMorph = (() => {
         unavailable("sea");
       }
 
-      if (availableGroups === 3) {
+      if (availableGroups === 3 && forecast.state !== "unavailable") {
         setField("status", `Наблюдение ${observation || "обновлено"}`);
         setField("source-note", observation || "наблюдение обновлено");
       } else if (availableGroups > 0) {
@@ -651,10 +706,12 @@ const campIconMorph = (() => {
       unavailable("sea");
       unavailable("wind");
       unavailable("daylight");
+      showForecast(null, today);
       setField("status", "Данные Open-Meteo сейчас недоступны");
       setField("source-note", "данные недоступны");
     } finally {
       window.clearTimeout(timeout);
+      loading = false;
       panel.setAttribute("aria-busy", "false");
     }
   };
@@ -662,6 +719,12 @@ const campIconMorph = (() => {
   const resetPosition = () => { panel.scrollLeft = 0; };
   resetPosition();
   window.addEventListener("pageshow", resetPosition);
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden) {
+      updateSolarPalette();
+      if (Date.now() - loadedAt >= 30 * 60 * 1000) void loadConditions();
+    }
+  });
   void loadConditions();
 })();
 
@@ -736,8 +799,11 @@ const campIconMorph = (() => {
   const clock = uniform("time");
   const theme = uniform("dark");
   const still = uniform("reduced");
-  const startedAt = performance.now();
   let frameRequest = 0;
+  let visible = false;
+  let contextLost = false;
+  let elapsed = 0;
+  let previousFrame = null;
   const motionIsReduced = () => root.dataset.motion === "reduce";
 
   const resize = () => {
@@ -751,9 +817,13 @@ const campIconMorph = (() => {
     gl.uniform2f(resolution, width, height);
   };
   const frame = (now) => {
+    frameRequest = 0;
+    if (!visible || document.hidden || contextLost) return;
     resize();
     const motionReduced = motionIsReduced();
-    gl.uniform1f(clock, motionReduced ? 9.8 : (now - startedAt) / 1000);
+    if (!motionReduced && previousFrame !== null) elapsed += Math.min(now - previousFrame, 100);
+    previousFrame = motionReduced ? null : now;
+    gl.uniform1f(clock, motionReduced ? 9.8 : elapsed / 1000);
     gl.uniform1f(theme, root.dataset.theme === "dark" ? 1 : 0);
     gl.uniform1f(still, motionReduced ? 1 : 0);
     gl.drawArrays(gl.TRIANGLES, 0, 6);
@@ -761,13 +831,20 @@ const campIconMorph = (() => {
   };
   const restart = () => {
     window.cancelAnimationFrame(frameRequest);
-    frameRequest = window.requestAnimationFrame(frame);
+    frameRequest = 0;
+    previousFrame = null;
+    if (visible && !document.hidden && !contextLost) frameRequest = window.requestAnimationFrame(frame);
   };
 
+  new IntersectionObserver(([entry]) => {
+    visible = entry.isIntersecting;
+    restart();
+  }).observe(canvas);
+  document.addEventListener("visibilitychange", restart);
   reduceMotion.addEventListener("change", restart);
   window.addEventListener("campmotionchange", restart);
   new MutationObserver(() => { if (motionIsReduced()) restart(); }).observe(root, { attributes: true, attributeFilter: ["data-theme"] });
   window.addEventListener("resize", () => { if (motionIsReduced()) restart(); });
-  canvas.addEventListener("webglcontextlost", (event) => { event.preventDefault(); window.cancelAnimationFrame(frameRequest); });
+  canvas.addEventListener("webglcontextlost", () => { contextLost = true; restart(); });
   restart();
 })();
