@@ -145,7 +145,7 @@ html {
 
 body {
   margin: 0;
-  min-width: 20rem;
+  min-width: 0;
   overflow-x: clip;
   background: var(--page);
   color: var(--text);
@@ -2057,7 +2057,11 @@ a {
   }
 
   .brand {
-    max-width: 11.5rem;
+    width: 100%;
+    max-width: min(11.5rem, calc(100vw - 2 * var(--space-page) - 4.25rem));
+    container-type: inline-size;
+    overflow-wrap: anywhere;
+    hyphens: auto;
     transition: opacity 180ms ease, transform 180ms ease, visibility 180ms step-end;
   }
 
@@ -3002,7 +3006,7 @@ a {
   }
 
   .brand {
-    max-width: 13rem;
+    max-width: min(13rem, calc(100vw - 2 * var(--space-page) - 4.25rem));
   }
 
 }
@@ -3260,6 +3264,97 @@ html[data-motion="reduce"] .race-trace__flow { animation: none; stroke-dashoffse
     padding-top: clamp(2.5rem, 10vw, 3rem);
   }
 
+}
+
+/* Reflow follows the available space relative to the reader's text size. */
+.hero-stage,
+.program,
+.trainers,
+.mobile-menu-panel,
+.site-footer {
+  container-type: inline-size;
+}
+
+@container (max-width: 8rem) {
+  .brand span { display: none; }
+}
+
+@container (max-width: 16rem) {
+  .hero-copy,
+  .program-heading,
+  .program-notes,
+  .race-targets,
+  .trainers-heading,
+  .coach-story,
+  .closing-action,
+  .mobile-menu-scroll,
+  .footer-note {
+    overflow-wrap: anywhere;
+    hyphens: auto;
+  }
+
+  .hero-copy h1,
+  .camp-facts,
+  .camp-facts div:last-child,
+  .mobile-menu-scroll,
+  .mobile-menu-program-items {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .camp-facts dd { white-space: normal; }
+
+  .hero-countdown {
+    position: relative;
+    inset: auto;
+    grid-column: 1;
+    grid-row: 2;
+    align-self: end;
+    justify-self: end;
+    margin: clamp(1.5rem, 5vw, 2rem) var(--space-page);
+    overflow-wrap: anywhere;
+  }
+
+  .coach-story::before { display: none; }
+  .coach-copy,
+  .coach-story-maksim .coach-copy { padding-inline-end: 0; }
+
+  .mobile-menu-key-facts {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "dates" "countdown" "price";
+  }
+
+  .mobile-menu-price { justify-items: start; }
+  .mobile-menu-program-items span:nth-child(even) { border-inline-start: 0; }
+  .mobile-menu-program-items span + span {
+    border-block-start: 1px solid color-mix(in srgb, var(--mobile-menu-text) 18%, transparent);
+  }
+
+  .mobile-menu-theme {
+    max-width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .mobile-menu-theme .theme-toggle--menu,
+  .mobile-menu-theme .motion-toggle {
+    min-width: 0;
+    max-width: 100%;
+    grid-template-columns: 1.25em minmax(0, 1fr);
+  }
+
+  .mobile-menu-theme .theme-toggle-label,
+  .mobile-menu-theme .motion-toggle-label {
+    inline-size: auto;
+    white-space: normal;
+  }
+
+  .footer-meta {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .footer-year { white-space: nowrap; }
+  .footer-credit { text-align: left; }
 }
 
 @media (forced-colors: active) {
