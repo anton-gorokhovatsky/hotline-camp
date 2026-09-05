@@ -468,6 +468,10 @@ const campIconMorph = (() => {
 
   const solarNote = document.querySelector("[data-solar-note]");
   const solarNoteBase = solarNote?.textContent.trim().replace(/\.$/, "");
+  const solarPreview = document.querySelector(".solar-preview");
+  const solarRange = document.querySelector("#solar-time");
+  const solarClock = document.querySelector("[data-solar-clock]");
+  let previewMinute = null;
   const solarPhaseNotes = {
     dawn: "встречая мягкий свет рассвета",
     day: "наполняясь дневным светом",
@@ -620,7 +624,7 @@ const campIconMorph = (() => {
   };
   const updateSolarPalette = () => {
     if (!solarTimes || document.hidden) return;
-    const minute = sochiMinutesNow();
+    const minute = previewMinute ?? sochiMinutesNow();
     if (!isNumber(minute)) return;
     const palette = solarPalette(minute, solarTimes.sunrise, solarTimes.sunset);
     root.dataset.solarPhase = palette.phase;
@@ -628,8 +632,17 @@ const campIconMorph = (() => {
     root.style.setProperty("--solar-accent", palette.accent);
     root.style.setProperty("--solar-deep", palette.deep);
     root.style.setProperty("--solar-progress", palette.progress.toFixed(3));
+    const clock = `${String(Math.floor(minute / 60)).padStart(2, "0")}:${String(minute % 60).padStart(2, "0")}`;
+    const phaseName = { dawn: "рассвет", day: "день", dusk: "закат", night: "ночь" }[palette.phase];
+    if (solarClock) solarClock.textContent = `${clock} · ${phaseName}`;
+    if (solarRange instanceof HTMLInputElement) {
+      solarRange.value = String(minute);
+      solarRange.setAttribute("aria-valuetext", `${clock}, ${phaseName}, время Сочи`);
+    }
     if (solarNote instanceof HTMLElement) {
-      const note = `${solarNoteBase}, ${solarPhaseNotes[palette.phase]}.`;
+      const note = previewMinute === null
+        ? `${solarNoteBase}, ${solarPhaseNotes[palette.phase]}.`
+        : `Палитра сайта показана на\u00a0${clock} по\u00a0времени Сочи.`;
       if (solarNote.textContent !== note) solarNote.textContent = note;
     }
   };
@@ -638,9 +651,31 @@ const campIconMorph = (() => {
     const sunset = minutesFromIso(sunsetValue);
     if (!isNumber(sunrise) || !isNumber(sunset) || sunset <= sunrise) return;
     solarTimes = { sunrise, sunset };
+    if (solarPreview) solarPreview.hidden = false;
     updateSolarPalette();
     if (solarTimer === null) solarTimer = window.setInterval(updateSolarPalette, 5 * 60 * 1000);
   };
+  const closeSolarPreview = () => {
+    previewMinute = null;
+    solarPreview.open = false;
+    updateSolarPalette();
+    solarPreview.querySelector("summary").focus();
+  };
+  solarPreview?.addEventListener("toggle", () => {
+    previewMinute = solarPreview.open ? Math.round(sochiMinutesNow() / 15) * 15 : null;
+    updateSolarPalette();
+  });
+  solarRange?.addEventListener("input", () => {
+    previewMinute = Number(solarRange.value);
+    updateSolarPalette();
+  });
+  document.querySelector("[data-solar-reset]")?.addEventListener("click", closeSolarPreview);
+  solarPreview?.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && solarPreview.open) {
+      event.preventDefault();
+      closeSolarPreview();
+    }
+  });
   const describeWeather = (code) => {
     if (!isNumber(code)) return "текущие условия";
     if (code === 0) return "ясно";
