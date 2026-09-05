@@ -277,6 +277,29 @@ const campIconMorph = (() => {
   campIconMorph(openIcon, closeIcon, false);
   let savedScroll = 0;
   let previousBodyStyles = null;
+  const isolatedElements = [];
+
+  const isolateBackground = () => {
+    const isolate = (element) => {
+      if (!(element instanceof HTMLElement) || element.inert) return;
+      isolatedElements.push(element);
+      element.inert = true;
+    };
+    for (let branch = masthead; branch && branch !== body; branch = branch.parentElement) {
+      [...branch.parentElement.children].filter((sibling) => sibling !== branch).forEach(isolate);
+    }
+    isolate(masthead.querySelector(".brand"));
+    masthead.setAttribute("role", "dialog");
+    masthead.setAttribute("aria-modal", "true");
+    masthead.setAttribute("aria-label", "Меню страницы");
+  };
+
+  const releaseBackground = () => {
+    isolatedElements.splice(0).forEach((element) => { element.inert = false; });
+    masthead.removeAttribute("role");
+    masthead.removeAttribute("aria-modal");
+    masthead.removeAttribute("aria-label");
+  };
 
   const updateStickyState = () => {
     masthead.classList.toggle("is-scrolled", window.scrollY > 12);
@@ -304,7 +327,7 @@ const campIconMorph = (() => {
   const focusableItems = () => [
     toggle,
     ...panel.querySelectorAll("a[href], button:not([disabled])"),
-  ].filter((item) => item instanceof HTMLElement && !item.hidden);
+  ].filter((item) => item instanceof HTMLElement && item.getClientRects().length && !item.closest("[inert]"));
 
   const closeMenu = ({ restoreFocus = true, destination = null } = {}) => {
     if (toggle.getAttribute("aria-expanded") !== "true") return;
@@ -316,6 +339,7 @@ const campIconMorph = (() => {
     toggle.setAttribute("aria-label", "Открыть меню");
     root.classList.remove("menu-open");
     panel.hidden = true;
+    releaseBackground();
     if (openIcon instanceof SVGElement) openIcon.hidden = false;
     if (closeIcon instanceof SVGElement) closeIcon.hidden = true;
     campIconMorph(openIcon, closeIcon, false);
@@ -334,6 +358,13 @@ const campIconMorph = (() => {
       window.requestAnimationFrame(() => {
         root.style.scrollBehavior = previousScrollBehavior;
         destination.scrollIntoView({ behavior: scrollBehavior, block: "start" });
+        const oldTabIndex = destination.getAttribute("tabindex");
+        destination.tabIndex = -1;
+        destination.focus({ preventScroll: true });
+        destination.addEventListener("blur", () => {
+          if (oldTabIndex === null) destination.removeAttribute("tabindex");
+          else destination.setAttribute("tabindex", oldTabIndex);
+        }, { once: true });
         window.requestAnimationFrame(() => {
           updateStickyState();
           updateActiveSection();
@@ -363,6 +394,8 @@ const campIconMorph = (() => {
     panel.hidden = false;
     updateActiveSection();
     root.classList.add("menu-open");
+    toggle.focus({ preventScroll: true });
+    isolateBackground();
     if (openIcon instanceof SVGElement) openIcon.hidden = true;
     if (closeIcon instanceof SVGElement) closeIcon.hidden = false;
     campIconMorph(openIcon, closeIcon, true);
