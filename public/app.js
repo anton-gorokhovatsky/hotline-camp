@@ -475,7 +475,7 @@ const campIconMorph = (() => {
     night: "погружаясь в\u00a0глубину ночи",
   };
   const SOCHI_TIME_ZONE = "Europe/Moscow";
-  const WEATHER_URL = "https://api.open-meteo.com/v1/forecast?latitude=43.5855&longitude=39.7231&current=temperature_2m%2Cweather_code%2Cwind_speed_10m%2Cwind_direction_10m&wind_speed_unit=ms&daily=sunrise%2Csunset&timezone=Europe%2FMoscow&forecast_days=1";
+  const WEATHER_URL = "https://api.open-meteo.com/v1/forecast?latitude=43.5855&longitude=39.7231&current=temperature_2m%2Cweather_code%2Cwind_speed_10m%2Cwind_direction_10m%2Crelative_humidity_2m%2Crain%2Cshowers&wind_speed_unit=ms&daily=sunrise%2Csunset&timezone=Europe%2FMoscow&forecast_days=1";
   const MARINE_URL = "https://marine-api.open-meteo.com/v1/marine?latitude=43.55&longitude=39.69&current=sea_surface_temperature&timezone=Europe%2FMoscow&forecast_days=1";
   const forecastOpens = "2026-09-17";
   const campStart = "2026-09-27";
@@ -662,6 +662,22 @@ const campIconMorph = (() => {
     setField(`${name}-note`, note);
   };
 
+  const weatherPhoto = document.querySelector(".hero-media");
+  const updateWeatherPhoto = (current) => {
+    if (!(weatherPhoto instanceof HTMLElement)) return;
+    const humidity = current?.relative_humidity_2m;
+    const rain = current?.rain;
+    const showers = current?.showers;
+    const validHumidity = isNumber(humidity) && humidity >= 0 && humidity <= 100;
+    const validRain = isNumber(rain) && rain >= 0 && isNumber(showers) && showers >= 0;
+    // An art-directed response to the data, capped to keep the athlete recognisable.
+    const dampAir = validHumidity ? Math.max(0, (humidity - 70) / 30) * 2 : 0;
+    const rainfall = validRain ? Math.sqrt(Math.min(1, (rain + showers) / 3)) * 8 : 0;
+    const blur = Math.min(10, dampAir + rainfall);
+    if (blur > 0) weatherPhoto.style.filter = `blur(${blur.toFixed(2)}px)`;
+    else weatherPhoto.style.removeProperty("filter");
+  };
+
   const fetchJson = async (url, signal) => {
     const response = await fetch(url, { cache: "no-store", signal });
     if (!response.ok) throw new Error(`Open-Meteo returned ${response.status}`);
@@ -695,6 +711,7 @@ const campIconMorph = (() => {
 
       if (weatherResult.status === "fulfilled") {
         const current = weatherResult.value.current;
+        updateWeatherPhoto(current);
         const daily = weatherResult.value.daily;
         const sunrise = formatClock(daily?.sunrise?.[0]);
         const sunset = formatClock(daily?.sunset?.[0]);
@@ -722,6 +739,7 @@ const campIconMorph = (() => {
 
         observation = formatObservation(current?.time);
       } else {
+        updateWeatherPhoto(null);
         unavailable("air");
         unavailable("wind");
         unavailable("daylight");
@@ -747,6 +765,7 @@ const campIconMorph = (() => {
         setField("source-note", "данные недоступны");
       }
     } catch (_) {
+      updateWeatherPhoto(null);
       unavailable("air");
       unavailable("sea");
       unavailable("wind");
