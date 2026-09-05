@@ -466,6 +466,14 @@ const campIconMorph = (() => {
   const panel = document.querySelector(".conditions");
   if (!(panel instanceof HTMLElement)) return;
 
+  const solarNote = document.querySelector("[data-solar-note]");
+  const solarNoteBase = solarNote?.textContent.trim().replace(/\.$/, "");
+  const solarPhaseNotes = {
+    dawn: "встречая мягкий свет рассвета",
+    day: "наполняясь дневным светом",
+    dusk: "сохраняя тепло заката",
+    night: "погружаясь в\u00a0глубину ночи",
+  };
   const SOCHI_TIME_ZONE = "Europe/Moscow";
   const WEATHER_URL = "https://api.open-meteo.com/v1/forecast?latitude=43.5855&longitude=39.7231&current=temperature_2m%2Cweather_code%2Cwind_speed_10m%2Cwind_direction_10m&wind_speed_unit=ms&daily=sunrise%2Csunset&timezone=Europe%2FMoscow&forecast_days=1";
   const MARINE_URL = "https://marine-api.open-meteo.com/v1/marine?latitude=43.55&longitude=39.69&current=sea_surface_temperature&timezone=Europe%2FMoscow&forecast_days=1";
@@ -620,6 +628,10 @@ const campIconMorph = (() => {
     root.style.setProperty("--solar-accent", palette.accent);
     root.style.setProperty("--solar-deep", palette.deep);
     root.style.setProperty("--solar-progress", palette.progress.toFixed(3));
+    if (solarNote instanceof HTMLElement) {
+      const note = `${solarNoteBase}, ${solarPhaseNotes[palette.phase]}.`;
+      if (solarNote.textContent !== note) solarNote.textContent = note;
+    }
   };
   const setSolarTimes = (sunriseValue, sunsetValue) => {
     const sunrise = minutesFromIso(sunriseValue);
