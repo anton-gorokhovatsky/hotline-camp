@@ -487,20 +487,26 @@ const campIconMorph = (() => {
   };
   const SOCHI_TIME_ZONE = "Europe/Moscow";
   const WEATHER_URL = "https://api.open-meteo.com/v1/forecast?latitude=43.5855&longitude=39.7231&current=temperature_2m%2Cweather_code%2Cwind_speed_10m%2Cwind_direction_10m%2Crelative_humidity_2m%2Crain%2Cshowers&wind_speed_unit=ms&daily=sunrise%2Csunset&timezone=Europe%2FMoscow&forecast_days=1";
-  const UV_URL = "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=43.5855&longitude=39.7231&current=uv_index&timeformat=unixtime&timezone=Europe%2FMoscow&forecast_days=1";
+  const UV_URL = "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=43.5855&longitude=39.7231&current=uv_index&hourly=uv_index&timeformat=unixtime&timezone=Europe%2FMoscow&forecast_days=2";
   // Art-direction limits: chroma changes with UV; wind only affects the existing water/air field.
   const WEATHER_ART = { uvLimit: 8, chromaMin: 0.65, chromaMax: 1.45, windLimit: 12 };
   const relativeColor = CSS.supports("color", "oklch(from red l calc(c * 1) h)");
   let uvReading = null;
+  let uvForecast = new Map();
+  let uvForecastAt = 0;
+  let windReading = null;
+  let scaleKey = "";
+  const refreshInterval = 30 * 60 * 1000;
+  const readingLifetime = 2 * 60 * 60 * 1000;
   const MARINE_URL = "https://marine-api.open-meteo.com/v1/marine?latitude=43.55&longitude=39.69&current=sea_surface_temperature&timezone=Europe%2FMoscow&forecast_days=1";
   const forecastOpens = "2026-09-17";
   const campStart = "2026-09-27";
   const campEnd = "2026-10-04";
   const todayInSochi = () => new Intl.DateTimeFormat("sv-SE", { timeZone: SOCHI_TIME_ZONE }).format(new Date());
   let loadedAt = 0;
+  let loadedDay = "";
   let loading = false;
   let solarTimes = null;
-  let solarTimer = null;
 
   const setField = (name, value) => {
     document.querySelectorAll(`[data-condition="${name}"]`).forEach((element) => {
@@ -634,22 +640,68 @@ const campIconMorph = (() => {
       deep: mixHex(from.deep, to.deep, progress),
     };
   };
+  const minuteClock = (minute) => `${String(Math.floor(minute / 60)).padStart(2, "0")}:${String(minute % 60).padStart(2, "0")}`;
+  const validUV = (value) => isNumber(value) && value >= 0 && value <= 30;
+  const uvAtMinute = (minute) => {
+    if (minute === null) return uvReading && Date.now() - uvReading.time * 1000 < readingLifetime ? uvReading.value : null;
+    if (!solarTimes || Date.now() - uvForecastAt >= readingLifetime) return null;
+    const time = Date.parse(`${solarTimes.day}T00:00:00+03:00`) / 1000 + minute * 60;
+    const hour = Math.floor(time / 3600) * 3600;
+    const from = uvForecast.get(hour);
+    if (!validUV(from)) return null;
+    if (time === hour) return from;
+    const to = uvForecast.get(hour + 3600);
+    return validUV(to) ? from + (to - from) * (time - hour) / 3600 : null;
+  };
+  const weatherColor = (hex, uv) => {
+    const chroma = uv === null ? 1 : WEATHER_ART.chromaMin
+      + (WEATHER_ART.chromaMax - WEATHER_ART.chromaMin) * Math.min(uv / WEATHER_ART.uvLimit, 1);
+    return relativeColor && chroma !== 1 ? `oklch(from ${hex} l calc(c * ${chroma.toFixed(3)}) h)` : hex;
+  };
+  const updateSolarScale = () => {
+    if (!solarTimes || !solarRange) return;
+    const { sunrise, sunset, day } = solarTimes;
+    const key = `${day}/${sunrise}/${sunset}/${uvForecastAt}/${Date.now() - uvForecastAt < readingLifetime}`;
+    if (scaleKey === key) return;
+    scaleKey = key;
+    const samples = [...new Set([sunrise - 90, sunrise, (sunrise + sunset) / 2, sunset, sunset + 90,
+      ...Array.from({ length: 97 }, (_, index) => index * 15)])].filter((minute) => minute >= 0 && minute <= 1440).sort((a, b) => a - b);
+    const stops = samples.map((minute) => `${weatherColor(solarPalette(minute, sunrise, sunset).accent, uvAtMinute(minute))} ${minute / 14.4}%`);
+    solarRange.style.setProperty("--solar-day-gradient", `linear-gradient(90deg, ${stops.join(", ")})`);
+    for (const [name, minute] of [["sunrise", sunrise], ["sunset", sunset]]) {
+      solarPreview.style.setProperty(`--${name}-position`, `${minute / 14.4}%`);
+      solarPreview.querySelector(`[data-solar-${name}]`).textContent = minuteClock(minute);
+    }
+  };
+  const updateWeatherNote = () => {
+    const note = document.querySelector("[data-weather-art-reading]");
+    if (!note) return;
+    const wind = windReading && Date.now() - windReading.time < readingLifetime ? windReading : null;
+    const uv = uvAtMinute(previewMinute);
+    const number = new Intl.NumberFormat("ru-RU", { maximumFractionDigits: 1 });
+    const clock = previewMinute !== null ? minuteClock(previewMinute) : uvReading ? new Intl.DateTimeFormat("ru-RU", {
+      timeZone: SOCHI_TIME_ZONE, hour: "2-digit", minute: "2-digit",
+    }).format(new Date(uvReading.time * 1000)) : "";
+    const windClock = wind ? formatClock(wind.iso) : "";
+    note.textContent = `Ветер${windClock ? ` на\u00a0${windClock}` : ""} — ${wind ? formatWind(wind.speed, wind.direction).value : "нет данных"}. `
+      + (uv === null ? (previewMinute === null ? "UV — нет данных." : `Прогноз UV на\u00a0${clock} недоступен.`)
+        : `${previewMinute === null ? "UV" : "Прогноз UV"} на\u00a0${clock} — ${number.format(uv)}.`);
+  };
   const updateSolarPalette = () => {
-    if (!solarTimes || document.hidden) return;
+    if (document.hidden) return;
+    updateWeatherNote();
+    if (!solarTimes) return;
     const minute = previewMinute ?? sochiMinutesNow();
     if (!isNumber(minute)) return;
     const palette = solarPalette(minute, solarTimes.sunrise, solarTimes.sunset);
-    const uv = uvReading && Date.now() / 1000 - uvReading.time < 7200 ? uvReading.value : null;
-    const chroma = uv === null ? 1 : WEATHER_ART.chromaMin
-      + (WEATHER_ART.chromaMax - WEATHER_ART.chromaMin) * Math.min(uv / WEATHER_ART.uvLimit, 1);
-    const weatherColor = (hex) => relativeColor && chroma !== 1
-      ? `oklch(from ${hex} l calc(c * ${chroma.toFixed(3)}) h)` : hex;
+    const uv = uvAtMinute(previewMinute);
     root.dataset.solarPhase = palette.phase;
-    root.style.setProperty("--solar-surface-tint", weatherColor(palette.surface));
-    root.style.setProperty("--solar-accent", weatherColor(palette.accent));
-    root.style.setProperty("--solar-deep", weatherColor(palette.deep));
+    root.style.setProperty("--solar-surface-tint", weatherColor(palette.surface, uv));
+    root.style.setProperty("--solar-accent", weatherColor(palette.accent, uv));
+    root.style.setProperty("--solar-deep", weatherColor(palette.deep, uv));
     root.style.setProperty("--solar-progress", palette.progress.toFixed(3));
-    const clock = `${String(Math.floor(minute / 60)).padStart(2, "0")}:${String(minute % 60).padStart(2, "0")}`;
+    const clock = minuteClock(minute);
+    updateSolarScale();
     const phaseName = { dawn: "рассвет", day: "день", dusk: "закат", night: "ночь" }[palette.phase];
     if (solarClock) {
       solarClock.textContent = `${clock} · ${phaseName}`;
@@ -669,11 +721,10 @@ const campIconMorph = (() => {
   const setSolarTimes = (sunriseValue, sunsetValue) => {
     const sunrise = minutesFromIso(sunriseValue);
     const sunset = minutesFromIso(sunsetValue);
-    if (!isNumber(sunrise) || !isNumber(sunset) || sunset <= sunrise) return;
-    solarTimes = { sunrise, sunset };
+    if (!isNumber(sunrise) || !isNumber(sunset) || sunset <= sunrise || sunriseValue.slice(0, 10) !== todayInSochi()) return;
+    solarTimes = { sunrise, sunset, day: sunriseValue.slice(0, 10) };
     if (solarPreview) solarPreview.hidden = false;
     updateSolarPalette();
-    if (solarTimer === null) solarTimer = window.setInterval(updateSolarPalette, 60 * 1000);
   };
   const resetSolarPreview = () => {
     previewMinute = null;
@@ -766,22 +817,24 @@ const campIconMorph = (() => {
   const weatherPhoto = document.querySelector(".hero-media");
   const updateWeatherArt = (current, ultraviolet) => {
     const speed = current?.wind_speed_10m;
-    const validWind = isNumber(speed) && speed >= 0 && speed <= 100;
-    const uv = ultraviolet?.uv_index;
-    const time = ultraviolet?.time;
+    const windTime = typeof current?.time === "string" ? Date.parse(`${current.time}+03:00`) : NaN;
+    const validWind = isNumber(speed) && speed >= 0 && speed <= 100 && isNumber(windTime)
+      && Date.now() - windTime >= -300000 && Date.now() - windTime < readingLifetime;
+    const direction = current?.wind_direction_10m;
+    windReading = validWind ? { speed, direction, time: windTime, iso: current.time } : null;
+    const uv = ultraviolet?.current?.uv_index;
+    const time = ultraviolet?.current?.time;
     const age = Date.now() / 1000 - time;
-    uvReading = isNumber(uv) && uv >= 0 && uv <= 30 && isNumber(time) && age >= -300 && age < 7200
+    uvReading = validUV(uv) && isNumber(time) && age >= -300 && age < 7200
       ? { value: uv, time } : null;
+    uvForecast = new Map((Array.isArray(ultraviolet?.hourly?.time) ? ultraviolet.hourly.time : [])
+      .map((hour, index) => [hour, ultraviolet.hourly.uv_index?.[index]]));
+    uvForecastAt = ultraviolet ? Date.now() : 0;
     root.dataset.windStrength = validWind ? String(Math.min(speed / WEATHER_ART.windLimit, 1)) : "0";
-    const note = document.querySelector("[data-weather-art-reading]");
-    if (note) {
-      const number = new Intl.NumberFormat("ru-RU", { maximumFractionDigits: 1 });
-      const clock = uvReading ? new Intl.DateTimeFormat("ru-RU", {
-        timeZone: SOCHI_TIME_ZONE, hour: "2-digit", minute: "2-digit",
-      }).format(new Date(time * 1000)) : "";
-      note.textContent = `Ветер — ${validWind ? formatWind(speed, current.wind_direction_10m).value : "нет данных"}. `
-        + (uvReading ? `UV — ${number.format(uv)} на\u00a0${clock}.` : "UV — нет данных.");
-    }
+    // Meteorological bearing describes where the wind comes from; the field follows its flow.
+    const angle = isNumber(direction) ? direction * Math.PI / 180 : null;
+    root.dataset.windX = validWind && angle !== null ? String(-Math.sin(angle)) : "0";
+    root.dataset.windY = validWind && angle !== null ? String(-Math.cos(angle)) : "0";
     updateSolarPalette();
     window.dispatchEvent(new Event("campweatherchange"));
   };
@@ -810,6 +863,7 @@ const campIconMorph = (() => {
     if (loading) return;
     loading = true;
     loadedAt = Date.now();
+    loadedDay = todayInSochi();
     panel.setAttribute("aria-busy", "true");
     const today = todayInSochi();
     showForecast(null, today, "loading");
@@ -828,7 +882,7 @@ const campIconMorph = (() => {
         fetchJson(UV_URL, controller.signal),
       ]);
       updateWeatherArt(weatherResult.status === "fulfilled" ? weatherResult.value.current : null,
-        uvResult.status === "fulfilled" ? uvResult.value.current : null);
+        uvResult.status === "fulfilled" ? uvResult.value : null);
 
       let availableGroups = 0;
       let observation = null;
@@ -909,12 +963,28 @@ const campIconMorph = (() => {
   const resetPosition = () => { panel.scrollLeft = 0; };
   resetPosition();
   window.addEventListener("pageshow", resetPosition);
-  document.addEventListener("visibilitychange", () => {
-    if (!document.hidden) {
-      updateSolarPalette();
-      if (Date.now() - loadedAt >= 30 * 60 * 1000) void loadConditions();
+  const refreshConditions = () => {
+    if (document.hidden) return;
+    const age = Date.now() - loadedAt;
+    if (solarTimes && solarTimes.day !== todayInSochi()) {
+      solarTimes = null;
+      previewMinute = null;
+      if (solarPreview) solarPreview.hidden = true;
+      for (const name of ["surface-tint", "accent", "deep", "progress"]) root.style.removeProperty(`--solar-${name}`);
+      delete root.dataset.solarPhase;
+      if (solarNote) solarNote.textContent = `${solarNoteBase}.`;
     }
-  });
+    if (windReading && Date.now() - windReading.time >= readingLifetime) {
+      windReading = null;
+      root.dataset.windStrength = root.dataset.windX = root.dataset.windY = "0";
+      updateWeatherPhoto(null);
+      window.dispatchEvent(new Event("campweatherchange"));
+    }
+    updateSolarPalette();
+    if (age >= refreshInterval || (loadedDay !== todayInSochi() && age >= 60000)) void loadConditions();
+  };
+  document.addEventListener("visibilitychange", refreshConditions);
+  window.setInterval(refreshConditions, 60 * 1000);
   void loadConditions();
 })();
 
@@ -934,11 +1004,11 @@ const campIconMorph = (() => {
 
   const vertexSource = "attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}";
   const fragmentSource = `
-    precision highp float;uniform vec2 r;uniform float time,dark,reduced,wind;const float PI=3.14159265;
+    precision highp float;uniform vec2 r,windFlow;uniform float time,dark,reduced,wind;const float PI=3.14159265;
     float sat(float x){return clamp(x,0.,1.);}float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
     float bell(float x,float a,float b,float c,float d){return smoothstep(a,b,x)*(1.-smoothstep(c,d,x));}
-    float water(vec2 d,float t){float back=(1.-smoothstep(-.03,.08,d.x))*exp(d.x*.78)*exp(-abs(d.y)*1.8);float stroke=.86+.14*cos(t*PI*2.2);float rings=sin(length(vec2(d.x*.62,d.y))*38.-t*(7.2+wind*3.));float cross=sin(d.x*17.+sin(d.y*9.-t*1.5)*(2.4+wind*2.));return(rings*.72+cross*.28)*back*stroke*(1.+wind*.8);}
-    float air(vec2 d,float t){float trail=(1.-smoothstep(-.035,.1,d.x))*exp(d.x*(.82-wind*.2));float core=exp(-abs(d.y)*(4.8-wind*1.4));float shear=d.y*6.*exp(-abs(d.y)*5.4);float cadence=.55+.45*cos(-d.x*34.-t*PI*3.);float slip=sin(-d.x*17.-t*PI*3.)*core*(.16+wind*.24);return(-shear*cadence*1.7+slip)*trail*(1.+wind*.7);}
+    float water(vec2 d,float t){d-=windFlow*wind*.09*(1.-exp(-length(d)*2.));float back=(1.-smoothstep(-.03,.08,d.x))*exp(d.x*.78)*exp(-abs(d.y)*1.8);float stroke=.86+.14*cos(t*PI*2.2);float rings=sin(length(vec2(d.x*.62,d.y))*38.-t*(7.2+wind*3.));float cross=sin(d.x*17.+sin(d.y*9.-t*1.5)*(2.4+wind*2.));return(rings*.72+cross*.28)*back*stroke*(1.+wind*.8);}
+    float air(vec2 d,float t){d.y+=windFlow.y*wind*min(abs(d.x),1.5)*.13;d.x*=1.-windFlow.x*wind*.1;float trail=(1.-smoothstep(-.035,.1,d.x))*exp(d.x*(.82-wind*.2));float core=exp(-abs(d.y)*(4.8-wind*1.4));float shear=d.y*6.*exp(-abs(d.y)*5.4);float cadence=.55+.45*cos(-d.x*34.-t*PI*3.);float slip=sin(-d.x*17.-t*PI*3.)*core*(.16+wind*.24);return(-shear*cadence*1.7+slip)*trail*(1.+wind*.7);}
     float pause(vec2 d,float t,float phase){float envelope=exp(-abs(d.x)*6.4);float shear=d.y*5.2*exp(-abs(d.y)*5.2);float breath=.72+.28*cos(t*PI*2.+phase);return-shear*envelope*breath;}
     float stride(vec2 uv,float p,float aspect){float f=0.;for(int i=0;i<8;i++){float q=.765+float(i)*.032,age=p-q;if(age>0.&&age<.085){float x=mix(-aspect*.56,aspect*.56,q),side=mod(float(i),2.)<1.?1.:-1.;float spread=.026+age*.52,dx=(uv.x-x)/spread;float column=exp(-dx*dx),height=exp(-pow((uv.y+.02)/.48,2.));float snap=sin(clamp(age/.085,0.,1.)*PI);f+=side*column*height*snap*(1.+side*uv.y*.82);}}return f;}
     void main(){vec2 uv=(gl_FragCoord.xy-.5*r)/r.y;float aspect=r.x/r.y;float p=mod(time,10.4)/10.4,sx=mix(-aspect*.56,aspect*.56,p);float sy=p>.76?.055*abs(sin((p-.76)*78.)):0.;vec2 d=uv-vec2(sx,sy);float w=1.-smoothstep(.27,.35,p),b=bell(p,.29,.38,.66,.75),run=smoothstep(.69,.78,p);float t1=bell(p,.265,.29,.34,.37),t2=bell(p,.665,.69,.74,.77);float field=water(d,time)*w+air(d,time)*b+stride(uv,p,aspect)*run+pause(d,time,0.)*t1+pause(d,time,PI)*t2;if(reduced>.5){field=water(uv-vec2(-aspect*.37,0.),9.2)*.72+air(uv-vec2(0.,0.),9.2)*.82;field+=stride(uv,.97,aspect*.7)*.85;}float edge=.34+.045*sin(uv.x*2.2)+.025*sin(uv.x*5.7+1.4);float band=1.-smoothstep(edge,edge+.12,abs(uv.y));band*=smoothstep(-aspect*.61,-aspect*.49,uv.x)*(1.-smoothstep(aspect*.49,aspect*.61,uv.x));float paperNoise=(hash(floor(gl_FragCoord.xy*.42))-.5)*.018;float threads=pow(.5+.5*cos((uv.y+field*.075)*92.+sin(uv.x*3.)*.7),11.);float body=band*sat(.075+abs(field)*.3+threads*.34);float signal=.48+.06*cos(time*PI*2.2);signal=mix(signal,.53+.11*(.5+.5*cos(time*PI*3.)),sat(b));signal=mix(signal,.55+.14*abs(sin((p-.76)*78.)),run);signal*=1.-.18*sat(t1+t2);float heat=reduced>.5?0.:exp(-length(d*vec2(.82,1.15))*8.)*signal;float glow=sat(heat)*band;float opacity=1.-(1.-body)*(1.-glow);vec3 sea=mix(vec3(.25,.43,.43),vec3(.56,.68,.66),dark);vec3 rose=mix(vec3(.79,.26,.37),vec3(.91,.43,.53),dark);vec3 ink=(sea*body*(1.-glow)+rose*glow)/max(opacity,.001);ink+=paperNoise*.7;gl_FragColor=vec4(ink*opacity,opacity);}
@@ -990,7 +1060,10 @@ const campIconMorph = (() => {
   const theme = uniform("dark");
   const still = uniform("reduced");
   const breeze = uniform("wind");
+  const flow = uniform("windFlow");
   let windStrength = 0;
+  let windX = 0;
+  let windY = 0;
   let frameRequest = 0;
   let visible = false;
   let contextLost = false;
@@ -1015,12 +1088,15 @@ const campIconMorph = (() => {
     const motionReduced = motionIsReduced();
     const windTarget = Math.min(1, Math.max(0, Number(root.dataset.windStrength) || 0));
     windStrength += (windTarget - windStrength) * 0.06;
+    windX += ((Number(root.dataset.windX) || 0) - windX) * 0.06;
+    windY += ((Number(root.dataset.windY) || 0) - windY) * 0.06;
     if (!motionReduced && previousFrame !== null) elapsed += Math.min(now - previousFrame, 100);
     previousFrame = motionReduced ? null : now;
     gl.uniform1f(clock, motionReduced ? 9.8 : elapsed / 1000);
     gl.uniform1f(theme, root.dataset.theme === "dark" ? 1 : 0);
     gl.uniform1f(still, motionReduced ? 1 : 0);
     gl.uniform1f(breeze, motionReduced ? 0 : windStrength);
+    gl.uniform2f(flow, motionReduced ? 0 : windX, motionReduced ? 0 : windY);
     gl.drawArrays(gl.TRIANGLES, 0, 6);
     if (!motionReduced) frameRequest = window.requestAnimationFrame(frame);
   };
