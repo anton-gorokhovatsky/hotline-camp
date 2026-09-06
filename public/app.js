@@ -471,7 +471,14 @@ const campIconMorph = (() => {
   const solarPreview = document.querySelector(".solar-preview");
   const solarRange = document.querySelector("#solar-time");
   const solarClock = document.querySelector("[data-solar-clock]");
+  const solarSummary = solarPreview?.querySelector("summary");
+  const solarControls = solarPreview?.querySelector(".solar-preview-controls");
+  const solarCopy = solarPreview?.closest(".footer-note");
+  const solarFooter = solarPreview?.closest("footer");
+  const solarMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
   let previewMinute = null;
+  let previewExpanded = false;
+  let previewAnimation = null;
   const solarPhaseNotes = {
     dawn: "встречая мягкий свет рассвета",
     day: "наполняясь дневным светом",
@@ -634,7 +641,10 @@ const campIconMorph = (() => {
     root.style.setProperty("--solar-progress", palette.progress.toFixed(3));
     const clock = `${String(Math.floor(minute / 60)).padStart(2, "0")}:${String(minute % 60).padStart(2, "0")}`;
     const phaseName = { dawn: "рассвет", day: "день", dusk: "закат", night: "ночь" }[palette.phase];
-    if (solarClock) solarClock.textContent = `${clock} · ${phaseName}`;
+    if (solarClock) {
+      solarClock.textContent = `${clock} · ${phaseName}`;
+      solarClock.previousSibling.textContent = previewMinute === null ? "Сейчас в\u00a0Сочи · " : "Просмотр палитры · ";
+    }
     if (solarRange instanceof HTMLInputElement) {
       solarRange.value = String(minute);
       solarRange.setAttribute("aria-valuetext", `${clock}, ${phaseName}, время Сочи`);
@@ -653,29 +663,75 @@ const campIconMorph = (() => {
     solarTimes = { sunrise, sunset };
     if (solarPreview) solarPreview.hidden = false;
     updateSolarPalette();
-    if (solarTimer === null) solarTimer = window.setInterval(updateSolarPalette, 5 * 60 * 1000);
+    if (solarTimer === null) solarTimer = window.setInterval(updateSolarPalette, 60 * 1000);
   };
-  const closeSolarPreview = () => {
+  const resetSolarPreview = () => {
     previewMinute = null;
-    solarPreview.open = false;
     updateSolarPalette();
-    solarPreview.querySelector("summary").focus();
   };
+  const finishSolarPreview = () => {
+    if (!solarPreview) return;
+    solarPreview.open = previewExpanded;
+    solarControls.inert = !previewExpanded;
+    previewAnimation?.cancel();
+    previewAnimation = null;
+    solarCopy.style.removeProperty("overflow");
+    solarFooter.style.removeProperty("overflow-anchor");
+  };
+  const setSolarPreviewOpen = (expanded) => {
+    if (!solarPreview || !solarCopy || !solarControls) return;
+    const startHeight = solarCopy.getBoundingClientRect().height;
+    previewExpanded = expanded;
+    previewAnimation?.cancel();
+    previewAnimation = null;
+    solarFooter.style.overflowAnchor = "none";
+    solarPreview.open = true;
+    solarControls.inert = !expanded;
+    if (!expanded) {
+      solarSummary.focus({ preventScroll: true });
+      resetSolarPreview();
+    }
+    const contentHeight = solarPreview.offsetHeight - solarSummary.offsetHeight;
+    const endHeight = solarCopy.getBoundingClientRect().height - (expanded ? 0 : contentHeight);
+    if (root.dataset.motion === "reduce" || solarMotion.matches || !solarCopy.animate) {
+      finishSolarPreview();
+      return;
+    }
+    // Include the changing caption in the height transition so the page bottom moves continuously.
+    solarCopy.style.overflow = "hidden";
+    const animation = solarCopy.animate({ height: [`${startHeight}px`, `${endHeight}px`] }, {
+      duration: 320, easing: "cubic-bezier(0.2, 0.7, 0.2, 1)",
+    });
+    previewAnimation = animation;
+    animation.onfinish = () => { if (previewAnimation === animation) finishSolarPreview(); };
+  };
+  solarSummary?.addEventListener("click", (event) => {
+    event.preventDefault();
+    setSolarPreviewOpen(!previewExpanded);
+  });
   solarPreview?.addEventListener("toggle", () => {
-    previewMinute = solarPreview.open ? Math.round(sochiMinutesNow() / 15) * 15 : null;
+    if (previewAnimation) return;
+    previewExpanded = solarPreview.open;
+    solarControls.inert = !previewExpanded;
+    if (!previewExpanded) previewMinute = null;
     updateSolarPalette();
   });
   solarRange?.addEventListener("input", () => {
     previewMinute = Number(solarRange.value);
     updateSolarPalette();
   });
-  document.querySelector("[data-solar-reset]")?.addEventListener("click", closeSolarPreview);
+  document.querySelector("[data-solar-reset]")?.addEventListener("click", resetSolarPreview);
   solarPreview?.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && solarPreview.open) {
+    if (event.key === "Escape" && previewExpanded) {
       event.preventDefault();
-      closeSolarPreview();
+      setSolarPreviewOpen(false);
     }
   });
+  const settleSolarMotion = () => { if (previewAnimation) finishSolarPreview(); };
+  solarMotion.addEventListener("change", settleSolarMotion);
+  window.addEventListener("campmotionchange", settleSolarMotion);
+  window.addEventListener("resize", settleSolarMotion);
+  document.addEventListener("visibilitychange", () => { if (document.hidden) settleSolarMotion(); });
   const describeWeather = (code) => {
     if (!isNumber(code)) return "текущие условия";
     if (code === 0) return "ясно";
