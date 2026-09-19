@@ -207,14 +207,20 @@ const campIconMorph = (() => {
   const CAMP_START_DAY = Date.UTC(2026, 8, 27);
   const CAMP_END_DAY = Date.UTC(2026, 9, 4);
   const DAY_MS = 86_400_000;
+  const CAMP_DAYS = Math.round((CAMP_END_DAY - CAMP_START_DAY) / DAY_MS) + 1;
+  const sochiClock = new Intl.DateTimeFormat("en-GB", {
+    timeZone: SOCHI_TIME_ZONE,
+    hour: "2-digit", minute: "2-digit", second: "2-digit", hourCycle: "h23",
+  });
+  let countdownTimer;
 
-  const sochiCalendarDay = () => {
+  const sochiCalendarDay = (now) => {
     const parts = new Intl.DateTimeFormat("en-CA", {
       timeZone: SOCHI_TIME_ZONE,
       year: "numeric",
       month: "2-digit",
       day: "2-digit",
-    }).formatToParts(new Date());
+    }).formatToParts(now);
     const year = Number(parts.find((part) => part.type === "year")?.value);
     const month = Number(parts.find((part) => part.type === "month")?.value);
     const day = Number(parts.find((part) => part.type === "day")?.value);
@@ -230,29 +236,39 @@ const campIconMorph = (() => {
     return "дней";
   };
 
-  const getCountdown = () => {
-    const today = sochiCalendarDay();
+  const getCountdown = (now) => {
+    const today = sochiCalendarDay(now);
     if (today < CAMP_START_DAY) {
       const days = Math.round((CAMP_START_DAY - today) / DAY_MS);
       return { value: `${days} ${dayWord(days)}`, label: "до старта кэмпа" };
     }
-    if (today === CAMP_START_DAY) return { value: "Сегодня", label: "стартует кэмп" };
-    if (today <= CAMP_END_DAY) return { value: "Кэмп идёт", label: "до 4 октября" };
-    return { value: "Кэмп завершён", label: "27 сентября — 4 октября" };
+    if (today <= CAMP_END_DAY) {
+      const day = Math.round((today - CAMP_START_DAY) / DAY_MS) + 1;
+      return { value: `День\u00a0${day} из\u00a0${CAMP_DAYS}`, label: "кэмп идёт" };
+    }
+    return { value: `${CAMP_DAYS}\u00a0дней вместе`, label: "кэмп завершён" };
   };
 
   const updateCountdowns = () => {
-    const countdown = getCountdown();
+    window.clearTimeout(countdownTimer);
+    const now = new Date();
+    const countdown = getCountdown(now);
     countdowns.forEach((element) => {
       const value = element.querySelector("[data-camp-countdown-value]");
       const label = element.querySelector("[data-camp-countdown-label]");
-      if (value) value.textContent = countdown.value;
-      if (label) label.textContent = countdown.label;
+      if (value && value.textContent !== countdown.value) value.textContent = countdown.value;
+      if (label && label.textContent !== countdown.label) label.textContent = countdown.label;
     });
+    const clock = Object.fromEntries(sochiClock.formatToParts(now).map(({ type, value }) => [type, value]));
+    const elapsed = (Number(clock.hour) * 3600 + Number(clock.minute) * 60 + Number(clock.second)) * 1000 + now.getMilliseconds();
+    countdownTimer = window.setTimeout(updateCountdowns, DAY_MS - elapsed);
   };
 
   updateCountdowns();
-  window.setInterval(updateCountdowns, 60 * 60 * 1000);
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden) updateCountdowns();
+  });
+  window.addEventListener("pageshow", updateCountdowns);
 })();
 
 (() => {
