@@ -3249,6 +3249,37 @@ html[data-motion="reduce"] .race-trace__flow { animation: none; stroke-dashoffse
   list-style: none;
 }
 
+.coach-achievement {
+  grid-column: 1 / -1;
+  display: grid;
+  justify-items: start;
+  gap: clamp(0.5rem, 1vw, 0.9rem);
+  max-width: 52rem;
+  color: var(--paper);
+}
+
+.coach-achievement-date { font-size: var(--type-label); }
+.coach-achievement h4 {
+  margin: 0;
+  max-width: 28ch;
+  font-size: clamp(1.65rem, 2.8vw, 2.75rem);
+  font-weight: 600;
+  line-height: 1.12;
+  text-wrap: balance;
+}
+.coach-achievement > p { margin: 0; }
+.coach-achievement strong { font-variant-numeric: tabular-nums; }
+.coach-achievement a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  min-height: 3rem;
+  color: inherit;
+  font-size: var(--type-label);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
 @media (max-width: 46rem) {
   .coach-story {
     display: grid;
