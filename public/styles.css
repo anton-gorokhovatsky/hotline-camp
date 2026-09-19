@@ -430,9 +430,20 @@ a {
 
 .mobile-menu-theme {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: clamp(0.8rem, 4vw, 1.5rem);
 }
+
+.theme-select {
+  min-width: 0; max-width: 100%; min-height: 3rem;
+  padding: 0 0.4rem;
+  border: 1px solid currentColor; border-radius: var(--radius-control);
+  background: transparent; color: var(--mobile-menu-text);
+  font: inherit; font-size: clamp(0.78rem, 3.8vw, 1rem); cursor: pointer;
+}
+.theme-select option { color: var(--text); background: var(--page); }
+.theme-select:focus-visible { outline-color: currentColor; }
 
 .mobile-menu-theme .theme-toggle--menu { width: auto; }
 .mobile-menu-theme .theme-toggle--menu,
@@ -728,7 +739,7 @@ a {
 
 .conditions-row {
   display: grid;
-  grid-template-columns: minmax(max-content, 1.4fr) minmax(max-content, 0.8fr) minmax(max-content, 1.1fr) minmax(max-content, 1.3fr) minmax(max-content, 1fr);
+  grid-template-columns: minmax(max-content, 1.4fr) minmax(max-content, 0.8fr) minmax(max-content, 1.1fr) minmax(max-content, 1fr);
   align-items: stretch;
   gap: var(--service-island-gap);
 }
@@ -751,6 +762,8 @@ a {
   color: var(--material-glass-text);
   flex: 0 0 auto;
 }
+
+.condition[hidden] { display: none; }
 
 .condition > span {
   color: var(--material-glass-text-soft);

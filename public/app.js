@@ -67,78 +67,55 @@ const campIconMorph = (() => {
   "use strict";
 
   const root = document.documentElement;
-  const themeToggles = [...document.querySelectorAll("[data-theme-toggle]")];
+  const themeSelects = [...document.querySelectorAll("[data-theme-select]")];
   const systemTheme = window.matchMedia("(prefers-color-scheme: dark)");
   const storageKey = "camp-theme";
+  let solarTheme = null;
 
   const storedTheme = () => {
     try {
       const value = localStorage.getItem(storageKey);
-      return value === "light" || value === "dark" ? value : null;
+      return value === "light" || value === "dark" ? value : "solar";
     } catch (_) {
-      return null;
+      return "solar";
     }
   };
 
-  const currentTheme = () => {
-    const applied = root.dataset.theme;
-    return applied === "light" || applied === "dark"
-      ? applied
-      : storedTheme() || (systemTheme.matches ? "dark" : "light");
-  };
+  let themeMode = storedTheme();
 
-  const updateThemeControls = (theme) => {
-    const nextTheme = theme === "dark" ? "light" : "dark";
-    const statusLabel = theme === "dark" ? "Дневная тема" : "Ночная тема";
-    const accessibleLabel = `Включить ${nextTheme === "dark" ? "тёмную" : "светлую"} тему`;
-
-    themeToggles.forEach((toggle) => {
-      toggle.setAttribute("aria-label", accessibleLabel);
-      toggle.setAttribute("aria-pressed", String(theme === "dark"));
-
-      if (toggle.classList.contains("theme-toggle--icon")) {
-        toggle.title = statusLabel;
-      }
-
-      const label = toggle.querySelector(".theme-toggle-label");
-      if (label) label.textContent = statusLabel;
-
-      const moon = toggle.querySelector(".theme-toggle-icon--moon:not([data-icon-morph])");
-      const sun = toggle.querySelector(".theme-toggle-icon--sun:not([data-icon-morph])");
-      if (moon) moon.toggleAttribute("hidden", nextTheme !== "dark");
-      if (sun) sun.toggleAttribute("hidden", nextTheme !== "light");
-      campIconMorph(moon, sun, nextTheme === "light");
-    });
-  };
-
-  const applyTheme = (theme, persist = false) => {
-    root.dataset.theme = theme;
+  const applyTheme = (mode = themeMode, persist = false) => {
+    themeMode = mode;
+    const theme = mode === "solar" ? solarTheme || (systemTheme.matches ? "dark" : "light") : mode;
+    if (root.dataset.theme !== theme) root.dataset.theme = theme;
+    root.dataset.themeMode = mode;
     root.style.colorScheme = theme;
 
     if (persist) {
       try {
-        localStorage.setItem(storageKey, theme);
+        localStorage.setItem(storageKey, mode);
       } catch (_) {}
     }
 
-    updateThemeControls(theme);
+    themeSelects.forEach((select) => { select.value = mode; select.hidden = false; });
   };
 
-  applyTheme(currentTheme());
+  applyTheme();
 
-  themeToggles.forEach((toggle) => {
-    toggle.addEventListener("click", () => {
-      applyTheme(currentTheme() === "dark" ? "light" : "dark", true);
+  themeSelects.forEach((select) => {
+    select.addEventListener("change", () => {
+      applyTheme(select.value, true);
     });
   });
 
-  systemTheme.addEventListener("change", (event) => {
-    if (!storedTheme()) applyTheme(event.matches ? "dark" : "light");
+  window.addEventListener("campsolarchange", (event) => {
+    solarTheme = event.detail.theme;
+    if (themeMode === "solar") applyTheme();
   });
+  systemTheme.addEventListener("change", () => { if (themeMode === "solar" && !solarTheme) applyTheme(); });
 
   window.addEventListener("storage", (event) => {
-    if (event.key === storageKey) {
-      applyTheme(storedTheme() || (systemTheme.matches ? "dark" : "light"));
+    if (event.key === storageKey || event.key === null) {
+      applyTheme(storedTheme());
     }
   });
 })();
@@ -342,7 +319,7 @@ const campIconMorph = (() => {
 
   const focusableItems = () => [
     toggle,
-    ...panel.querySelectorAll("a[href], button:not([disabled])"),
+    ...panel.querySelectorAll("a[href], button:not([disabled]), select:not([disabled])"),
   ].filter((item) => item instanceof HTMLElement && item.getClientRects().length && !item.closest("[inert]"));
 
   const closeMenu = ({ restoreFocus = true, destination = null } = {}) => {
@@ -516,6 +493,7 @@ const campIconMorph = (() => {
   const readingLifetime = 2 * 60 * 60 * 1000;
   const MARINE_URL = "https://marine-api.open-meteo.com/v1/marine?latitude=43.55&longitude=39.69&current=sea_surface_temperature&timezone=Europe%2FMoscow&forecast_days=1";
   const forecastOpens = "2026-09-17";
+  const forecastVisible = !document.querySelector(".condition-forecast")?.hidden;
   const campStart = "2026-09-27";
   const campEnd = "2026-10-04";
   const todayInSochi = () => new Intl.DateTimeFormat("sv-SE", { timeZone: SOCHI_TIME_ZONE }).format(new Date());
@@ -712,6 +690,9 @@ const campIconMorph = (() => {
     const palette = solarPalette(minute, solarTimes.sunrise, solarTimes.sunset);
     const uv = uvAtMinute(previewMinute);
     root.dataset.solarPhase = palette.phase;
+    window.dispatchEvent(new CustomEvent("campsolarchange", { detail: {
+      theme: minute >= solarTimes.sunrise && minute < solarTimes.sunset ? "light" : "dark",
+    } }));
     root.style.setProperty("--solar-surface-tint", weatherColor(palette.surface, uv));
     root.style.setProperty("--solar-accent", weatherColor(palette.accent, uv));
     root.style.setProperty("--solar-deep", weatherColor(palette.deep, uv));
@@ -884,7 +865,7 @@ const campIconMorph = (() => {
     const today = todayInSochi();
     showForecast(null, today, "loading");
     const weatherUrl = new URL(WEATHER_URL);
-    if (today >= forecastOpens && today <= campEnd) {
+    if (forecastVisible && today >= forecastOpens && today <= campEnd) {
       weatherUrl.searchParams.set("daily", "sunrise,sunset,temperature_2m_min,temperature_2m_max");
       weatherUrl.searchParams.set("forecast_days", "16");
     }
@@ -949,7 +930,7 @@ const campIconMorph = (() => {
         unavailable("sea");
       }
 
-      if (availableGroups === 3 && forecast.state !== "unavailable") {
+      if (availableGroups === 3 && (!forecastVisible || forecast.state !== "unavailable")) {
         setField("status", `Наблюдение ${observation || "обновлено"}`);
         setField("source-note", observation || "наблюдение обновлено");
       } else if (availableGroups > 0) {
@@ -988,6 +969,7 @@ const campIconMorph = (() => {
       if (solarPreview) solarPreview.hidden = true;
       for (const name of ["surface-tint", "accent", "deep", "progress"]) root.style.removeProperty(`--solar-${name}`);
       delete root.dataset.solarPhase;
+      window.dispatchEvent(new CustomEvent("campsolarchange", { detail: { theme: null } }));
       if (solarNote) solarNote.textContent = `${solarNoteBase}.`;
     }
     if (windReading && Date.now() - windReading.time >= readingLifetime) {

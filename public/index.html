@@ -126,8 +126,8 @@
       ym(111830664,"init",{ssr:true,webvisor:true,clickmap:true,ecommerce:"dataLayer",referrer:document.referrer,url:location.href,accurateTrackBounce:true,trackLinks:true});
     </script>
     <!-- /Yandex.Metrika counter -->
-    <link rel="stylesheet" href="./styles.css?v=20260919-links">
-    <script src="./app.js?v=20260919-camp-days" defer></script>
+    <link rel="stylesheet" href="./styles.css?v=20260919-solar-theme">
+    <script src="./app.js?v=20260919-solar-theme" defer></script>
   </head>
   <body>
     <noscript><div><img src="https://mc.yandex.ru/watch/111830664" style="position:absolute; left:-9999px;" alt=""></div></noscript>
@@ -147,16 +147,6 @@
               <a href="#trainers">Тренеры</a>
               <a href="#registration">Участие</a>
             </nav>
-
-            <button class="theme-toggle theme-toggle--icon" type="button" data-theme-toggle aria-pressed="false">
-              <svg class="theme-toggle-icon theme-toggle-icon--moon" viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M20 15.2A8.5 8.5 0 0 1 8.8 4a8.5 8.5 0 1 0 11.2 11.2Z"></path>
-              </svg>
-              <svg class="theme-toggle-icon theme-toggle-icon--sun" viewBox="0 0 24 24" aria-hidden="true" hidden>
-                <circle cx="12" cy="12" r="4"></circle>
-                <path d="M12 2v2m0 16v2M2 12h2m16 0h2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4"></path>
-              </svg>
-            </button>
 
             <div class="mobile-menu material-glass">
               <button
@@ -251,16 +241,11 @@
                   </svg>
                   <span class="motion-toggle-label">Остановить движение</span>
                 </button>
-                <button class="theme-toggle theme-toggle--menu" type="button" data-theme-toggle aria-pressed="false">
-                  <svg class="theme-toggle-icon theme-toggle-icon--moon" viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M20 15.2A8.5 8.5 0 0 1 8.8 4a8.5 8.5 0 1 0 11.2 11.2Z"></path>
-                  </svg>
-                  <svg class="theme-toggle-icon theme-toggle-icon--sun" viewBox="0 0 24 24" aria-hidden="true" hidden>
-                    <circle cx="12" cy="12" r="4"></circle>
-                    <path d="M12 2v2m0 16v2M2 12h2m16 0h2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4"></path>
-                  </svg>
-                  <span class="theme-toggle-label">Ночная тема</span>
-                </button>
+                <select class="theme-select" data-theme-select aria-label="Тема сайта" title="Автоматическая тема — по восходу и закату в Сочи" hidden>
+                  <option value="solar">По солнцу</option>
+                  <option value="light">Светлая</option>
+                  <option value="dark">Тёмная</option>
+                </select>
               </div>
             </div>
           </nav>
@@ -323,7 +308,7 @@
                 <strong data-condition="daylight-value">Загрузка</strong>
                 <small data-condition="daylight-note">сегодня</small>
               </div>
-              <div class="condition condition-forecast service-island material-glass">
+              <div class="condition condition-forecast service-island material-glass" hidden>
                 <span data-condition="forecast-label">27.09—04.10</span>
                 <strong data-condition="forecast-value">Прогноз на&nbsp;даты кэмпа</strong>
                 <small data-condition="forecast-note">нужно подключение к&nbsp;Open-Meteo</small>
