@@ -67,7 +67,7 @@ const campIconMorph = (() => {
   "use strict";
 
   const root = document.documentElement;
-  const themeSelects = [...document.querySelectorAll("[data-theme-select]")];
+  const themeChoices = [...document.querySelectorAll("[data-theme-choice]")];
   const systemTheme = window.matchMedia("(prefers-color-scheme: dark)");
   const storageKey = "camp-theme";
   let solarTheme = null;
@@ -96,14 +96,17 @@ const campIconMorph = (() => {
       } catch (_) {}
     }
 
-    themeSelects.forEach((select) => { select.value = mode; select.hidden = false; });
+    themeChoices.forEach((choice) => {
+      choice.checked = choice.value === mode;
+      choice.closest("fieldset").hidden = false;
+    });
   };
 
   applyTheme();
 
-  themeSelects.forEach((select) => {
-    select.addEventListener("change", () => {
-      applyTheme(select.value, true);
+  themeChoices.forEach((choice) => {
+    choice.addEventListener("change", () => {
+      if (choice.checked) applyTheme(choice.value, true);
     });
   });
 
@@ -319,8 +322,9 @@ const campIconMorph = (() => {
 
   const focusableItems = () => [
     toggle,
-    ...panel.querySelectorAll("a[href], button:not([disabled]), select:not([disabled])"),
-  ].filter((item) => item instanceof HTMLElement && item.getClientRects().length && !item.closest("[inert]"));
+    ...panel.querySelectorAll("a[href], button:not([disabled]), input:not([disabled])"),
+  ].filter((item) => item instanceof HTMLElement && item.getClientRects().length
+    && !item.closest("[inert]") && !item.matches('input[type="radio"]:not(:checked)'));
 
   const closeMenu = ({ restoreFocus = true, destination = null } = {}) => {
     if (toggle.getAttribute("aria-expanded") !== "true") return;
@@ -414,11 +418,13 @@ const campIconMorph = (() => {
     const items = focusableItems();
     const first = items[0];
     const last = items.at(-1);
+    const active = document.activeElement;
+    const isLastChoice = active?.matches("[data-theme-choice]") && last?.matches("[data-theme-choice]");
 
-    if (event.shiftKey && document.activeElement === first) {
+    if (event.shiftKey && active === first) {
       event.preventDefault();
       last?.focus();
-    } else if (!event.shiftKey && document.activeElement === last) {
+    } else if (!event.shiftKey && (active === last || isLastChoice)) {
       event.preventDefault();
       first?.focus();
     }
