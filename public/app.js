@@ -127,7 +127,7 @@ const campIconMorph = (() => {
   "use strict";
 
   const root = document.documentElement;
-  const motionToggles = [...document.querySelectorAll("[data-motion-toggle]")];
+  const motionChoices = [...document.querySelectorAll("[data-motion-choice]")];
   const systemMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
   const storageKey = "camp-motion";
 
@@ -140,18 +140,10 @@ const campIconMorph = (() => {
     }
   };
 
-  const currentMotion = () => root.dataset.motion === "reduce" ? "reduce" : "full";
   const updateMotionControls = (motion) => {
-    const isReduced = motion === "reduce";
-    motionToggles.forEach((toggle) => {
-      toggle.setAttribute("aria-pressed", String(isReduced));
-      const label = toggle.querySelector(".motion-toggle-label");
-      if (label) label.textContent = isReduced ? "Включить движение" : "Остановить движение";
-      const pause = toggle.querySelector(".motion-toggle-icon--pause:not([data-icon-morph])");
-      const play = toggle.querySelector(".motion-toggle-icon--play:not([data-icon-morph])");
-      if (pause) pause.toggleAttribute("hidden", isReduced);
-      if (play) play.toggleAttribute("hidden", !isReduced);
-      campIconMorph(pause, play, isReduced);
+    motionChoices.forEach((choice) => {
+      choice.checked = choice.value === motion;
+      choice.closest("fieldset").hidden = false;
     });
   };
   const applyMotion = (motion, persist = false) => {
@@ -164,9 +156,9 @@ const campIconMorph = (() => {
   };
 
   applyMotion(storedMotion() || (systemMotion.matches ? "reduce" : "full"));
-  motionToggles.forEach((toggle) => {
-    toggle.addEventListener("click", () => {
-      applyMotion(currentMotion() === "reduce" ? "full" : "reduce", true);
+  motionChoices.forEach((choice) => {
+    choice.addEventListener("change", () => {
+      if (choice.checked) applyMotion(choice.value, true);
     });
   });
   systemMotion.addEventListener("change", (event) => {

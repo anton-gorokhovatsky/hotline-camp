@@ -126,8 +126,8 @@
       ym(111830664,"init",{ssr:true,webvisor:true,clickmap:true,ecommerce:"dataLayer",referrer:document.referrer,url:location.href,accurateTrackBounce:true,trackLinks:true});
     </script>
     <!-- /Yandex.Metrika counter -->
-    <link rel="stylesheet" href="./styles.css?v=20260919-theme-choice">
-    <script src="./app.js?v=20260919-theme-choice" defer></script>
+    <link rel="stylesheet" href="./styles.css?v=20260919-display-settings">
+    <script src="./app.js?v=20260919-display-settings" defer></script>
   </head>
   <body>
     <noscript><div><img src="https://mc.yandex.ru/watch/111830664" style="position:absolute; left:-9999px;" alt=""></div></noscript>
@@ -232,20 +232,22 @@
                 </div>
               </div>
               <div class="mobile-menu-theme" role="group" aria-label="Настройки отображения">
-                <button class="motion-toggle motion-toggle--menu" type="button" data-motion-toggle aria-pressed="false">
-                  <svg class="motion-toggle-icon motion-toggle-icon--pause" viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M7.5 3v18M16.5 3v18"></path>
-                  </svg>
-                  <svg class="motion-toggle-icon motion-toggle-icon--play" viewBox="0 0 24 24" aria-hidden="true" hidden>
-                    <path d="m6 3 14 9-14 9Z"></path>
-                  </svg>
-                  <span class="motion-toggle-label">Остановить движение</span>
-                </button>
-                <fieldset class="theme-choice" hidden>
+                <fieldset class="display-choice motion-choice" hidden>
+                  <legend class="visually-hidden">Движение</legend>
+                  <span class="display-choice-label" aria-hidden="true">Движение</span>
+                  <div class="display-choice-options">
+                    <label><input class="visually-hidden" type="radio" name="camp-motion" value="full" data-motion-choice><span>Включено</span></label>
+                    <label><input class="visually-hidden" type="radio" name="camp-motion" value="reduce" data-motion-choice><span>Выключено</span></label>
+                  </div>
+                </fieldset>
+                <fieldset class="display-choice theme-choice" hidden>
                   <legend class="visually-hidden">Тема сайта</legend>
-                  <label><input class="visually-hidden" type="radio" name="camp-theme" value="solar" data-theme-choice aria-describedby="solar-theme-help"><span>По солнцу</span></label>
-                  <label><input class="visually-hidden" type="radio" name="camp-theme" value="light" data-theme-choice><span>Светлая</span></label>
-                  <label><input class="visually-hidden" type="radio" name="camp-theme" value="dark" data-theme-choice><span>Тёмная</span></label>
+                  <span class="display-choice-label" aria-hidden="true">Тема</span>
+                  <div class="display-choice-options">
+                    <label><input class="visually-hidden" type="radio" name="camp-theme" value="solar" data-theme-choice aria-describedby="solar-theme-help"><span>По солнцу</span></label>
+                    <label><input class="visually-hidden" type="radio" name="camp-theme" value="light" data-theme-choice><span>Светлая</span></label>
+                    <label><input class="visually-hidden" type="radio" name="camp-theme" value="dark" data-theme-choice><span>Тёмная</span></label>
+                  </div>
                   <span class="visually-hidden" id="solar-theme-help">По времени восхода и заката в Сочи</span>
                 </fieldset>
               </div>
