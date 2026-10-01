@@ -96,14 +96,12 @@ def main() -> int:
         "registration must be outside the trainers section",
     )
 
-    cta_indexes = [
-        index for index, link in enumerate(parser.links)
-        if "camp-cta" in classes(link)
-    ]
-    require(len(cta_indexes) == 4, "hero, menu, program and closing must expose the same CTA")
-    for index in cta_indexes:
-        require(parser.links[index].get("href") == CTA_URL, "every CTA must use the approved form URL")
-        require(parser.anchor_texts[index].startswith("Заполнить заявку"), "every CTA must use the approved text")
+    ctas = [(tag, attrs) for tag, attrs in parser.tags if "camp-cta" in classes(attrs)]
+    require(len(ctas) == 4, "hero, menu, program and closing must expose the same registration state")
+    require(all(tag == "button" and attrs.get("type") == "button" and "disabled" in attrs and "href" not in attrs for tag, attrs in ctas), "registration must be natively disabled at every entry point")
+    closed_ctas = re.findall(r'<button\b[^>]*class="camp-cta\b[^\"]*"[^>]*>\s*<span>Приём заявок закрыт</span>\s*</button>', html)
+    require(len(closed_ctas) == 4, "every closed CTA must use the same label and markup")
+    require(CTA_URL not in html, "closed registration must not expose the application link")
 
     selected_photos = {
         "hero-time-trial.jpg",
@@ -188,7 +186,7 @@ def main() -> int:
     require(re.search(r"path:\s*(?:\./)?public", workflow) is not None, "Pages must upload the public directory")
 
     print("Static contract: OK")
-    print(f"Sections: {len(parser.sections)}; CTAs: {len(cta_indexes)}; photographs: {len(narrative_images)}")
+    print(f"Sections: {len(parser.sections)}; disabled CTAs: {len(ctas)}; photographs: {len(narrative_images)}")
     print("Runtime: plain HTML/CSS/JS; no Node build required")
     return 0
 

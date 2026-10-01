@@ -689,8 +689,8 @@ a {
   box-shadow: 0 0 1.8rem rgba(255, 91, 120, 0.2);
 }
 
-:root[data-theme="dark"] .hero .camp-cta:hover,
-:root[data-theme="dark"] .program .camp-cta:hover {
+:root[data-theme="dark"] .hero .camp-cta:not(:disabled):hover,
+:root[data-theme="dark"] .program .camp-cta:not(:disabled):hover {
   background: var(--oleander);
   color: var(--oleander-ink);
 }
@@ -707,12 +707,16 @@ a {
   corner-shape: squircle;
   background: var(--sea-deep);
   color: var(--paper);
+  border: 0;
+  font-family: inherit;
   font-size: var(--type-body-small);
   font-weight: 680;
   letter-spacing: var(--tracking-tight);
   line-height: 1;
   transition: background-color 180ms ease, color 180ms ease, transform 180ms ease;
 }
+
+.camp-cta:disabled { opacity: 0.55; cursor: not-allowed; }
 
 .camp-cta svg {
   width: 1.25rem;
@@ -725,7 +729,7 @@ a {
   transform: translateY(0.06rem);
 }
 
-.camp-cta:hover {
+.camp-cta:not(:disabled):hover {
   transform: translateY(-0.12rem);
   background: var(--oleander);
   color: var(--oleander-ink);
@@ -1597,7 +1601,7 @@ a {
   color: var(--ink);
 }
 
-.camp-cta-closing:hover {
+.camp-cta-closing:not(:disabled):hover {
   background: var(--sea-deep);
   color: var(--paper);
 }
