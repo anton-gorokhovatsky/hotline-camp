@@ -212,19 +212,30 @@ const campIconMorph = (() => {
     const today = sochiCalendarDay(now);
     if (today < CAMP_START_DAY) {
       const days = Math.round((CAMP_START_DAY - today) / DAY_MS);
-      return { value: `${days} ${dayWord(days)}`, label: "до старта кэмпа" };
+      return { stage: "upcoming", value: `${days} ${dayWord(days)}`, label: "до старта кэмпа" };
     }
     if (today <= CAMP_END_DAY) {
       const day = Math.round((today - CAMP_START_DAY) / DAY_MS) + 1;
-      return { value: `День\u00a0${day} из\u00a0${CAMP_DAYS}`, label: "кэмп идёт" };
+      return { stage: "active", value: `День\u00a0${day} из\u00a0${CAMP_DAYS}`, label: "кэмп идёт" };
     }
-    return { value: `${CAMP_DAYS}\u00a0дней вместе`, label: "кэмп завершён" };
+    return { stage: "ended", value: `${CAMP_DAYS}\u00a0дней вместе`, label: "кэмп завершён" };
+  };
+
+  const closingTitle = document.querySelector("#registration-title");
+  const closingNote = document.querySelector("[data-camp-closing-note]");
+  const closingCopy = {
+    upcoming: ["Встретимся в\u00a0Сочи?", "Кэмп пройдёт с\u00a027\u00a0сентября по\u00a04\u00a0октября 2026\u00a0года. Финальная неделя подготовки к\u00a0стартам в\u00a0Сочи."],
+    active: ["Кэмп идёт", "Кэмп проходит с\u00a027\u00a0сентября по\u00a04\u00a0октября 2026\u00a0года. Участники готовятся к\u00a0стартам в\u00a0Сочи."],
+    ended: ["Кэмп завершён", "27\u00a0сентября — 4\u00a0октября 2026\u00a0года. Восемь дней подготовки к\u00a0стартам в\u00a0Сочи."],
   };
 
   const updateCountdowns = () => {
     window.clearTimeout(countdownTimer);
     const now = new Date();
     const countdown = getCountdown(now);
+    const [title, note] = closingCopy[countdown.stage];
+    if (closingTitle && closingTitle.textContent !== title) closingTitle.textContent = title;
+    if (closingNote && closingNote.textContent !== note) closingNote.textContent = note;
     countdowns.forEach((element) => {
       const value = element.querySelector("[data-camp-countdown-value]");
       const label = element.querySelector("[data-camp-countdown-label]");

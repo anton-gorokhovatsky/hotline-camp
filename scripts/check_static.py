@@ -79,7 +79,7 @@ def main() -> int:
         require(any(tag == "meta" and attrs.get("property") == property_name and attrs.get("content") == url for tag, attrs in parser.tags), f"{property_name} must use the public domain")
     for document in ("AGENTS.md", "README.md", "docs/interface-rules.md"):
         copy = read(ROOT / document)
-        require(CTA_URL in copy and "Заполнить заявку" in copy, f"{document} must describe the current CTA")
+        require("Приём заявок закрыт" in copy and "disabled" in copy, f"{document} must describe the closed registration state")
 
     require(html.lower().startswith("<!doctype html>"), "document must start with a doctype")
     require(re.search(r'<html\b[^>]*\blang="ru"', html, re.I) is not None, "html lang must be ru")
@@ -151,17 +151,20 @@ def main() -> int:
     require(html.count("Переводим накопленную форму в&nbsp;готовность к&nbsp;старту.") == 1, "the hero promise must appear exactly once")
     require("Абсолютный победитель Ironman 70.3 Oman 2025" in html, "the supplied trainer distinction must be preserved")
     require("Победитель VII Всероссийской летней спартакиады учащихся, 2015" in html, "the supplied Spartakiad title must be preserved")
-    require("Встретимся в&nbsp;Сочи?" in html, "the registration section needs its own heading")
+    require('<h2 id="registration-title">Кэмп завершён</h2>' in html, "the closing heading must report the completed camp without JavaScript")
+    require(html.count('data-camp-countdown-label>кэмп завершён</span>') == 2, "both countdowns must report the completed camp without JavaScript")
+    require('data-camp-closing-note' in html, "the closing copy must follow the countdown lifecycle")
+    require("завершён" in metadata["description"] and "завершён" in metadata["og:description"], "page and sharing descriptions must report the completed camp")
 
-    for endpoint in ("api.open-meteo.com/v1/forecast", "marine-api.open-meteo.com/v1/marine"):
+    for endpoint in ("api.open-meteo.com/v1/forecast", "marine-api.open-meteo.com/v1/marine", "air-quality-api.open-meteo.com/v1/air-quality"):
         require(endpoint in js, f"missing live data endpoint: {endpoint}")
     for state in ("Загрузка", "Нет данных", "данные недоступны"):
         require(state in html + js, f"missing honest data state: {state}")
     require("sea_surface_temperature" in js, "sea temperature must come from Open-Meteo")
     require("temperature_2m" in js, "air temperature must come from Open-Meteo")
-    require("temperature_2m_min" in js and "temperature_2m_max" in js, "camp forecast must use real daily temperatures")
-    for field in ("forecast-label", "forecast-value", "forecast-note"):
-        require(f'data-condition="{field}"' in html, f"missing dynamic forecast field: {field}")
+    conditions = [attrs for _, attrs in parser.tags if "condition" in classes(attrs)]
+    require(len([attrs for attrs in conditions if "hidden" not in attrs]) == 4, "the rail must expose current weather, sea, daylight and source")
+    require(all("hidden" in attrs for attrs in conditions if "condition-forecast" in classes(attrs)), "the camp-date forecast must stay hidden when retained")
     require("IntersectionObserver" in js and '"visibilitychange"' in js, "animation must pause outside the viewport and in the background")
     require(".dot-motif" not in css, "retired decorative motifs must not return")
 

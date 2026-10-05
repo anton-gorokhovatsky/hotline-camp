@@ -3,103 +3,234 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Hotline — локальные регрессии</title>
-<style>body{margin:0;font:14px system-ui}header{padding:8px;background:#fff;color:#111}button{min-height:48px}iframe{display:block;width:100%;height:900px;border:0}pre{white-space:pre-wrap}</style>
+<style>
+  body{margin:0;font:14px system-ui;background:#fff;color:#111}
+  header{padding:16px}button{min-height:48px}iframe{display:block;width:100%;height:900px;border:0}
+  pre{white-space:pre-wrap}summary{cursor:pointer;padding:12px 0}
+</style>
 <header>
-  <strong>Локальная QA-фикстура · вымышленные тестовые данные, не прогноз</strong>
-  <pre id="results">Проверяем…</pre>
-  <button id="start">Начало</button><button id="field">Поле</button>
-  <button id="hidden">Скрыть / показать документ</button>
-  <button id="theme">Сменить тему</button>
-  <button id="forecast">Прогноз</button><button id="contrast">Проверить контраст</button>
-  <output id="counts"></output>
+  <strong>Локальные проверки · вымышленные погодные данные</strong>
+  <p>Исполняется настоящий app.js. Время, погода и настройки изолированы; внешняя сеть и аналитика отключены.</p>
+  <output id="status" role="status">Проверяем…</output>
+  <details><summary>Результаты сценариев</summary><pre id="results"></pre></details>
+  <button id="rerun" disabled>Повторить проверки</button>
+  <button id="closing" disabled>Показать финальный блок</button>
 </header>
-<iframe id="fixture" title="Тестовая страница"></iframe>
+<iframe id="fixture" title="Сайт с тестовыми данными"></iframe>
 <script type="module">
-const source = await (await fetch('../public/app.js')).text();
-const helpers = source.slice(source.indexOf('  const isNumber ='), source.indexOf('  const showForecast ='));
-const state = new Function('forecastOpens', 'campStart', 'campEnd', `${helpers};return forecastState;`)('2026-09-17', '2026-09-27', '2026-10-04');
-const daily = {time:[], temperature_2m_min:[], temperature_2m_max:[], sunrise:[], sunset:[]};
-for(let day=17;day<=34;day++) {
-  const date = new Date(Date.UTC(2026,8,day)).toISOString().slice(0,10);
-  daily.time.push(date); daily.temperature_2m_min.push(15); daily.temperature_2m_max.push(27);
-  daily.sunrise.push(`${date}T06:00`); daily.sunset.push(`${date}T19:00`);
-}
-const results=[];
-const check=(name,ok)=>{results.push(`${ok?'PASS':'FAIL'} ${name}`);document.querySelector('#results').textContent=results.join('\n');if(!ok)throw Error(name)};
-check('До 17 сентября — анонс, даже без API', state(null,'2026-09-16').state==='soon');
-check('17 сентября — загрузка', state(null,'2026-09-17','loading').state==='loading');
-const partial={...daily,time:daily.time.slice(0,16)};
-check('Горизонт 16 дней — только 27.09—02.10', state(partial,'2026-09-17').label==='27.09—02.10 · часть дат');
-check('Полный диапазон', state(daily,'2026-09-19').label==='27.09—04.10');
-check('Честные минимум и максимум', state(daily,'2026-09-19').value==='+15…+27°');
-check('Во время кэмпа — только оставшиеся дни', state(daily,'2026-10-01').label==='01.10—04.10');
-check('Последний день', state(daily,'2026-10-04').label==='04.10');
-check('После кэмпа — завершение', state(null,'2026-10-05').state==='ended');
-check('Ошибка API', state(null,'2026-09-17').state==='unavailable');
-check('Пустой ответ', state({},'2026-09-17').state==='unavailable');
-check('null не превращается в ноль', state({...daily,temperature_2m_min:[]},'2026-09-17').state==='unavailable');
-check('Перевёрнутый диапазон недопустим', state({...daily,temperature_2m_min:daily.time.map(()=>40)},'2026-09-17').state==='unavailable');
-const gap={...daily,temperature_2m_min:[...daily.temperature_2m_min]};gap.temperature_2m_min[11]=null;
-check('Пропуск дня не скрывается',state(gap,'2026-09-19').label==='27.09 · часть дат');
-document.querySelector('#results').textContent=results.join('\n');
-const scenario=new URLSearchParams(location.search).get('scenario')||'partial';
-const fixture=document.querySelector('#fixture');
-let html=await (await fetch('../public/index.html')).text();
-// Never send analytics from a synthetic test document.
-html=html.replace(/<script\b[^>]*>[\s\S]*?<\/script>/g,tag=>tag.includes('mc.yandex.ru')?'':tag);
-const boot=()=>{
-  const nativeDate=Date;
-  const date=scenario==='ended'?'2026-10-05T09:00:00Z':scenario==='soon'?'2026-09-04T09:00:00Z':scenario==='full'?'2026-09-19T09:00:00Z':'2026-09-17T09:00:00Z';
-  window.Date=class extends nativeDate{constructor(...args){super(...(args.length?args:[date]))}static now(){return new nativeDate(date).getTime()}};
-  const nativeFetch=fetch;
-  window.fetch=(url,options)=>{
-    if(String(url).includes('api.open-meteo.com/v1/forecast')){
-      document.documentElement.dataset.qaWeatherUrl=String(url);
-      if(scenario==='error')return Promise.reject(Error('QA network failure'));
-      return Promise.resolve(new Response(JSON.stringify({current:{time:'2026-09-17T12:00',temperature_2m:25,weather_code:2,wind_speed_10m:2,wind_direction_10m:90},daily:scenario==='partial'?partial:daily})));
-    }
-    if(String(url).includes('marine-api.open-meteo.com'))return Promise.resolve(new Response(JSON.stringify({current:{sea_surface_temperature:24}})));
-    return nativeFetch(url,options);
+const fixture = document.querySelector('#fixture');
+const status = document.querySelector('#status');
+const results = document.querySelector('#results');
+const template = await (await fetch('../public/index.html')).text();
+const clean = new DOMParser().parseFromString(template, 'text/html');
+clean.querySelectorAll('script').forEach(script => {
+  if (script.textContent.includes('mc.yandex.ru')) script.remove();
+});
+clean.querySelectorAll('noscript').forEach(node => node.remove());
+const base = clean.createElement('base');
+base.href = new URL('../public/', location.href).href;
+clean.head.prepend(base);
+const policy = clean.createElement('meta');
+policy.httpEquiv = 'Content-Security-Policy';
+policy.content = "default-src 'self' data:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; connect-src 'none'";
+base.after(policy);
+
+// Installed before the site's own scripts; no source slicing or test hooks in production.
+function boot(options) {
+  const NativeDate = Date;
+  let now = NativeDate.parse(options.date || '2026-10-05T09:00:00Z');
+  window.Date = class extends NativeDate {
+    constructor(...args) { super(...(args.length ? args : [now])); }
+    static now() { return now; }
   };
-  const draw=WebGLRenderingContext.prototype.drawArrays;
-  WebGLRenderingContext.prototype.drawArrays=function(...args){document.documentElement.dataset.qaDraws=Number(document.documentElement.dataset.qaDraws||0)+1;return draw.apply(this,args)};
-  new MutationObserver(records=>{const changes=records.filter(r=>r.attributeName==='href'&&r.target.matches('link[rel="icon"]')).length;if(changes)document.documentElement.dataset.qaFavicons=Number(document.documentElement.dataset.qaFavicons||0)+changes}).observe(document.head,{subtree:true,attributes:true,attributeFilter:['href']});
-  if(new URLSearchParams(parent.location.search).has('reduce')) {
-    const media=matchMedia;
-    window.matchMedia=query=>query.includes('prefers-reduced-motion')?new Proxy(media(query),{get:(target,key)=>key==='matches'?true:typeof target[key]==='function'?target[key].bind(target):target[key]}):media(query);
-    const get=Storage.prototype.getItem;
-    Storage.prototype.getItem=function(key){return key==='camp-motion'?null:get.call(this,key)};
+  const values = new Map(Object.entries(options.storage || {}));
+  Object.defineProperty(window, 'localStorage', { value: {
+    getItem: key => values.get(key) ?? null,
+    setItem: (key, value) => values.set(key, String(value)),
+    removeItem: key => values.delete(key),
+    clear: () => values.clear(),
+  } });
+  const nativeMatchMedia = window.matchMedia.bind(window);
+  window.matchMedia = query => {
+    const media = nativeMatchMedia(query);
+    const matches = query === '(prefers-color-scheme: dark)' ? !!options.systemDark
+      : query === '(prefers-reduced-motion: reduce)' ? true : media.matches;
+    return new Proxy(media, { get(target, key) {
+      const value = key === 'matches' ? matches : Reflect.get(target, key, target);
+      return typeof value === 'function' ? value.bind(target) : value;
+    } });
+  };
+  let release;
+  const gate = new Promise(resolve => { release = resolve; });
+  if (!options.loading) release();
+  const qa = window.__qa = { requests: [], errors: [], release, advance(iso) {
+    now = NativeDate.parse(iso);
+    window.dispatchEvent(new Event('pageshow'));
+  } };
+  addEventListener('error', event => qa.errors.push(event.message));
+  addEventListener('unhandledrejection', event => qa.errors.push(String(event.reason)));
+  window.fetch = async (url, request = {}) => {
+    const endpoint = new URL(url, location.href);
+    const kind = endpoint.hostname === 'api.open-meteo.com' ? 'weather'
+      : endpoint.hostname === 'marine-api.open-meteo.com' ? 'marine'
+      : endpoint.hostname === 'air-quality-api.open-meteo.com' ? 'uv' : 'unexpected';
+    qa.requests.push({ kind, url: endpoint.href });
+    if (kind === 'unexpected') throw Error(`Unmocked request: ${endpoint.href}`);
+    await gate;
+    if (request.signal?.aborted) throw new DOMException('Aborted', 'AbortError');
+    if (options.fail?.includes(kind)) throw Error(`Fixture ${kind} failure`);
+    const localISO = timestamp => new NativeDate(timestamp + 3 * 3600000).toISOString().slice(0, 16);
+    const day = localISO(now).slice(0, 10);
+    const observed = options.stale ? now - 3 * 3600000 : now;
+    const time = localISO(observed);
+    const midnight = NativeDate.parse(`${day}T00:00:00+03:00`) / 1000;
+    const hourlyTime = Array.from({ length: 25 }, (_, hour) => midnight + hour * 3600);
+    const uv = hour => hour >= 6 && hour <= 18 ? Math.round(8 * Math.sin((hour - 6) * Math.PI / 12)) : 0;
+    const data = kind === 'weather' ? {
+      current: { time, temperature_2m: 25, weather_code: 2, wind_speed_10m: 6,
+        wind_direction_10m: 90, relative_humidity_2m: 80, rain: 0.4, showers: 0 },
+      daily: { time: [day], sunrise: [`${day}T06:00`], sunset: [`${day}T18:00`] },
+    } : kind === 'marine' ? { current: { time, sea_surface_temperature: 24 } } : {
+      current: { time: observed / 1000, uv_index: options.invalidUV ? null : 6 },
+      hourly: { time: hourlyTime, uv_index: hourlyTime.map((_, hour) => options.invalidUV ? null : uv(hour)) },
+    };
+    return new Response(JSON.stringify(data), { headers: { 'Content-Type': 'application/json' } });
+  };
+}
+
+const waitFor = async (predicate, message) => {
+  const deadline = performance.now() + 6000;
+  while (!predicate()) {
+    if (performance.now() > deadline) throw Error(`Тайм-аут: ${message}`);
+    await new Promise(resolve => setTimeout(resolve, 25));
   }
 };
-const setup=`const scenario=${JSON.stringify(scenario)},daily=${JSON.stringify(daily)},partial=${JSON.stringify(partial)};(${boot})();`;
-html=html.replace('<head>',`<head><base href="../public/"><script>${setup}<\/script>`);
-fixture.srcdoc=html;
-document.querySelector('#start').onclick=()=>fixture.contentDocument.querySelector('#about').scrollIntoView();
-document.querySelector('#field').onclick=()=>fixture.contentDocument.querySelector('.race-rhythm').scrollIntoView({block:'center'});
-document.querySelector('#hidden').onclick=()=>{
-  const doc=fixture.contentDocument, hidden=!doc.hidden;
-  Object.defineProperty(doc,'hidden',{configurable:true,value:hidden});
-  doc.dispatchEvent(new Event('visibilitychange'));
+const mount = async (options = {}) => {
+  const doc = clean.cloneNode(true);
+  const setup = doc.createElement('script');
+  setup.textContent = `(${boot.toString()})(${JSON.stringify(options)});`;
+  doc.querySelector('meta[http-equiv]').after(setup);
+  fixture.srcdoc = '<!doctype html>' + doc.documentElement.outerHTML;
+  await new Promise(resolve => fixture.addEventListener('load', resolve, { once: true }));
+  await waitFor(() => fixture.contentWindow.__qa?.requests.length === 3, 'три погодных запроса');
+  if (!options.loading) await ready();
 };
-document.querySelector('#theme').onclick=()=>{const root=fixture.contentDocument.documentElement;root.dataset.theme=root.dataset.theme==='dark'?'light':'dark'};
-document.querySelector('#forecast').onclick=()=>fixture.contentDocument.querySelector('.conditions').scrollIntoView({block:'center'});
-document.querySelector('#contrast').onclick=()=>{
-  const doc=fixture.contentDocument,root=doc.documentElement,win=fixture.contentWindow;
-  const originalTheme=root.dataset.theme,originalStyle=root.getAttribute('style');
-  const instant=doc.createElement('style');instant.textContent='*{transition:none!important}';doc.head.append(instant);
-  const canvas=doc.createElement('canvas');canvas.width=canvas.height=1;const ctx=canvas.getContext('2d');
-  const luminance=color=>{ctx.fillStyle=color;ctx.fillRect(0,0,1,1);const rgb=[...ctx.getImageData(0,0,1,1).data].slice(0,3).map(v=>{v/=255;return v<=.04045?v/12.92:((v+.055)/1.055)**2.4});return rgb[0]*.2126+rgb[1]*.7152+rgb[2]*.0722};
-  const ratios=[];
-  for(const theme of ['light','dark'])for(const [surface,deep] of [['#c8d0d0','#081611'],['#ccd4d1','#0a1b15'],['#ead7d7','#163025'],['#f4ead7','#0a2f20'],['#ead5c2','#2a2118'],['#c9cfce','#091713']]){
-    root.dataset.theme=theme;root.style.setProperty('--solar-surface-tint',surface);root.style.setProperty('--solar-deep',deep);
-    const ink=luminance(win.getComputedStyle(doc.querySelector('.camp-terms strong')).color),paper=luminance(win.getComputedStyle(doc.querySelector('#program')).backgroundColor);
-    ratios.push((Math.max(ink,paper)+.05)/(Math.min(ink,paper)+.05));
+const ready = () => waitFor(() => fixture.contentDocument.querySelector('.conditions')?.getAttribute('aria-busy') === 'false', 'погода завершила загрузку');
+const doc = () => fixture.contentDocument;
+const win = () => fixture.contentWindow;
+const text = selector => doc().querySelector(selector).textContent.replace(/\s+/g, ' ').trim();
+let checks = 0;
+const check = (name, condition) => {
+  results.textContent += `${condition ? 'PASS' : 'FAIL'} ${name}\n`;
+  if (!condition) throw Error(name);
+  checks++;
+};
+const range = minute => {
+  const input = doc().querySelector('#solar-time');
+  input.value = minute;
+  input.dispatchEvent(new (win().Event)('input', { bubbles: true }));
+};
+const theme = value => doc().querySelector(`[data-theme-choice][value="${value}"]`).click();
+const countdown = (value, label, title) => {
+  check(`Счётчики: ${value} / ${label}`, [...doc().querySelectorAll('[data-camp-countdown]')].every(node =>
+    node.textContent.replace(/\s+/g, ' ').trim() === `${value} ${label}`));
+  check(`Финал: ${title}`, text('#registration-title') === title);
+};
+const healthy = () => {
+  check('Нет ошибок исполнения', win().__qa.errors.length === 0);
+  check('Все fetch-запросы подменены, дальний прогноз не запрашивается', win().__qa.requests.every(request =>
+    request.kind !== 'unexpected' && (request.kind !== 'weather' || new URL(request.url).searchParams.get('forecast_days') === '1')));
+};
+async function run() {
+  document.querySelector('#rerun').disabled = true;
+  document.querySelector('#closing').disabled = true;
+  results.textContent = '';
+  status.textContent = 'Проверяем…';
+  delete status.dataset.result;
+  checks = 0;
+  try {
+    await mount({ loading: true, systemDark: true });
+    check('Загрузка обозначена', text('[data-condition="air-value"]') === 'Загрузка' && doc().querySelector('.conditions').getAttribute('aria-busy') === 'true');
+    check('До солнечных данных действует системная тема', doc().documentElement.dataset.theme === 'dark');
+    win().__qa.release();
+    await ready();
+    check('Погода, море и время наблюдения получены из фикстуры', text('[data-condition="air-value"]') === '+25°' && text('[data-condition="sea-value"]') === '+24°' && text('[data-condition="source-note"]') === '05.10 · 12:00');
+    check('Днём солнечная тема светлая', doc().documentElement.dataset.themeMode === 'solar' && doc().documentElement.dataset.theme === 'light');
+    check('Системное ограничение движения учтено', doc().documentElement.dataset.motion === 'reduce');
+    check('Ветер и UV имеют собственные значения и время', text('[data-weather-art-reading]').includes('Ветер на 12:00 — 6 м/с') && text('[data-weather-art-reading]').includes('UV на 12:00 — 6.'));
+    check('Ветер управляет существующим полем', Number(doc().documentElement.dataset.windStrength) > 0 && Number(doc().documentElement.dataset.windX) < 0);
+    check('UV меняет насыщенность при поддержке относительного цвета', !win().CSS.supports('color', 'oklch(from red l calc(c * 1) h)') || doc().documentElement.style.getPropertyValue('--solar-accent').includes('1.250'));
+    countdown('8 дней вместе', 'кэмп завершён', 'Кэмп завершён');
+    check('Все четыре кнопки остаются закрытыми', [...doc().querySelectorAll('.camp-cta')].length === 4 && [...doc().querySelectorAll('.camp-cta')].every(button => button.disabled && button.textContent.trim() === 'Приём заявок закрыт' && !button.hasAttribute('href')));
+
+    const preview = doc().querySelector('.solar-preview');
+    preview.querySelector('summary').click();
+    const dayColor = doc().documentElement.style.getPropertyValue('--solar-accent');
+    range(0);
+    check('Просмотр ночи меняет фазу, тему и цвет', doc().documentElement.dataset.solarPhase === 'night' && doc().documentElement.dataset.theme === 'dark' && doc().documentElement.style.getPropertyValue('--solar-accent') !== dayColor);
+    check('Просмотр подписан временем и прогнозом UV', text('[data-solar-note]').includes('00:00') && text('[data-weather-art-reading]').includes('Прогноз UV на 00:00 — 0.'));
+    doc().querySelector('[data-solar-reset]').click();
+    check('Возврат к текущему времени сохраняет открытую панель', preview.open && doc().querySelector('#solar-time').value === '720' && doc().documentElement.dataset.theme === 'light' && !text('[data-solar-note]').includes('показана'));
+    range(180);
+    preview.querySelector('summary').click();
+    check('Сворачивание завершает просмотр и изолирует контролы', !preview.open && doc().querySelector('.solar-preview-controls').inert && doc().querySelector('#solar-time').value === '720');
+
+    const toggle = doc().querySelector('#menu-toggle');
+    toggle.click();
+    check('Меню изолирует фон', doc().querySelector('#program').inert && doc().querySelector('#masthead').getAttribute('aria-modal') === 'true');
+    theme('dark');
+    range(720);
+    check('Ручная тёмная тема имеет приоритет над дневным солнцем', doc().documentElement.dataset.theme === 'dark' && win().localStorage.getItem('camp-theme') === 'dark');
+    theme('light');
+    range(0);
+    check('Ручная светлая тема имеет приоритет над ночью', doc().documentElement.dataset.theme === 'light' && win().localStorage.getItem('camp-theme') === 'light');
+    theme('solar');
+    check('Возврат к солнечному режиму применяет выбранный час', doc().documentElement.dataset.theme === 'dark');
+    doc().dispatchEvent(new (win().KeyboardEvent)('keydown', { key: 'Escape', bubbles: true }));
+    check('Escape закрывает меню, освобождает фон и возвращает фокус', toggle.getAttribute('aria-expanded') === 'false' && !doc().querySelector('#program').inert && doc().activeElement === toggle);
+    healthy();
+
+    await mount({ date: '2026-09-26T20:59:00Z' });
+    countdown('1 день', 'до старта кэмпа', 'Встретимся в Сочи?');
+    check('До начала — будущее время', text('[data-camp-closing-note]').includes('Кэмп пройдёт'));
+    win().__qa.advance('2026-09-26T21:00:00Z');
+    countdown('День 1 из 8', 'кэмп идёт', 'Кэмп идёт');
+    check('После полуночи Сочи — настоящее время', text('[data-camp-closing-note]').includes('Кэмп проходит'));
+    win().__qa.advance('2026-10-04T20:59:00Z');
+    countdown('День 8 из 8', 'кэмп идёт', 'Кэмп идёт');
+    win().__qa.advance('2026-10-04T21:00:00Z');
+    countdown('8 дней вместе', 'кэмп завершён', 'Кэмп завершён');
+    check('После окончания нет обещания подготовки в настоящем времени', !text('[data-camp-closing-note]').includes('готовятся'));
+    healthy();
+
+    await mount({ fail: ['marine'] });
+    check('Частичный сбой локален: погода остаётся, море недоступно', text('[data-condition="air-value"]') === '+25°' && text('[data-condition="sea-value"]') === 'Нет данных' && text('[data-condition="status"]').startsWith('Часть данных недоступна'));
+    healthy();
+    await mount({ fail: ['weather', 'marine', 'uv'], systemDark: true });
+    check('Полный сбой завершает загрузку и честно обозначен', text('[data-condition="status"]') === 'Данные Open-Meteo сейчас недоступны' && text('[data-condition="air-value"]') === 'Нет данных');
+    check('Без солнечных данных сохраняется системная тема, просмотр скрыт', doc().documentElement.dataset.theme === 'dark' && doc().querySelector('.solar-preview').hidden);
+    healthy();
+    await mount({ stale: true });
+    check('Устаревшие ветер и UV не влияют на оформление', doc().documentElement.dataset.windStrength === '0' && text('[data-weather-art-reading]') === 'Ветер — нет данных. UV — нет данных.' && !doc().documentElement.style.getPropertyValue('--solar-accent').includes('oklch'));
+    healthy();
+    await mount({ invalidUV: true, storage: { 'camp-theme': 'dark' } });
+    check('Отсутствующий UV не превращается в ноль', text('[data-weather-art-reading]').includes('UV — нет данных.'));
+    check('Сохранённый ручной выбор переживает получение дневной погоды', doc().documentElement.dataset.theme === 'dark' && doc().querySelector('[data-theme-choice][value="dark"]').checked);
+    healthy();
+    await mount();
+    status.textContent = `PASS · ${checks} проверок. Ниже — сайт на 5 октября, 12:00 по Сочи.`;
+    status.dataset.result = 'pass';
+  } catch (error) {
+    status.textContent = `FAIL · ${error.message}`;
+    status.dataset.result = 'fail';
+    console.error(error);
+  } finally {
+    document.querySelector('#rerun').disabled = false;
+    document.querySelector('#closing').disabled = false;
   }
-  root.dataset.theme=originalTheme;if(originalStyle===null)root.removeAttribute('style');else root.setAttribute('style',originalStyle);
-  instant.remove();
-  check('Контраст во всех 12 состояниях ≥4,5:1',Math.min(...ratios)>=4.5);
-  document.querySelector('#results').textContent+=`\nМинимальный контраст: ${Math.min(...ratios).toFixed(2)}:1`;
-};
-setInterval(()=>{const d=fixture.contentDocument?.documentElement.dataset;if(d)document.querySelector('#counts').textContent=`draws=${d.qaDraws||0}, favicons=${d.qaFavicons||0}, hidden=${fixture.contentDocument.hidden}`},250);
+}
+document.querySelector('#rerun').addEventListener('click', run);
+document.querySelector('#closing').addEventListener('click', () => doc().querySelector('.closing-action').scrollIntoView());
+await run();
 </script>
 </html>
