@@ -172,6 +172,25 @@ const campIconMorph = (() => {
 (() => {
   "use strict";
 
+  const signature = document.querySelector(".footer-signature");
+  if (!signature) return;
+  const syncMotion = () => signature.toggleAttribute("paused", document.documentElement.dataset.motion === "reduce");
+  syncMotion();
+  window.addEventListener("campmotionchange", syncMotion);
+  customElements.whenDefined("ag-signature").then(() => {
+    // The pinned 1.0.2 module uses the portfolio home URL; retain this site's case link.
+    const fallback = signature.querySelector("a");
+    const credit = signature.shadowRoot?.querySelector("a");
+    if (fallback && credit) {
+      for (const name of ["href", "target", "rel"]) credit.setAttribute(name, fallback.getAttribute(name));
+    }
+    syncMotion();
+  });
+})();
+
+(() => {
+  "use strict";
+
   const countdowns = [...document.querySelectorAll("[data-camp-countdown]")];
   if (!countdowns.length) return;
 

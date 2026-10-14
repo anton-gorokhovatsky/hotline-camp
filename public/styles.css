@@ -1743,6 +1743,24 @@ a {
   text-decoration: none;
 }
 
+.footer-signature {
+  display: block;
+  grid-column: 10 / -1;
+  grid-row: 1;
+  align-self: start;
+  justify-self: end;
+  min-inline-size: 0;
+  max-inline-size: 100%;
+  --ag-signature-size: clamp(3.5rem, 5vw, 4.5rem);
+  --ag-signature-name-size: var(--type-label);
+  --ag-signature-role-size: var(--type-caption);
+  --ag-signature-gap: clamp(0.5rem, 1vw, 0.75rem);
+  --ag-signature-ink: var(--paper);
+  --ag-signature-muted: var(--paper);
+  --ag-signature-accent: var(--paper);
+  --ag-signature-node-ink: var(--paper);
+}
+
 @media (max-width: 74rem) {
   .hero-media img {
     width: 125.5%;
@@ -3084,7 +3102,7 @@ a {
 
   .footer-meta {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: space-between;
     gap: 1rem;
   }
