@@ -1621,7 +1621,7 @@ a {
   z-index: 4;
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
-  align-items: baseline;
+  align-items: start;
   column-gap: var(--grid-gap);
   width: 100%;
   min-height: 0;
@@ -1751,6 +1751,7 @@ a {
   justify-self: end;
   min-inline-size: 0;
   max-inline-size: 100%;
+  line-height: 1.45;
   --ag-signature-size: clamp(3.5rem, 5vw, 4.5rem);
   --ag-signature-name-size: var(--type-label);
   --ag-signature-role-size: var(--type-caption);

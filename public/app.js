@@ -184,6 +184,16 @@ const campIconMorph = (() => {
     if (fallback && credit) {
       for (const name of ["href", "target", "rel"]) credit.setAttribute(name, fallback.getAttribute(name));
     }
+    // Match the pinned component's typography to this compact, top-aligned footer.
+    if (credit) Object.assign(credit.style, { alignItems: "start", flexWrap: "nowrap" });
+    const name = signature.shadowRoot?.querySelector(".name");
+    if (name) name.style.lineHeight = "inherit";
+    const arrow = signature.shadowRoot?.querySelector(".arrow");
+    if (arrow) Object.assign(arrow.style, {
+      inlineSize: "calc(1cap - 0.08em)", blockSize: "calc(1cap - 0.08em)",
+      borderTopWidth: "0.08em", borderRightWidth: "0.08em",
+      marginInlineStart: "0.35em", verticalAlign: "baseline",
+    });
     syncMotion();
   });
 })();
