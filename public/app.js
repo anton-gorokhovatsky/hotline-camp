@@ -185,7 +185,11 @@ const campIconMorph = (() => {
       for (const name of ["href", "target", "rel"]) credit.setAttribute(name, fallback.getAttribute(name));
     }
     // Match the pinned component's typography to this compact, top-aligned footer.
-    if (credit) Object.assign(credit.style, { alignItems: "start", flexWrap: "nowrap" });
+    if (credit) Object.assign(credit.style, {
+      alignItems: "start", flexWrap: "nowrap", flexDirection: "row", minBlockSize: "3rem",
+    });
+    const text = signature.shadowRoot?.querySelector(".text");
+    if (text) Object.assign(text.style, { minInlineSize: "0", flex: "1 1 auto" });
     const name = signature.shadowRoot?.querySelector(".name");
     if (name) name.style.lineHeight = "inherit";
     const arrow = signature.shadowRoot?.querySelector(".arrow");
